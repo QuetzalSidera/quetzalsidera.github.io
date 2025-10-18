@@ -8,13 +8,13 @@
   --bg-alt: #fff5eb;
   --bg-elevated: #ffffff;
   --bg-soft: #fff0e0;
+  --code: #e1e3e6;
   --text-color: #51402f;
   --text-light: #927a62;
   --text-lighter: #9a8a7a;
   --divider-color: #ffd9b8;
   --divider-light: #ffe8d1;
   --divider-dark: #ffc9a1;
-  --code: #e1e3e6;
   --warning : rgba(216, 35, 35, 0.76);
   --font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --code-font: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
