@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A.L.I.C.E开放平台</title>
+  <link rel="icon" type="image/png" href="../img/Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <header class="site-header">
+    <div class="navbar home top">
+      <div class="wrapper">
+        <div class="container">
+          <div class="brand">
+            <a class="logo-link" href="/">
+              <img class="logo-image" src="../img/Logo.png" width="200" height="200" alt="Logo">
+              <span>A.L.I.C.E开放平台</span>
+            </a>
+          </div>
+          <div class="nav-content">
+            <div class="nav-content-body">
+              <nav class="nav-menu">
+                <a class="nav-link" href="https://github.com/QuetzalSidera/QuetzalSidera-Me-FrontBackend">源代码</a>
+                <a class="nav-link" href="/guide">项目特性</a>
+                <a class="nav-link" href="/guide">开放编辑</a>
+                <a class="nav-link" href="/api">API文档</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="content-wrapper">
+    <!-- 内容区域 -->
+    <div class="container" style="padding: 80px 0;">
+      <div class="content-section">
+        <h1 id="ApiAuthorization">API鉴权</h1>
+        <p>API使用首部中的<code>Authorization</code>与<code>AuthToken</code>字段进行身份认证与鉴权。</p>
+        <fieldset>
+          <legend>首部鉴权字段</legend>
+          <p><code>Authorization</code>首部: 用户唯一身份标识，<a href="#AuthTokenRegister">申请API AuthToken</a>响应中的<code>userGuid</code>
+          </p>
+          <p><code>AuthToken</code>首部: 用户API认证令牌，<a href="#AuthTokenRegister">申请API
+            AuthToken</a>响应中的<code>authToken</code></p>
+        </fieldset>
+        <fieldset>
+          <legend>三类鉴权等级</legend>
+          <p><strong>无鉴权: </strong>首部不携带鉴权字段</p>
+          <p>
+            <strong>用户AuthToken鉴权: </strong>首部需携带用户账户申请获得的<code>Authorization</code>与<code>AuthToken</code>
+          </p>
+          <p><strong>管理员AuthToken鉴权: </strong>首部需携带管理员账户申请获得的<code>Authorization</code>与<code>AuthToken</code>
+          </p>
+        </fieldset>
+        <h1 id="ApiDocument">API文档</h1>
+        <p>API为RESTful风格，响应报文均为JSON格式，Base Url均为<code>api.quetzalsidera.me</code>, 强制使用HTTPS协议</p>
+
+        <h2 id="AuthTokenRegister">一、申请API AuthToken</h2>
+        <h3>鉴权类型: 无鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>GET /v1/authToken</pre>
+        <h3>2.参数</h3>
+        <h4>Url参数</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>参数名</td>
+            <td>类型</td>
+            <td>必需</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>email</td>
+            <td>string</td>
+            <td>是</td>
+            <td>注册使用邮箱</td>
+          </tr>
+          <tr>
+            <td>password</td>
+            <td>string</td>
+            <td>是</td>
+            <td>密码</td>
+          </tr>
+          </tbody>
+        </table>
+        <h3>3.响应</h3>
+
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1001: 邮箱或密码错误
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          <tr>
+            <td>data</td>
+            <td>object</td>
+            <td>响应主体</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h4>data对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>authToken</td>
+            <td>string</td>
+            <td>API认证令牌（首部中的AuthToken）</td>
+          </tr>
+          <tr>
+            <td>userGuid</td>
+            <td>string</td>
+            <td>用户Guid（首部中的Authorization）</td>
+          </tr>
+          <tr>
+            <td>createTimestamp</td>
+            <td>num</td>
+            <td>令牌生成时间对应的UTC秒级时间戳（令牌有效期为自此时间起<strong>5小时</strong>）</td>
+          </tr>
+          <tr>
+            <td>isAdmin</td>
+            <td>bool</td>
+            <td>是否为管理员</td>
+          </tr>
+          </tbody>
+
+        </table>
+        <h3>4.请求示例</h3>
+        <pre>curl "https://api.quetzalsidera.me/v1/authToken?email=example@example.com&password=123456"</pre>
+
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+  "data": {
+    "authToken": "44cc78fb-c2cc-4a37-bab4-72c4023e3ae0",
+    "userGuid": "4254bf69-a6d2-4602-872d-1d1546b25869",
+    "createTimestamp": 1760614727,
+    "isAdmin": true
+  }
+}</pre>
+        <h4>邮箱或密码错误</h4>
+        <pre>{
+  "status": 1001,
+  "message": "EmailOrPasswordError",
+  "data": null
+}</pre>
+        <p class="warning"><strong>备注: </strong>由于本API参数涉及邮箱与注册时密码，请务必在请求时使用HTTPS协议</p>
+
+        <h2>二、 检查认证状态</h2>
+        <h3>鉴权类型: 无鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>GET /v1/authToken/check</pre>
+        <h3>2.参数</h3>
+        <h4>Url参数</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>参数名</td>
+            <td>类型</td>
+            <td>必需</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>user_guid</td>
+            <td>string</td>
+            <td>是</td>
+            <td>用户Guid</td>
+          </tr>
+          <tr>
+            <td>auth_token</td>
+            <td>string</td>
+            <td>是</td>
+            <td>API认证令牌</td>
+          </tr>
+          </tbody>
+        </table>
+        <h3>3.响应</h3>
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1002: user_guid与auth_token已过期或不存在
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h3>4.请求示例</h3>
+        <pre>curl "https://api.quetzalsidera.me/v1/authTokenCheck?user_guid=example-guid&auth_token=example-auth-token"</pre>
+        <h3>5.响应示例</h3>
+        <h4>未过期</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+}</pre>
+        <h4>已过期或不存在</h4>
+        <pre>{
+  "status": 1002,
+  "message": "TokenExpired"
+}</pre>
+
+        <h2>三、获取管理员列表</h2>
+        <h3>鉴权类型: 用户AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>GET /v1/admins</pre>
+        <h3>2.参数</h3>
+        <h4>无参数</h4>
+        <h3>3.响应</h3>
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          <tr>
+            <td>data</td>
+            <td>array</td>
+            <td>管理员邮箱列表</td>
+          </tr>
+          </tbody>
+        </table>
+
+
+        <h3>4.请求示例</h3>
+        <pre>curl  "https://api.quetzalsidera.me/v1/admins" \
+          -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+          -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0"</pre>
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+  "data": [
+          "example1@example1.com",
+          "example2@example2.com"
+  ]
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden",
+  "data": null
+}</pre>
+
+        <h2>四、添加管理员</h2>
+        <h3>鉴权类型: 管理员AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>POST /v1/admins</pre>
+        <h3>2.参数</h3>
+        <h4>表单参数</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>参数名</td>
+            <td>类型</td>
+            <td>必需</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>mailBox</td>
+            <td>string</td>
+            <td>是</td>
+            <td>要添加的管理员邮箱地址</td>
+          </tr>
+          </tbody>
+        </table>
+        <h3>3.响应</h3>
+
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h3>4.请求示例</h3>
+        <pre>curl -X POST "https://api.quetzalsidera.me/v1/admins" \
+          --data-urlencode 'mailBox=example@example.com' \
+          -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+          -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0"</pre>
+
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden"
+}</pre>
+
+        <h2>五、删除管理员</h2>
+        <h3>鉴权类型: 管理员AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>DELETE /v1/admins</pre>
+        <h3>2.参数</h3>
+        <h4>表单参数</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>参数名</td>
+            <td>类型</td>
+            <td>必需</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>mailBox</td>
+            <td>string</td>
+            <td>是</td>
+            <td>要删除的管理员邮箱地址</td>
+          </tr>
+          </tbody>
+        </table>
+        <h3>3.响应</h3>
+
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h3>4.请求示例</h3>
+        <pre>curl -X DELETE "https://api.quetzalsidera.me/v1/admins" \
+     -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     --data-urlencode 'mailBox=example@example.com' </pre>
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden",
+}</pre>
+
+        <h2>六、添加好友卡片</h2>
+        <h3>鉴权类型: 用户AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>POST /v1/checkList</pre>
+        <h3>2.参数</h3>
+        <h4>Json请求体</h4>
+        <pre>{
+  "link": "https://example.com/friend-profile",  // 目标链接
+  "pictureLink": "https://example.com/images/profile-pic.jpg", // 头像Url
+  "title": {
+    "zhCn": "标题",       //卡片标题 简体中文
+    "enUs": "title",     //卡片标题 英文（美国）
+    "zhHk": "標題",       //卡片标题 繁体中文（香港）
+    "zhTw": "標題",       //卡片标题 繁体中文（台湾）
+    "enGb": "title",     //卡片标题 英文（英国）
+    "jaJp": "タイトル"    //卡片标题 日语
+  },
+  "comment": {
+    "zhCn": "短评",            //卡片短评 简体中文
+    "enUs": "comment",        //卡片短评 英文（美国）
+    "zhHk": "短評",            //卡片短评 繁体中文（香港）
+    "zhTw": "短評",            //卡片短评 繁体中文（台湾）
+    "enGb": "comment",        //卡片短评 英文（英国）
+    "jaJp": "短いコメント"      //卡片短评 日语
+  },
+  "addOn": "额外信息或备注内容"     //描述性备注，非展示信息，仅用于审核
+}</pre>
+
+        <p><strong>备注: </strong>头像Url请使用能够直接以GET方法获取到的图像文件，否则可能出现无法显示的问题</p>
+        <p>若没有这样的文件，<a href="https://github.com/QuetzalSidera/QuetzalSidera-Me-FrontBackend">源代码</a>中，文件夹<code>QuetzalSidera.Me/wwwroot/img/choices/</code>中也提供了一系列可以选择的图片。若选择该系列的图片，参数<code>pictureLink</code>请填写为
+          <code>img/choices/文件名</code>。例如选择 <code>IMG_5050.PNG</code>，参数<code>pictureLink</code>请填写<code>img/choices/IMG_5050.PNG</code>
+        </p>
+        <h3>3.响应</h3>
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          <tr>
+            <td>data</td>
+            <td>string</td>
+            <td>卡片Guid，用于各种卡片操作</td>
+          </tr>
+          </tbody>
+        </table>
+
+
+        <h3>4.请求示例(请求体保存为data.json文件)</h3>
+        <pre>curl -X POST "https://api.quetzalsidera.me/v1/checkList" \
+     -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     -H "Content-Type: application/json" \
+     -d @data.json</pre>
+        <h3>4.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+  "data": "9a1a8a8a-c1ca-4257-a4db-152ccda550f9"
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden",
+  "data": null
+}</pre>
+
+
+        <h2>七、获取卡片列表</h2>
+        <h3>鉴权类型: 管理员AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>GET /v1/checkList/all</pre>
+        <h3>2.参数</h3>
+        <h4>无参数</h4>
+        <h3>3.响应</h3>
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          <tr>
+            <td>data</td>
+            <td>array</td>
+            <td>卡片列表</td>
+          </tr>
+          </tbody>
+        </table>
+
+
+        <h3>4.请求示例</h3>
+        <pre>curl -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     "https://api.quetzalsidera.me/v1/checkList/all"</pre>
+
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+  "data": [
+    {
+      "link": "https://example.com/friend-profile",
+      "pictureLink": "https://example.com/images/profile-pic.jpg",
+      "title": {
+        "zhCn": "标题1",
+        "enUs": "title1",
+        "zhHk": "標題1",
+        "zhTw": "標題1",
+        "enGb": "title1",
+        "jaJp": "タイトル1"
+      },
+      "comment": {
+        "zhCn": "短评1",
+        "enUs": "comment1",
+        "zhHk": "短評1",
+        "zhTw": "短評1",
+        "enGb": "comment1",
+        "jaJp": "短いコメント1"
+      },
+      "addOn": "额外信息或备注内容1"
+    },
+    {
+      "link": "https://example.com/friend-profile",
+      "pictureLink": "https://example.com/images/profile-pic.jpg",
+      "title": {
+        "zhCn": "标题2",
+        "enUs": "title2",
+        "zhHk": "標題2",
+        "zhTw": "標題2",
+        "enGb": "title2",
+        "jaJp": "タイトル2"
+      },
+      "comment": {
+        "zhCn": "短评2",
+        "enUs": "comment2",
+        "zhHk": "短評2",
+        "zhTw": "短評2",
+        "enGb": "comment2",
+        "jaJp": "短いコメント2"
+      },
+      "addOn": "额外信息或备注内容2"
+    }
+  ]
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden",
+  "data": null
+}</pre>
+
+        <h2>八、检查卡片状态</h2>
+        <h3>鉴权类型: 用户AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>GET /v1/checkList</pre>
+        <h3>2.参数</h3>
+        <h4>Url参数</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>参数名</td>
+            <td>类型</td>
+            <td>必需</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>cardGuid</td>
+            <td>string</td>
+            <td>是</td>
+            <td>卡片唯一标识</td>
+          </tr>
+          </tbody>
+        </table>
+        <h3>3.响应</h3>
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          <tr>
+            <td>data</td>
+            <td>bool</td>
+            <td>true: 正在审核, false: 审核已结束</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h3>4.请求示例</h3>
+        <pre>curl -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     "https://api.quetzalsidera.me/v1/checkList?cardGuid=933691ea-fdc0-4ea2-b2bc-9621e8b45fd8"</pre>
+
+        <h3>5.响应示例</h3>
+        <h4>正在审核</h4>
+        <pre>{
+  "status": 0,
+  "message": "Checking",
+  "data": false
+}</pre>
+        <h4>审核已结束</h4>
+        <pre>{
+  "status": 0,
+  "message": "Finished",
+  "data": true
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden",
+  "data": false
+}</pre>
+
+
+        <h2>九、拒绝卡片审核</h2>
+        <h3>鉴权类型: AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>DELETE /v1/checkList</pre>
+        <h3>2.参数</h3>
+        <h4>Url参数</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>参数名</td>
+            <td>类型</td>
+            <td>必需</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>cardGuid</td>
+            <td>string</td>
+            <td>是</td>
+            <td>卡片唯一标识</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h3>3.响应</h3>
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h3>4.请求示例</h3>
+        <pre>curl -X DELETE \
+     -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     "https://api.quetzalsidera.me/v1/checkList?cardGuid=933691ea-fdc0-4ea2-b2bc-9621e8b45fd8"</pre>
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden",
+}</pre>
+
+        <h2>十、通过卡片审核</h2>
+        <h3>鉴权类型: 管理员AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>POST /v1/checkList</pre>
+        <h3>2.参数</h3>
+        <h4>Url参数</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>参数名</td>
+            <td>类型</td>
+            <td>必需</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>cardGuid</td>
+            <td>string</td>
+            <td>是</td>
+            <td>卡片唯一标识</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h3>3.响应</h3>
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              4001: 卡片Guid不存在<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          </tbody>
+        </table>
+
+
+        <h3>4.请求示例</h3>
+        <pre>curl -X POST \
+     -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     "https://api.quetzalsidera.me/v1/checkList?cardGuid=fa0b5e0c-3a42-4759-a408-c56e8860446a"</pre>
+
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+}</pre>
+        <h4>卡片Guid不存在</h4>
+        <pre>{
+  "status": 4001,
+  "message": "BadRequest"
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden"
+}</pre>
+
+        <h2>十一、获取位置信息</h2>
+        <h3>鉴权类型: 管理员AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>GET /v1/myLocation</pre>
+        <h3>2.参数</h3>
+        <h4>无参数</h4>
+        <h3>3.响应</h3>
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          <tr>
+            <td>data</td>
+            <td>string</td>
+            <td>地点</td>
+          </tr>
+          </tbody>
+        </table>
+        <h3>4.请求示例</h3>
+        <pre>curl -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     "https://api.quetzalsidera.me/v1/myLocation"</pre>
+
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+  "data": "深圳"
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden",
+  "data": null
+}</pre>
+
+
+        <h2>十二、修改位置信息</h2>
+        <h3>鉴权类型: 管理员AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>POST /v1/myLocation</pre>
+        <h3>2.参数</h3>
+        <h4>表单参数</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>参数名</td>
+            <td>类型</td>
+            <td>必需</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>location</td>
+            <td>string</td>
+            <td>是</td>
+            <td>新的位置信息</td>
+          </tr>
+          </tbody>
+        </table>
+        <h3>4.请求示例</h3>
+        <pre>curl -X POST \
+     -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     --data-urlencode 'location=北京' \
+     "https://api.quetzalsidera.me/v1/myLocation"</pre>
+
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+}</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden"
+}</pre>
+
+
+        <h2>十三、获取已注册用户数量</h2>
+        <h3>鉴权类型: 管理员AuthToken鉴权</h3>
+        <h3>1.Url</h3>
+        <pre>GET /v1/userNum</pre>
+        <h3>2.参数</h3>
+        <h4>无参数</h4>
+        <h3>3.响应</h3>
+
+        <h4>根对象</h4>
+        <table>
+          <thead>
+          <tr>
+            <td>名称</td>
+            <td>类型</td>
+            <td>描述</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>status</td>
+            <td>num</td>
+            <td>0: Ok<br/>
+              1003: 权限不足
+            </td>
+          </tr>
+          <tr>
+            <td>message</td>
+            <td>string</td>
+            <td>描述消息</td>
+          </tr>
+          <tr>
+            <td>data</td>
+            <td>num</td>
+            <td>已注册用户数量</td>
+          </tr>
+          </tbody>
+        </table>
+
+        <h3>4.请求示例</h3>
+        <pre>curl -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     "https://api.quetzalsidera.me/v1/userNum"</pre>
+
+        <h3>5.响应示例</h3>
+        <h4>成功</h4>
+        <pre>{
+  "status": 0,
+  "message": "Ok",
+  "data": 1
+}
+</pre>
+        <h4>权限不足</h4>
+        <pre>{
+  "status": 1003,
+  "message": "Forbidden",
+  "data": 0
+}</pre>
+      </div>
+    </div>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-links">
+        <section class="footer-section">
+          <h3 class="footer-section-title">项目</h3>
+          <ul class="footer-links-list">
+            <li><a class="footer-link" href="#features">特性</a></li>
+            <li><a class="footer-link" href="#api">参考</a></li>
+            <li><a class="footer-link" href="#source">源代码</a></li>
+          </ul>
+        </section>
+        <section class="footer-section">
+          <h3 class="footer-section-title">社区</h3>
+          <ul class="footer-links-list">
+            <li><a class="footer-link" href="https://github.com/QuetzalSidera">GitHub</a></li>
+            <li><a class="footer-link" href="https://chat.qurtzalsidera.me/">在线演示</a></li>
+            <li><a class="footer-link" href="mailto:1969154690@qq.com">技术支持</a></li>
+          </ul>
+        </section>
+        <section class="footer-section">
+          <h3 class="footer-section-title">资源</h3>
+          <ul class="footer-links-list">
+            <li><a class="footer-link" href="https://www.quetzalsidera.me/">个人博客</a></li>
+            <li><a class="footer-link" href="https://open.qurtzalsidera.me/">开放平台</a></li>
+            <li><a class="footer-link" href="https://www.quetzalsidera.me/ThankYou">致谢</a></li>
+          </ul>
+        </section>
+      </div>
+      <div class="footer-bottom">
+          <span class="copyright">
+            <a class="footer-link" href="https://beian.miit.gov.cn/#/Integrated/index">
+              © 版权所有 2025 QianShuang | © 人物, 美术及故事情节著作权归NEXON Games所有 | 粤ICP备2025477459号 | 此页面由Github Pages托管
+            </a>
+          </span>
+      </div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
