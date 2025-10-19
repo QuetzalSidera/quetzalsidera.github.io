@@ -16,7 +16,6 @@
   --divider-dark: #ffc9a1;
   --code: #e1e3e6;
   --warning : rgba(216, 35, 35, 0.76);
-  --success: rgba(35, 216, 89, 0.76);
   --font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   --code-font: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
   --icon-font: "Font Awesome 6 Free", "Font Awesome 6 Brands", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
@@ -26,6 +25,7 @@
   --table-header-text: var(--text-color);
   --table-row-hover: var(--bg-alt);
   --table-stripe: var(--bg-soft);
+  --success: rgba(35, 216, 89, 0.76);
 }
 
 * {
