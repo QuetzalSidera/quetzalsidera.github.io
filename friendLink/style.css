@@ -38,7 +38,6 @@ body {
   background-color: var(--bg-color);
   color: var(--text-color);
   line-height: 1.6;
-  font-family: var(--font-family);
 }
 
 .container {
@@ -162,7 +161,6 @@ body {
   font-size: 85%;
   margin: 0;
   padding: 0.2em 0.4em;
-  font-family: var(--code-font);
 }
 
 .content-section pre {
@@ -174,7 +172,6 @@ body {
   border: 1px solid var(--divider-color);
   font-size: 14px;
   line-height: 1.5;
-  font-family: var(--code-font);
 }
 
 .content-section table {
