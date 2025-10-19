@@ -111,6 +111,10 @@ body {
   border-radius: 6px;
 }
 
+.nav-link.active {
+  color: var(--primary-color);
+  background: var(--bg-soft);
+}
 .nav-link:hover {
   color: var(--primary-color);
   background: var(--bg-soft);

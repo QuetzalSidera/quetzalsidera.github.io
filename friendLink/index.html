@@ -1,10 +1,207 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>添加友链 - A.L.I.C.E开放平台</title>
+  <link rel="icon" type="image/png" href="../img/Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div id="app">
+  <header class="site-header">
+    <div class="navbar home top">
+      <div class="wrapper">
+        <div class="container">
+          <div class="brand">
+            <a class="logo-link" href="/">
+              <img class="logo-image" src="../img/Logo.png" width="200" height="200" alt="Logo">
+              <span>A.L.I.C.E开放平台</span>
+            </a>
+          </div>
+          <div class="nav-content">
+            <div class="nav-content-body">
+              <nav class="nav-menu">
+                <a class="nav-link" href="https://github.com/QuetzalSidera/QuetzalSidera-Me-FrontBackend">源代码</a>
+                <a class="nav-link" href="/introduce">项目介绍</a>
+                <a class="nav-link active" href="/friendLink">添加友链</a>
+                <a class="nav-link" href="/doc">API文档</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
+  <main class="content-wrapper">
+    <div class="container">
+      <div class="content-section">
+        <h1>添加友链</h1>
+        <p>欢迎添加友链谢谢喵~</p>
+
+        <div class="methods-container">
+          <!-- 方法一 -->
+          <div class="method-card">
+            <div class="method-header">
+              <div class="method-icon">
+                <i class="fas fa-user-plus"></i>
+              </div>
+              <h2 class="method-title">方法一：联系网站的所有者（如果你知道他是谁的话）</h2>
+            </div>
+            <div class="method-description">
+              <p>快去线下拷打他吧（bushi）</p>
+            </div>
+          </div>
+
+          <!-- 方法二 -->
+          <div class="method-card">
+            <div class="method-header">
+              <div class="method-icon">
+                <i class="fas fa-code"></i>
+              </div>
+              <h2 class="method-title">方法二：通过API接口提交</h2>
+            </div>
+            <div class="method-description">
+              <p>可以通过调用开放的的REST API来提交友链申请。</p>
+            </div>
+            <div class="method-content">
+              <h3>1. 注册账号</h3>
+              <p>首先，您需要在 <a href="https://chat.quetzalsidera.me" target="_blank">chat.quetzalsidera.me</a> 上注册一个账号。</p>
+              <p>请妥善保存您的邮箱和密码，在后续步骤中需要使用它们来获取API令牌。</p>
+
+              <h3>2. 获取API令牌</h3>
+              <p>使用您在步骤1中注册的邮箱和密码，调用"申请AuthToken"API获取API令牌。由于涉及邮箱与密码，请确保使用HTTPS协议。</p>
+              <p>API请求示例：</p>
+              <pre>curl "https://api.quetzalsidera.me/v1/authToken?email=example@example.com&password=123456"</pre>
+              <p>成功响应示例：</p>
+              <pre>{
+  "status": 0,
+  "message": "Ok",
+  "data": {
+    "userGuid": "4254bf69-a6d2-4602-872d-1d1546b25869",
+    "authToken": "44cc78fb-c2cc-4a37-bab4-72c4023e3ae0",
+    "createTimestamp": 1760614727,
+    "isAdmin": false
+  }
+}</pre>
+              <p class="warning"><strong>注意：</strong>请妥善保存响应中的  <code>userGuid</code>和<code>authToken</code>，它们将在后续步骤中分别作为API请求报文首部中的
+                <code>Authorization</code>和<code>AuthToken</code>。</p>
+
+              <h3>3. 添加好友卡片</h3>
+              <p>使用步骤2中获得的API令牌，调用"添加好友卡片"API将您的卡片内容添加到审核列表。</p>
+              <p>Json请求体</p>
+              <pre>{
+  "link": "https://example.com/friend-profile",  // 目标链接
+  "pictureLink": "https://example.com/images/profile-pic.jpg", // 头像Url
+  "title": {
+    "zhCn": "标题",       //卡片标题 简体中文
+    "enUs": "title",     //卡片标题 英文（美国）
+    "zhHk": "標題",       //卡片标题 繁体中文（香港）
+    "zhTw": "標題",       //卡片标题 繁体中文（台湾）
+    "enGb": "title",     //卡片标题 英文（英国）
+    "jaJp": "タイトル"    //卡片标题 日语
+  },
+  "comment": {
+    "zhCn": "短评",            //卡片短评 简体中文
+    "enUs": "comment",        //卡片短评 英文（美国）
+    "zhHk": "短評",            //卡片短评 繁体中文（香港）
+    "zhTw": "短評",            //卡片短评 繁体中文（台湾）
+    "enGb": "comment",        //卡片短评 英文（英国）
+    "jaJp": "短いコメント"      //卡片短评 日语
+  },
+  "addOn": "额外信息或备注内容"     //描述性备注，非展示信息，仅用于审核
+}</pre>
+              <p><strong>备注: </strong>头像Url请使用能够直接以GET方法获取到的图像文件，否则可能出现无法显示的问题</p>
+              <p>若没有这样的文件，<a href="https://github.com/QuetzalSidera/QuetzalSidera-Me-FrontBackend">源代码</a>中，文件夹<code>QuetzalSidera.Me/wwwroot/img/choices/</code>中也提供了一系列可以选择的图片。若选择该系列的图片，参数<code>pictureLink</code>请填写为
+                <code>img/choices/文件名</code>。例如选择 <code>IMG_5050.PNG</code>，参数<code>pictureLink</code>请填写<code>img/choices/IMG_5050.PNG</code>
+              </p>
+              <p>请求示例(请求体保存为data.json文件)</p>
+              <pre>curl -X POST "https://api.quetzalsidera.me/v1/checkList" \
+     -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     -H "Content-Type: application/json" \
+     -d @data.json</pre>
+
+              <p>成功响应示例：</p>
+              <pre>{
+  "status": 0,
+  "message": "Ok",
+  "data": "9a1a8a8a-c1ca-4257-a4db-152ccda550f9"
+}</pre>
+              <p class="success"><strong>提示：</strong>请保存响应中的 <code>data</code> 字段值（卡片Guid），在下一步中可以用于检查审核状态。</p>
+
+              <h3>4. 检查审核状态</h3>
+              <p>使用步骤3中获得的卡片Guid作为参数，调用"检查卡片状态"API获取卡片审核状态。</p>
+              <p>请求示例：</p>
+              <pre>curl -H "Authorization: 4254bf69-a6d2-4602-872d-1d1546b25869" \
+     -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
+     "https://api.quetzalsidera.me/v1/checkList?cardGuid=933691ea-fdc0-4ea2-b2bc-9621e8b45fd8"</pre>
+
+              <h3>5. 等待展示</h3>
+              <p>审核通过后，卡片将进入数据库。由于前端缓存机制，可能需要最长1小时才能在网站上显示。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-links">
+        <section class="footer-section">
+          <h3 class="footer-section-title">项目</h3>
+          <ul class="footer-links-list">
+            <li><a class="footer-link" href="/introduce">项目介绍</a></li>
+            <li><a class="footer-link" href="/doc">API文档</a></li>
+            <li><a class="footer-link"
+                   href="https://github.com/QuetzalSidera/QuetzalSidera-Me-FrontBackend">源代码</a></li>
+          </ul>
+        </section>
+        <section class="footer-section">
+          <h3 class="footer-section-title">社区</h3>
+          <ul class="footer-links-list">
+            <li><a class="footer-link" href="https://github.com/QuetzalSidera">GitHub</a></li>
+            <li><a class="footer-link" href="mailto:1969154690@qq.com">反馈</a></li>
+          </ul>
+        </section>
+        <section class="footer-section">
+          <h3 class="footer-section-title">资源</h3>
+          <ul class="footer-links-list">
+            <li><a class="footer-link" href="https://www.quetzalsidera.me/">个人博客</a></li>
+            <li><a class="footer-link" href="https://open.qurtzalsidera.me/">开放平台</a></li>
+            <li><a class="footer-link" href="https://chat.quetzalsidera.me">爱丽丝</a></li>
+          </ul>
+        </section>
+      </div>
+      <div class="footer-bottom">
+          <span class="copyright">
+            <a class="footer-link" href="https://beian.miit.gov.cn/#/Integrated/index">
+              © 版权所有 2025 QianShuang | © 人物, 美术及故事情节著作权归NEXON Games所有 | 粤ICP备2025477459号 | 此页面由Github Pages托管
+            </a>
+          </span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // 表单提交处理
+  document.getElementById('friendLinkForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    // 在实际应用中，这里应该发送表单数据到服务器
+    // 这里只是模拟提交成功
+    document.getElementById('successMessage').style.display = 'block';
+
+    // 重置表单
+    this.reset();
+
+    // 滚动到成功消息
+    document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+  });
+</script>
 </body>
 </html>

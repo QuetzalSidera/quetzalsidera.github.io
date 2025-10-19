@@ -1,10 +1,491 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN" dir="ltr">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>项目介绍 - A.L.I.C.E开放平台</title>
+  <link rel="icon" type="image/png" href="../img/Logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* 内容区域调整 */
+    .content-section {
+      max-width: 100%;
+    }
+
+    /* 添加回到顶部按钮 */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      background: var(--primary-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(255, 138, 61, 0.3);
+      transition: all 0.3s;
+      opacity: 0;
+      visibility: hidden;
+      z-index: 100;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+    }
+  </style>
 </head>
 <body>
+<div id="app">
+  <header class="site-header">
+    <div class="navbar home top">
+      <div class="wrapper">
+        <div class="container">
+          <div class="brand">
+            <a class="logo-link" href="/">
+              <img class="logo-image" src="../img/Logo.png" width="200" height="200" alt="Logo">
+              <span>A.L.I.C.E开放平台</span>
+            </a>
+          </div>
+          <div class="nav-content">
+            <div class="nav-content-body">
+              <nav class="nav-menu">
+                <a class="nav-link" href="https://github.com/QuetzalSidera/QuetzalSidera-Me-FrontBackend">源代码</a>
+                <a class="nav-link active" href="/introduce">项目介绍</a>
+                <a class="nav-link" href="/friendLink">添加友链</a>
+                <a class="nav-link" href="/doc">API文档</a>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
+  <main class="content-wrapper">
+    <!-- 内容区域 -->
+    <div class="container" style="padding: 80px 0;">
+      <div class="content-with-sidebar">
+        <!-- 主要内容区域 -->
+        <div class="content-section">
+          <h1 id="ProjectOverview">🌐 QuetzalSidera.Me 项目介绍</h1>
+
+          <h3>项目示意图</h3>
+          <p><img src="../img/服务架构.png" alt="服务架构图" style="max-width: 100%;"></p>
+
+          <h3>技术栈</h3>
+          <ul>
+            <li><strong>前端</strong>：ASP.NET Core Blazor · HTML/CSS · RESTful API · gRPC · Caddy（反向代理）</li>
+            <li><strong>后端</strong>：EF Core · SQLite · gRPC · SMTP</li>
+            <li><strong>部署</strong>：Docker（全容器化部署）</li>
+          </ul>
+
+          <h3>安全与架构</h3>
+          <ul>
+            <li>全站启用 <strong>HTTPS</strong>，证书由 <strong>Caddy + ZeroSSL</strong> 自动化管理。</li>
+            <li>部署仅开放 <strong>80 / 443</strong> 端口，其余端口仅在容器内部可见。</li>
+            <li>所有组件均使用 原生 Blazor + HTML/CSS/C# 构建，<strong>无任何第三方UI框架依赖</strong>。</li>
+          </ul>
+
+          <h2 id="ArchitectureDesign">⚙️ 架构设计理念</h2>
+          <p>传统 Blazor 项目前后端是不分离的，而 <strong>QuetzalSidera.Me</strong> 采用 <strong>前后端分离 + gRPC 通信</strong> 模式，处于以下考虑：</p>
+          <ul>
+            <li><strong>前后端分离部署</strong>：前端可在公网服务器运行，不需要公网IP的第三方服务部署在位于内网的后端，通过 <strong>Frp</strong> 穿透通信。</li>
+            <li><strong>带宽优化</strong>：例如邮件验证码发送由后端完成，避免每次传输完整 HTML 内容。</li>
+            <li><strong>数据隔离</strong>：AI 聊天上下文由后端维护，前端仅传输新消息，降低请求体大小。</li>
+            <li><strong>统一后端服务</strong>：
+              <ul>
+                <li>在 <code>chat.quetzalsidera.me</code> 注册的账号可用于 API 访问。</li>
+                <li><code>api.quetzalsidera.me</code>可实时查询或修改<code>www.quetzalsidera.me</code>内容，实现互通。</li>
+              </ul>
+            </li>
+            <li><strong>P.S.</strong>：最开始是计划做 <strong>物理意义</strong> 上的前后端分离的，前端位于公网服务器上，后端位于校园网内，但最后考虑到校园网环境并不稳定（<del>有稳定过吗</del>），因此将后端项目同样部署于同一个云服务器上，通过容器网络通信。</li>
+          </ul>
+
+          <h2 id="GRPCvsRESTful">🔗 gRPC v.s. RESTful</h2>
+          <p>api.quetzalsidera.me开放API使用RESTful风格:</p>
+          <ul>
+            <li>简单易用，易于编写API文档</li>
+            <li>接口清晰，维护成本低。</li>
+          </ul>
+
+          <p>后端->前端通信使用gRPC:</p>
+          <ul>
+            <li>支持 <strong>服务端流式输出</strong>，便于 AI 回复实时传输。</li>
+            <li>序列化高效，数据包更小。</li>
+            <li><code>.proto</code> 文件可同时生成 <strong>客户端与服务端接口</strong>，开发成本低。</li>
+          </ul>
+
+          <h2 id="ContainerDeployment">🐳 容器化部署</h2>
+          <ul>
+            <li><strong>多阶段构建</strong>：构建镜像与运行镜像分离，减少体积。</li>
+            <li><strong>卷挂载隔离</strong>：用户数据 / 密钥文件 / 运行日志分卷存储，安全可控（<del>日志多了方便直接删日志库</del>）。</li>
+          </ul>
+
+          <pre>#compose.yaml
+volumes:
+  #数据卷
+  chat_data:
+  www_data:
+  api_data:
+  #日志卷
+  log_data:
+  www_log_data:
+  chat_log_data:
+  api_log_data:
+  #密钥卷
+  www_key_data:
+  chat_key_data:
+  api_key_data:
+ #Caddy卷
+  caddy_data:
+  caddy_logs:</pre>
+
+          <ul>
+            <li><strong>最小暴露面</strong>：仅反向代理容器映射物理端口，防止多余端口暴露。</li>
+          </ul>
+
+          <pre>   #Caddy反向代理
+  caddy:
+   #...
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - front-network
+   #...</pre>
+
+          <h2 id="Subprojects">📝 子项目说明</h2>
+
+          <h3 id="MainSite">🌐 www.quetzalsidera.me</h3>
+          <p>个人博客前端，为了搜索引擎优化而采用了服务端渲染，数据均来自后端数据库，并在前端内存中进行缓存（大部分内容缓存1小时，天气组件缓存30分钟），可通过 API 动态修改内容。</p>
+
+          <h3 id="ChatSite">💬 chat.quetzalsidera.me</h3>
+          <p>网页端 AI 聊天项目，AI 角色为《蔚蓝档案》千禧年科技学院游戏开发部机器人 <strong>爱丽丝</strong> 。提示词请参见文件：<code>Backend/ThirdParty/Assistant/AgentPrompt.cs</code></p>
+
+          <h4 id="UserDataSync">1.用户数据如何进行同步</h4>
+          <p>网页端每次加载时，会从浏览器LocalStorage中读取加密的令牌信息，并使用服务端的密钥进行解密，从后端同步历史对话记录网页端为减少不必要的轮询，网页只会在"页面第一次渲染"或"登录成功"后从数据库获取历史记录，若您的同一账号在别的地方有未同步的历史记录，请 <strong>刷新页面</strong> 以同步</p>
+
+          <ul>
+            <li>浏览器 LocalStorage 中保存加密令牌，服务端解密后同步历史对话。</li>
+          </ul>
+
+          <pre>var userGuid = await ProtectedLocalStorage.GetAsync&lt;string&gt;(AppState.UserGuidKey);
+var authToken = await ProtectedLocalStorage.GetAsync&lt;string&gt;(AppState.AuthTokenKey);
+var createTimestamp = await ProtectedLocalStorage.GetAsync&lt;long&gt;(AppState.CreateTimestampKey);
+//...
+await ChatService.GetUserInfoAsync();
+await ChatService.SyncChatHistoryAsync();</pre>
+
+          <ul>
+            <li>无效令牌时自动申请临时用户并存储到LocalStorage（临时用户历史记录在12小时内无更新访问记录即清除）。</li>
+          </ul>
+
+          <pre>await ChatService.GetTempUserAsync();
+try
+{
+    await ProtectedLocalStorage.SetAsync(AppState.AuthTokenKey, ChatService.AuthToken.CookieString);
+    await ProtectedLocalStorage.SetAsync(AppState.UserGuidKey, ChatService.AuthToken.UserGuid);
+    await ProtectedLocalStorage.SetAsync(AppState.CreateTimestampKey, ChatService.AuthToken.CreateTimestamp);
+}
+catch
+{
+    //...
+}</pre>
+
+          <ul>
+            <li>登录/注册后临时会话记录自动合并至正式账户。</li>
+          </ul>
+
+          <pre>public async Task&lt;List&lt;ChatSessionModel&gt;&gt; SyncChatHistoryAsync()
+{
+    //...
+    //非游客账户且本地记录条数不为0
+    if (AuthToken.IsRegistered && LocalHistory.History.Count != 0)
+    {
+        LocalHistory.UserGuid = AuthToken.UserGuid;
+        //合并记录到后端
+        await chatSessionService.MergeHistoryAsync(LocalHistory);
+    }
+    //...
+}</pre>
+
+          <h4 id="UserDataSecurity">2.用户数据安全如何保障</h4>
+          <ul>
+            <li>全站 HTTPS + AntiForgery Cookie防御CSRF/XSRF攻击,以下为源代码中部分内容，更多请参见<a href="https://learn.microsoft.com/zh-cn/aspnet/core/security/anti-request-forgery?view=aspnetcore-9.0">微软官方文档</a>。</li>
+          </ul>
+
+          <pre> // 持久化密钥到指定路径
+ builder.Services.AddDataProtection()
+     .PersistKeysToFileSystem(new DirectoryInfo(path))
+     .SetApplicationName("Chat.QuetzalSidera.Me");
+//...
+  app.UseAntiforgery();</pre>
+
+          <ul>
+            <li>单次会话期间的用户身份鉴别由Blazor框架自动处理，用户长期令牌加密存储于 LocalStorage，密钥仅存在于服务端, 参见<a href="https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.server.protectedbrowserstorage.protectedlocalstorage?view=aspnetcore-9.0">微软官方文档</a>。</li>
+            <li>所有输入输出均进行 HTML 编码防止 XSS, 此部分由Blazor框架自动处理，参见<a href="https://learn.microsoft.com/zh-cn/aspnet/core/security/cross-site-scripting?view=aspnetcore-9.0">微软官方文档</a>。</li>
+            <li>密码采用 <strong>PBKDF2 + 盐</strong> 单向加密存储。</li>
+          </ul>
+
+          <pre> public static string HashPassword(string plainPassword)
+ {
+    // 生成随机盐
+    byte[] salt = GenerateRandomSalt();
+    // 使用 PBKDF2 进行哈希
+    byte[] hash = Pbkdf2(plainPassword, salt, Iterations, HashSize);
+    // 格式：算法$迭代次数$盐$哈希值（全部使用Base64）
+    return $"{AlgorithmIdentifier}{Delimiter}{Iterations}{Delimiter}{Convert.ToBase64String(salt)}{Delimiter}{Convert.ToBase64String(hash)}";
+ }</pre>
+
+          <ul>
+            <li>数据库仅对容器网络开放访问。</li>
+          </ul>
+
+          <h4 id="UserDataIntegrity">3.用户数据完整性如何保障</h4>
+          <p>数据库为每位用户的历史记录分配了同步锁对象， 避免针对同一个账户的并发操作（如多终端登录）导致用户数据不一致</p>
+
+          <pre> public static bool UpdateSession(AuthTokenModel authTokenModel, string sessionGuid, List&lt;ChatMessageModel&gt; messages,
+        string? title = null)
+    {
+        if (!HistoryLocks.ContainsKey(authTokenModel.UserGuid))
+            HistoryLocks.TryAdd(authTokenModel.UserGuid, new Lock());
+        lock (HistoryLocks[authTokenModel.UserGuid])
+        {
+           //数据库操作...
+        }
+    }</pre>
+
+          <p>并且数据入库将在AI流式回复结束后进行，避免阻塞AI回复线程</p>
+
+          <pre> public override async Task PostMessage(ChatMessagePostInfo request, IServerStreamWriter&lt;ChatMessage&gt; responseStream,
+        ServerCallContext context){
+     //...
+     //流式回复
+     await foreach (string responsePiece in deepsSeekClient.SendMessageAsync(messages))
+                {
+                    //...
+                    await responseStream.WriteAsync(new ChatMessageModel()
+                    {
+                        MessageGuid = responseGuid,
+                        Timestamp = responseTimestamp,
+                        Talker = Talker.Agent,
+                        Message = responsePiece,
+                    });
+                }
+
+  //回复结束，将记录插入数据库
+   DatabaseHelper.UpdateSession(authToken, session.SessionGuid, [message, response], title);
+  }</pre>
+
+          <h4 id="StreamingOutput">4.流式输出实现</h4>
+          <p>在每轮对话中，AI的回复是实时生成的(流式)，而不是在回复生成结束后才被整体发送给用户(非流式)。由于第三方API请求均由后端发起，流式输出意味着从第三方服务器->后端->前端->用户页面的全链条都必须是流式的</p>
+
+          <ul>
+            <li><strong>第三方服务器->后端</strong>: DeepSeek API 提供流式输出。</li>
+          </ul>
+
+          <pre>public async IAsyncEnumerable&lt;string&gt; SendMessageAsync(List&lt;ChatMessageModel&gt; messages)
+{
+    var client = new DeepSeek.Core.DeepSeekClient(ApiKey);
+    //...
+    var choices = client.ChatStreamAsync(request, CancellationToken.None);
+    await foreach (var response in choices)
+    {
+        yield return response.Delta?.Content ?? string.Empty;
+    }
+}</pre>
+
+          <ul>
+            <li><strong>后端->前端</strong>: 后端使用 gRPC 服务端流式传输至前端。</li>
+          </ul>
+
+          <pre>public override async Task PostMessage(ChatMessagePostInfo request, IServerStreamWriter&lt;ChatMessage&gt; responseStream,
+        ServerCallContext context)
+{
+    //...
+    await foreach (string responsePiece in deepsSeekClient.SendMessageAsync(messages))
+    {
+        //...
+        await responseStream.WriteAsync(new ChatMessageModel()
+        {
+            MessageGuid = responseGuid,
+            Timestamp = responseTimestamp,
+            Talker = Talker.Agent,
+            Message = responsePiece,
+        });
+    }
+    //...
+}</pre>
+
+          <ul>
+            <li><strong>前端->用户页面</strong>: 前端通过 Blazor 差异化渲染AI回复气泡实现实时显示。</li>
+          </ul>
+
+          <pre>//流式输出
+ private async Task SendMessage(){
+    //...
+    await foreach (var response in responses)
+    {
+        messageModel.Message += response.Message;
+        //调用StateHasChanged触发组件重新渲染
+        StateHasChanged();
+    }
+}</pre>
+
+          <h3 id="APISite">🔐 api.quetzalsidera.me</h3>
+          <p>开放 RESTful API，在<a href="https://chat.quetzalsidera.me">chat.quetzalsidera.me</a>注册的用户可申请 API Token。</p>
+          <p>更多内容参见<a href="https://open.quetzalsidera.me/doc">开放API文档</a></p>
+
+          <h2 id="Highlights">🧩 项目亮点</h2>
+          <ul>
+            <li>💡 原生 Blazor 前端动画</li>
+            <li>🧱 纯容器化架构</li>
+            <li>🔐 HTTPS 全站自动证书 + 全站 AntiForgery Cookie + 加密LocalStorage持久化令牌</li>
+            <li>🧮 数据库线程安全设计</li>
+            <li>🧠 流式输出</li>
+            <li>🔒 完整ICP备案 + 联网备案 + 安全评估</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 回到顶部按钮 -->
+  <a href="#" class="back-to-top" title="回到顶部">
+    <i class="fas fa-arrow-up"></i>
+  </a>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-links">
+        <section class="footer-section">
+          <h3 class="footer-section-title">项目</h3>
+          <ul class="footer-links-list">
+            <li><a class="footer-link" href="/introduce">项目介绍</a></li>
+            <li><a class="footer-link" href="/doc">API文档</a></li>
+            <li><a class="footer-link"
+                   href="https://github.com/QuetzalSidera/QuetzalSidera-Me-FrontBackend">源代码</a></li>
+          </ul>
+        </section>
+        <section class="footer-section">
+          <h3 class="footer-section-title">社区</h3>
+          <ul class="footer-links-list">
+            <li><a class="footer-link" href="https://github.com/QuetzalSidera">GitHub</a></li>
+            <li><a class="footer-link" href="mailto:1969154690@qq.com">反馈</a></li>
+          </ul>
+        </section>
+        <section class="footer-section">
+          <h3 class="footer-section-title">资源</h3>
+          <ul class="footer-links-list">
+            <li><a class="footer-link" href="https://www.quetzalsidera.me/">个人博客</a></li>
+            <li><a class="footer-link" href="https://open.qurtzalsidera.me/">开放平台</a></li>
+            <li><a class="footer-link" href="https://chat.quetzalsidera.me">爱丽丝</a></li>
+          </ul>
+        </section>
+      </div>
+      <div class="footer-bottom">
+          <span class="copyright">
+            <a class="footer-link" href="https://beian.miit.gov.cn/#/Integrated/index">
+              © 版权所有 2025 QianShuang | © 人物, 美术及故事情节著作权归NEXON Games所有 | 粤ICP备2025477459号 | 此页面由Github Pages托管
+            </a>
+          </span>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  // 侧栏导航交互功能
+  document.addEventListener('DOMContentLoaded', function() {
+    const sidebarLinks = document.querySelectorAll('.sidebar-nav-link, .sidebar-nav-sub-link');
+    const sections = document.querySelectorAll('h1[id], h2[id], h3[id], h4[id]');
+    const backToTopBtn = document.querySelector('.back-to-top');
+
+    // 高亮当前活动链接
+    function highlightActiveLink() {
+      let currentSection = '';
+
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 150) {
+          currentSection = section.getAttribute('id');
+        }
+      });
+
+      sidebarLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + currentSection) {
+          link.classList.add('active');
+
+          // 确保父级菜单项也展开
+          let parentItem = link.closest('.sidebar-nav-sub-list');
+          while (parentItem) {
+            const parentLink = parentItem.previousElementSibling;
+            if (parentLink && parentLink.classList.contains('sidebar-nav-link')) {
+              parentLink.classList.add('active');
+            }
+            parentItem = parentItem.parentElement.closest('.sidebar-nav-sub-list');
+          }
+        }
+      });
+    }
+
+    // 显示/隐藏回到顶部按钮
+    function toggleBackToTop() {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    }
+
+    // 监听滚动事件
+    window.addEventListener('scroll', function() {
+      highlightActiveLink();
+      toggleBackToTop();
+    });
+
+    // 点击链接平滑滚动
+    sidebarLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 100,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // 回到顶部按钮功能
+    backToTopBtn.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+
+    // 初始高亮
+    highlightActiveLink();
+    toggleBackToTop();
+  });
+</script>
 </body>
 </html>
