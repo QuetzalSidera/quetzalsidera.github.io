@@ -91,6 +91,8 @@
 
               <h3>3. 添加好友卡片</h3>
               <p>使用步骤2中获得的API令牌，调用"添加好友卡片"API将您的卡片内容添加到审核列表。</p>
+              <p>好友卡片展示效果示例</p>
+              <img src="../img/Example.png" alt="示例" width="800" height="auto"/>
               <p>Json请求体</p>
               <pre>{
   "link": "https://example.com/friend-profile",  // 目标链接
@@ -139,6 +141,19 @@
      -H "AuthToken: 44cc78fb-c2cc-4a37-bab4-72c4023e3ae0" \
      "https://api.quetzalsidera.me/v1/checkList?cardGuid=933691ea-fdc0-4ea2-b2bc-9621e8b45fd8"</pre>
 
+              <p>响应示例</p>
+              <p>正在审核</p>
+              <pre>{
+  "status": 0,
+  "message": "Checking",
+  "data": false
+}</pre>
+              <p>审核已结束</p>
+              <pre>{
+  "status": 0,
+  "message": "Finished",
+  "data": true
+}</pre>
               <h3>5. 等待展示</h3>
               <p>审核通过后，卡片将进入数据库。由于前端缓存机制，可能需要最长1小时才能在网站上显示。</p>
             </div>
