@@ -174,7 +174,7 @@ volumes:
           <p>网页端 AI 聊天项目，AI 角色为《蔚蓝档案》千禧年科技学院游戏开发部机器人 <strong>爱丽丝</strong> 。提示词请参见文件：<code>Backend/ThirdParty/Assistant/AgentPrompt.cs</code></p>
 
           <h4 id="UserDataSync">1.用户数据如何进行同步</h4>
-          <p>网页端每次加载时，会从浏览器LocalStorage中读取加密的令牌信息，并使用服务端的密钥进行解密，从后端同步历史对话记录网页端为减少不必要的轮询，网页只会在"页面第一次渲染"或"登录成功"后从数据库获取历史记录，若您的同一账号在别的地方有未同步的历史记录，请 <strong>刷新页面</strong> 以同步</p>
+          <p>网页端每次加载时，会从浏览器LocalStorage中读取加密的令牌信息，并使用服务端的密钥进行解密，从后端同步历史对话记录网页端。为减少不必要的轮询，网页只会在"页面第一次渲染"或"登录成功"后从数据库获取历史记录，若您的同一账号在别的地方有未同步的历史记录，请 <strong>刷新页面</strong> 以同步</p>
 
           <ul>
             <li>浏览器 LocalStorage 中保存加密令牌，服务端解密后同步历史对话。</li>
@@ -352,7 +352,8 @@ catch
             <li>💡 原生 Blazor 前端动画</li>
             <li>🧱 纯容器化架构</li>
             <li>🔐 HTTPS 全站自动证书 + 全站 AntiForgery Cookie + 加密LocalStorage持久化令牌</li>
-            <li>🧮 数据库线程安全设计</li>
+            <li>🧮 数据库并发安全设计</li>
+            <li>🌐 前端多语言支持</li>
             <li>🧠 流式输出</li>
             <li>🔒 完整ICP备案 + 联网备案 + 安全评估</li>
           </ul>
