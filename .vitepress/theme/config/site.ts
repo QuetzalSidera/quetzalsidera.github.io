@@ -50,7 +50,7 @@ export const blogThemeConfig: BlogThemeConfig = {
     { name: 'Markdown', url: 'https://www.markdownguide.org/' },
   ],
   clientID: 'Ov23lih50I0dC7NzyGSY',
-  repo: 'quetzalsidera.github.io-comment-store',
+  repo: 'quetzalsidera.github.io',
   owner: 'QuetzalSidera',
   admin: ['QuetzalSidera'],
 }
