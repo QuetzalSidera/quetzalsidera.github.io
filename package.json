@@ -1,0 +1,35 @@
+{
+  "name": "quetzalsidera-blog",
+  "version": "0.0.1",
+  "description": "QuetzalSidera 的个人博客，基于 VitePress",
+  "type": "module",
+  "main": ".vitepress/theme/Layout.vue",
+  "author": "QuetzalSidera",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/animejs": "^3.1.12",
+    "@types/md5": "^2.3.5",
+    "@types/node": "^22.13.1",
+    "less": "^4.2.2",
+    "markdown-it-mathjax3": "^4.3.2",
+    "vitepress": "^1.6.3",
+    "vue": "^3.5.13"
+  },
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  },
+  "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fortawesome/free-brands-svg-icons": "^7.2.0",
+    "@fortawesome/free-regular-svg-icons": "^7.2.0",
+    "@fortawesome/free-solid-svg-icons": "^7.2.0",
+    "animejs": "^3.2.2",
+    "gray-matter": "^4.0.3",
+    "markdown-it-custom-attrs": "^1.0.2",
+    "md5": "^2.3.0",
+    "minisearch": "^7.1.1",
+    "normalize.css": "^8.0.1"
+  }
+}
