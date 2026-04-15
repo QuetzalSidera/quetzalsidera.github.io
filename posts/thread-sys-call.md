@@ -1,7 +1,7 @@
 ---
 title: Unix 进程通信入门
 date: 2026-04-09
-tags: [ Unix, C语言, 系统调用, 进程 ]
+tags: [ Unix, 操作系统,C语言, 系统调用, 进程 ]
 pinned: false
 outline:
   - title: 1. 进程的基本属性
@@ -96,13 +96,13 @@ outline:
 head:
   - - meta
     - name: description
-      content: 一篇面向初学者的 Unix C 语言系统调用笔记，整理 fork、wait、waitpid、exec、文件描述符、open/close、dup2 与 pipe 的基本概念和典型例子。
+      content: 一篇面向初学者的 Unix C 语言进程相关系统调用笔记，整理 fork、wait、waitpid、exec、文件描述符、open/close、dup2 与 pipe 的基本概念和典型例子。
   - - meta
     - name: keywords
       content: Unix, C语言, fork, wait, waitpid, exec, pipe, dup2, 文件描述符, 进程通信
 ---
 
-一篇围绕 Unix 进程控制与进程间通信展开的学习笔记，主要整理 `fork`、`wait`、`waitpid`、`exec`、文件描述符、`open` / `close`、
+一篇围绕 Unix 进程控制展开的学习笔记，主要整理 `fork`、`wait`、`waitpid`、`exec`、文件描述符、`open` / `close`、
 `dup2` 与 `pipe` 的基本概念和常见使用方式。
 
 ---
@@ -118,12 +118,10 @@ ls | wc -l
 背后其实就涉及：
 
 - 创建子进程
-- 执行新程序
 - 重定向标准输入输出
+- 执行新程序
 - 用管道在进程之间传递数据
 - 等待子进程结束
-
-这篇笔记按“先建立整体认识，再拆解单个系统调用”的顺序整理。
 
 ---
 

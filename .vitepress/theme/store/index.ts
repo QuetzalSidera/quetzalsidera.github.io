@@ -22,7 +22,7 @@ const state: StoreState = reactive({
   currPage: 1,
   searchDialog: false,
   splashLoading: true,
-  fireworksEnabled: true,
+  fireworksEnabled: false,
   spinePlayerEnabled: true,
   showDropdownMenu: false,
   darkMode: 'system',
