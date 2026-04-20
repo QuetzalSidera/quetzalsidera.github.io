@@ -9,6 +9,7 @@ export function createEmptyPost(): PostData {
     create: 0,
     update: 0,
     tags: [],
+    collection: '',
     wordCount: 0,
     cover: '',
     excerpt: '',

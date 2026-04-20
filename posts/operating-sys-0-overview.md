@@ -3,6 +3,7 @@ title: Unix操作系统1 - 概述
 date: 2026-04-15
 tags: [ 操作系统,Unix, C语言, 系统调用 ,笔记 ]
 pinned: false
+collection: 计科笔记
 outline:
   - title: 操作系统的作用
     slug: 操作系统的作用

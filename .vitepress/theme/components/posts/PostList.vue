@@ -1,40 +1,41 @@
 <template>
   <div class="container posts-content">
     <TransitionGroup class="posts-list" name="list" tag="div">
-      <article class="post" v-for="post in postsList" :key="post.href">
-        <span v-if="post.pinned" class="pinned"></span>
+      <article class="post" v-for="item in listItems" :key="item.href">
+        <span v-if="item.pinned" class="pinned"></span>
         <header class="post-header">
-          <div v-if="post.cover" class="cover-container">
+          <div v-if="item.cover" class="cover-container">
             <img
-              :src="post.cover"
+              :src="item.cover"
               class="cover-image"
-              :alt="post.title + '-cover'"
+              :alt="item.title + '-cover'"
               loading="lazy"
             />
           </div>
           <div class="header-content">
             <div class="title">
-              <div class="title-dot" v-if="!post.cover"></div>
+              <div class="title-dot" v-if="!item.cover"></div>
               <h1 class="name">
-                <a :href="base + post.href">{{ post.title }}</a>
+                <a :href="base + item.href">{{ item.title }}</a>
               </h1>
             </div>
             <div class="meta-info-bar">
               <span class="iconfont icon-time time"></span>
               <div class="time-info">
-                <time datetime="">{{ formatDate(post.create) }}</time>
+                <time datetime="">{{ formatDate(item.create) }}</time>
               </div>
-              <div class="wordcount seperator">约{{ post.wordCount }}字</div>
+              <div class="wordcount seperator">{{ item.metricText }}</div>
             </div>
-            <ul class="tags">
-              <li v-for="tag in post.tags">
-                <a :href="`${base}tags/`" @click="state.currTag = tag"
-                  ><i class="iconfont icon-tag"></i> {{ tag }}</a
-                >
+            <ul v-if="item.tags.length" class="tags">
+              <li v-for="tag in item.tags">
+                <a v-if="item.tagsInteractive" :href="`${base}tags/`" @click="state.currTag = tag">
+                  <i class="iconfont icon-tag"></i> {{ tag }}
+                </a>
+                <span v-else class="tag-label"><i class="iconfont icon-tag"></i> {{ tag }}</span>
               </li>
             </ul>
             <div class="excerpt">
-              <p>{{ post.excerpt }}</p>
+              <p>{{ item.excerpt }}</p>
             </div>
           </div>
         </header>
@@ -98,8 +99,23 @@
 <script setup lang="ts">
 import { useData } from 'vitepress'
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
-import { data as posts } from '../../utils/posts.data'
+import { data as posts, type PostData } from '../../utils/posts.data'
+import { data as collections, type CollectionData } from '../../utils/collections.data'
+import { getPostsByCollection } from '../../utils/currentCollection'
 import { useStore } from '../../store'
+
+type ListItem = {
+  title: string
+  href: string
+  create: number
+  cover?: string
+  excerpt: string
+  tags: string[]
+  tagsInteractive: boolean
+  pinned: boolean
+  metricText: string
+}
+
 const { state } = useStore()
 const { page } = useData()
 const base = useData().site.value.base
@@ -115,12 +131,46 @@ function formatDate(timestamp: number): string {
   }).format(date)
 }
 
-// 文章传值
-const finalPosts = computed(() => {
+function mapPostsToListItems(items: PostData[]): ListItem[] {
+  return items.map((post) => ({
+    title: post.title,
+    href: post.href,
+    create: post.create,
+    cover: post.cover,
+    excerpt: post.excerpt || '',
+    tags: post.tags ?? [],
+    tagsInteractive: true,
+    pinned: !!post.pinned,
+    metricText: `约${post.wordCount}字`,
+  }))
+}
+
+function mapCollectionsToListItems(items: CollectionData[]): ListItem[] {
+  return items.map((collection) => ({
+    title: collection.title,
+    href: collection.href,
+    create: collection.create,
+    cover: collection.cover,
+    excerpt: collection.description || '',
+    tags: collection.tags ?? [],
+    tagsInteractive: false,
+    pinned: false,
+    metricText: `共${getPostsByCollection(collection).length}篇文章`,
+  }))
+}
+
+const finalItems = computed(() => {
   if (page.value.filePath === 'index.md') {
-    return posts
+    return mapPostsToListItems(posts)
   } else if (page.value.filePath === 'tags/index.md') {
-    return state.selectedPosts
+    return mapPostsToListItems(state.selectedPosts)
+  } else if (page.value.filePath === 'collections/index.md') {
+    return mapCollectionsToListItems(collections)
+  } else if (
+    page.value.filePath?.startsWith('collections/') &&
+    page.value.filePath !== 'collections/index.md'
+  ) {
+    return mapPostsToListItems(state.selectedPosts)
   }
   return []
 })
@@ -183,6 +233,11 @@ function goToPage(page: number) {
     url.searchParams.set('tag', tagParam)
   }
 
+  const collectionParam = url.searchParams.get('collection')
+  if (collectionParam) {
+    url.searchParams.set('collection', collectionParam)
+  }
+
   window.history.pushState({}, '', url.toString())
 }
 
@@ -216,14 +271,16 @@ const showRightEllipsis = computed(() => {
   )
 })
 const postsList = computed(() => {
-  return finalPosts.value.slice(
+  return finalItems.value.slice(
     (currPage.value - 1) * pageSize.value,
     currPage.value * pageSize.value,
   )
 })
 const totalPage = computed(() => {
-  return Math.ceil(finalPosts.value.length / pageSize.value) || 1
+  return Math.ceil(finalItems.value.length / pageSize.value) || 1
 })
+
+const listItems = computed(() => postsList.value)
 
 // 监听文章列表
 watch(
@@ -440,18 +497,22 @@ watch(
     padding-top: 6px;
     margin-right: 16px;
 
-    a {
+    a,
+    .tag-label {
       color: var(--font-color-grey);
       padding: 3px 5px;
       color: var(--font-color-gold);
       background-color: var(--btn-background);
       border-radius: 5px;
       transition: all 0.5s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
 
-      &:hover {
-        background-color: var(--btn-hover);
-        color: var(--font-color-gold);
-      }
+    a:hover {
+      background-color: var(--btn-hover);
+      color: var(--font-color-gold);
     }
   }
 }
@@ -586,7 +647,8 @@ watch(
     li {
       padding-top: 4px;
       margin-right: 8px;
-      a {
+      a,
+      .tag-label {
         font-size: 12px;
         padding: 4px 6px;
         .icon-tag {

@@ -3,6 +3,7 @@ title: 关于我
 date: 2026-04-07
 tags: [ 自我介绍, 个人博客 ]
 pinned: true
+collection: 个人档案
 outline:
   - title: 最近在学什么
     slug: 最近在学什么

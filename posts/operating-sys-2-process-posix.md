@@ -3,6 +3,7 @@ title: Unix操作系统3 - POSIX进程API
 date: 2026-04-17
 tags: [ Unix, POSIX, C语言, 系统调用, 进程 ]
 pinned: false
+collection: 计科笔记
 outline:
   - title: POSIX概述
     slug: posix概述
@@ -80,8 +81,6 @@ CPU。
 - 介绍什么是 POSIX，以及它和 Unix 编程的关系
 - 介绍一些后续文章会不断用到的基础 API，例如 `open`、`read`、`write`、`close`
 - 介绍最核心的一组进程 API，例如 `fork`、`exec`、`wait`、`waitpid`
-
-这里暂时不展开线程与进程通信。像 `pthread`、`pipe`、信号、共享内存、socket 这些内容，放到后面的文章中单独整理。
 
 ## POSIX概述<a id=posix概述></a>
 
@@ -723,4 +722,3 @@ open("a.txt", O_CREAT, 0666);
 `wait()`/`waitpid()` 等函数，才能获取子进程的终止状态并释放资源，避免子进程变成僵尸进程。
 
 父进程可以捕捉该信号，并在捕捉函数中完成子进程状态的回收，这样就不用使用`wait`函数去等待了。
-

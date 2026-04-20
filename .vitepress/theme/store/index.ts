@@ -5,6 +5,7 @@ import { createEmptyPost } from './defaults'
 interface StoreState {
   selectedPosts: PostData[]
   currTag: string
+  currCollection: string
   currPost: PostData
   currPage: number
   searchDialog: boolean
@@ -18,6 +19,7 @@ interface StoreState {
 const state: StoreState = reactive({
   selectedPosts: [],
   currTag: '',
+  currCollection: '',
   currPost: createEmptyPost(),
   currPage: 1,
   searchDialog: false,

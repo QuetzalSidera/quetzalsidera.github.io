@@ -3,6 +3,7 @@ title: Unix 进程通信入门
 date: 2026-04-09
 tags: [ Unix, 操作系统,C语言, 系统调用, 进程 ]
 pinned: false
+collection: 计科笔记
 outline:
   - title: 1. 进程的基本属性
     slug: 进程的基本属性

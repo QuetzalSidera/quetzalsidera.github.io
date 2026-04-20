@@ -54,6 +54,7 @@ const handleNavClick = (url: string) => {
   // 点击首页时重置页码
   if (url === '') {
     resetPage()
+    state.currCollection = ''
     state.currPost = createEmptyPost()
   }
 
@@ -61,6 +62,13 @@ const handleNavClick = (url: string) => {
   if (url === 'tags/') {
     resetPage()
     state.currTag = ''
+    state.currCollection = ''
+    state.currPost = createEmptyPost()
+  }
+
+  if (url === 'collections/') {
+    resetPage()
+    state.currCollection = ''
     state.currPost = createEmptyPost()
   }
 }

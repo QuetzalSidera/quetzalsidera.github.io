@@ -17,35 +17,46 @@ const tagData: Record<string, PostData[]> = {}
 const { state } = useStore()
 let handlePopState: (() => void) | null = null
 
-const setTag = (tag: string) => {
-  active.value = tag
-  state.selectedPosts = tagData[tag] || []
-  state.currTag = tag
-
-  const url = new URL(window.location.href)
-
-  // 设置URL的tag参数
-  if (tag && tag.trim() !== '') {
-    url.searchParams.set('tag', tag)
-  } else {
-    url.searchParams.delete('tag')
-  }
-
-  // 清除page参数
-  const pageParam = url.searchParams.get('page')
-  if (!pageParam || pageParam === '1') {
-    url.searchParams.delete('page')
-  }
-
-  window.history.pushState({}, '', url.toString())
-}
-
 for (const post of posts) {
   if (!post.tags) continue
   for (const tag of post.tags) {
     if (!tagData[tag]) tagData[tag] = []
     tagData[tag].push(post)
   }
+}
+
+function getFirstTag() {
+  return Object.keys(tagData)[0] || ''
+}
+
+function resolveTag(tag: string) {
+  if (tag && tagData[tag]) {
+    return tag
+  }
+
+  return getFirstTag()
+}
+
+const setTag = (tag: string, syncUrl = true) => {
+  const nextTag = resolveTag(tag)
+  active.value = nextTag || null
+  state.selectedPosts = nextTag ? tagData[nextTag] || [] : []
+  state.currTag = nextTag
+
+  if (!syncUrl || typeof window === 'undefined') {
+    return
+  }
+
+  const url = new URL(window.location.href)
+
+  if (nextTag) {
+    url.searchParams.set('tag', nextTag)
+  } else {
+    url.searchParams.delete('tag')
+  }
+
+  url.searchParams.delete('page')
+  window.history.pushState({}, '', url.toString())
 }
 
 // 从URL获取tag
@@ -63,7 +74,7 @@ function getTagFromUrl(): string {
 // 挂载组件时获取URL的tag
 onMounted(() => {
   const tagFromUrl = getTagFromUrl()
-  const firstTag = Object.keys(tagData)[0] || ''
+  const firstTag = getFirstTag()
 
   if (tagFromUrl) {
     setTag(tagFromUrl)
@@ -75,8 +86,9 @@ onMounted(() => {
 
   handlePopState = () => {
     const tagFromUrl = getTagFromUrl()
-    if (tagFromUrl !== active.value) {
-      setTag(tagFromUrl)
+    const nextTag = resolveTag(tagFromUrl)
+    if (nextTag !== active.value) {
+      setTag(tagFromUrl, false)
     }
   }
   window.addEventListener('popstate', handlePopState)
@@ -95,7 +107,8 @@ onUnmounted(() => {
   if (handlePopState) {
     window.removeEventListener('popstate', handlePopState)
   }
-  setTag('')
+  active.value = null
+  state.selectedPosts = []
 })
 </script>
 <style scoped lang="less">

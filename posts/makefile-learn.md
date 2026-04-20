@@ -3,6 +3,7 @@ title: Makefile 学习笔记
 date: 2026-04-08
 tags: [ 笔记, Makefile, C语言 ,C++ ]
 pinned: false
+collection: 计科笔记
 outline:
   - title: C/C++ 编译过程
     slug: compile-flow

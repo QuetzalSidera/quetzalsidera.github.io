@@ -34,6 +34,8 @@ import BannerHero from './components/home/BannerHero.vue'
 import WelcomeBox from './components/home/WelcomeBox.vue'
 import PostList from './components/posts/PostList.vue'
 import TagFilter from './components/posts/TagFilter.vue'
+import CollectionsBanner from './components/collections/CollectionsBanner.vue'
+import CollectionBanner from './components/collections/CollectionBanner.vue'
 import PostViewer from './components/posts/PostViewer.vue'
 import PostBanner from './components/posts/PostBanner.vue'
 import NotFound from './components/NotFound.vue'
@@ -46,6 +48,7 @@ import { useData, useRoute } from 'vitepress'
 import { useStore } from './store'
 import { createEmptyPost } from './store/defaults'
 import { resolveCurrentPost } from './utils/currentPost'
+import { resolveCurrentCollection } from './utils/currentCollection'
 
 const { page } = useData()
 const route = useRoute()
@@ -68,6 +71,21 @@ const isTagPage = computed(() => {
   return normalizedRoutePath.value === '/tags/' || normalizedRoutePath.value === '/tags/index.html'
 })
 
+const isCollectionsIndexPage = computed(() => {
+  return (
+    normalizedRoutePath.value === '/collections/' ||
+    normalizedRoutePath.value === '/collections/index.html'
+  )
+})
+
+const isCollectionDetailPage = computed(() => {
+  return (
+    !!page.value.relativePath &&
+    page.value.relativePath.startsWith('collections/') &&
+    page.value.relativePath !== 'collections/index.md'
+  )
+})
+
 const heroComponent = computed(() => {
   if (!state.splashLoading && isHomePage.value) {
     return WelcomeBox
@@ -75,6 +93,14 @@ const heroComponent = computed(() => {
 
   if (isTagPage.value) {
     return TagFilter
+  }
+
+  if (isCollectionsIndexPage.value) {
+    return CollectionsBanner
+  }
+
+  if (isCollectionDetailPage.value) {
+    return CollectionBanner
   }
 
   return PostBanner
@@ -89,26 +115,60 @@ const heroKey = computed(() => {
     return `tag-${currentPageKey.value}`
   }
 
+  if (isCollectionsIndexPage.value) {
+    return `collections-${currentPageKey.value}`
+  }
+
+  if (isCollectionDetailPage.value) {
+    return `collection-banner-${currentPageKey.value}`
+  }
+
   return `banner-${currentPageKey.value}`
 })
 
 const contentComponent = computed(() => {
-  return isHomePage.value || isTagPage.value ? PostList : PostViewer
+  return isHomePage.value || isTagPage.value || isCollectionsIndexPage.value || isCollectionDetailPage.value
+    ? PostList
+    : PostViewer
 })
 
 const contentKey = computed(() => {
-  return isHomePage.value || isTagPage.value
+  return isHomePage.value || isTagPage.value || isCollectionsIndexPage.value || isCollectionDetailPage.value
     ? `post-list-${currentPageKey.value}`
     : `post-viewer-${currentPageKey.value}`
 })
 
 watchEffect(() => {
+  const currentCollection = resolveCurrentCollection({
+    relativePath: page.value.relativePath,
+    routePath: route.path,
+    base,
+  })
+
+  if (isCollectionsIndexPage.value) {
+    state.currCollection = ''
+    state.selectedPosts = []
+    state.currPost = createEmptyPost()
+    return
+  }
+
+  if (isCollectionDetailPage.value) {
+    state.currCollection = currentCollection?.slug ?? ''
+    state.selectedPosts = currentCollection?.posts ?? []
+    state.currPost = createEmptyPost()
+    return
+  }
+
   const currentPost = resolveCurrentPost({
     relativePath: page.value.relativePath,
     routePath: route.path,
     base,
   })
 
+  if (!isTagPage.value) {
+    state.selectedPosts = []
+  }
+  state.currCollection = ''
   state.currPost = currentPost ?? createEmptyPost()
 })
 </script>

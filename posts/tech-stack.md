@@ -2,6 +2,7 @@
 title: 技术栈整理
 date: 2026-04-07
 tags: [ 技术栈, 学习, 开发 ]
+collection: 个人档案
 outline:
   - title: 语言
     slug: 语言

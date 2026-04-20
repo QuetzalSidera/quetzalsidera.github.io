@@ -3,6 +3,7 @@ title: Unix操作系统2 - 进程基础
 date: 2026-04-15
 tags: [ Unix, C语言, 系统调用, 进程,线程 ]
 pinned: false
+collection: 计科笔记
 outline:
   - title: 进程是什么
     slug: 进程是什么

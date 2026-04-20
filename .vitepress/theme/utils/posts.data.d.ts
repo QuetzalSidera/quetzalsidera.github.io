@@ -1,12 +1,13 @@
 export interface PostData {
   id: number
   title: string
-  outline: Outline[];
+  outline: Outline[]
   content: string
   href: string
   create: number
   update: number
   tags?: string[]
+  collection?: string
   wordCount: number
   cover?: string
   excerpt: string
@@ -14,9 +15,9 @@ export interface PostData {
 }
 
 type Outline = {
-  level?: number;
-  title: string;
-  slug: string;
+  level?: number
+  title: string
+  slug: string
 }
 
 export declare const data: PostData[]

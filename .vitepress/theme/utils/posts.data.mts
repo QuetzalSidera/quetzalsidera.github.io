@@ -13,23 +13,23 @@ let id = 1
 interface Post {
   id: number
   title: string
-  outline: Outline[];
+  outline: Outline[]
   content: string
   href: string
   create: number
   update: number
   tags?: string[]
+  collection?: string
   wordCount: number
   cover?: string
   excerpt: string | undefined
   pinned?: boolean
 }
 
-
 type Outline = {
-  level?: number;
-  title: string;
-  slug: string;
+  level?: number
+  title: string
+  slug: string
 }
 
 // Post数据缓存
@@ -69,6 +69,7 @@ function getPost(md: any, file: string, postDir: string): Post {
     create: +(new Date(data.date) || timestamp),
     update: timestamp,
     tags: data.tags,
+    collection: data.collection,
     wordCount: countWords(content),
     cover: data.cover,
     excerpt: excerpt,

@@ -2,6 +2,7 @@
 title: 文化建设
 date: 2026-04-07
 tags: [ 爱好, 阅读, 游戏, 生活 ]
+collection: 个人档案
 outline:
   - title: 游戏
     slug: 游戏

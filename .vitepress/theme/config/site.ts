@@ -29,6 +29,7 @@ export const blogThemeConfig: BlogThemeConfig = {
   menuList: [
     { name: '首页', url: '' },
     { name: '标签', url: 'tags/' },
+    { name: '文集', url: 'collections/' },
   ],
   videoBanner: false,
   name: 'QuetzalSidera',
@@ -54,4 +55,3 @@ export const blogThemeConfig: BlogThemeConfig = {
   owner: 'QuetzalSidera',
   admin: ['QuetzalSidera'],
 }
-
