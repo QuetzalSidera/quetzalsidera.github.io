@@ -3,7 +3,7 @@ title: 操作系统系列行文规范
 date: 2026-04-17
 tags: [ 写作, 规范, 操作系统 ]
 pinned: false
-collection: 计科笔记
+collection: Unix操作系统
 ---
 
 这份文档用于总结操作系统系列文章的行文规范，后续写作时统一参考。

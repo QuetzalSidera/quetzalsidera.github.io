@@ -194,6 +194,7 @@ html {
 }
 
 body {
+  width: 100vw;
   background-image: var(--theme-background-image);
   background-color: var(--general-background-color);
   background-size: cover;
@@ -202,9 +203,10 @@ body {
   background-attachment: fixed;
   overflow-y: scroll;
   overflow-x: hidden;
+  scrollbar-color: var(--color-blue) var(--scrollbar-track-color);
   color: var(--font-color-grey);
   font-family: 'Blueaka', sans-serif;
-  transition: background-image 0.5s, background-color 0.5s;
+  transition: background-color 0.5s, color 0.5s;
 }
 
 :root[theme='light'] {
@@ -225,13 +227,19 @@ a {
 
 ::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
+  background: var(--scrollbar-track-color);
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 3px;
+  width: 6px;
+  border-radius: 999px;
   background: var(--color-blue);
+  background-clip: padding-box;
   cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-color);
 }
 
 @media (max-width: 768px) {

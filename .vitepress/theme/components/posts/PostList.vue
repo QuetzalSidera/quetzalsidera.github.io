@@ -1,50 +1,27 @@
 <template>
   <div class="container posts-content">
+    <div class="posts-toolbar">
+      <label class="sort-control">
+        <span class="sort-label">排序</span>
+        <select v-model="sortMode" @change="handleSortChange">
+          <option value="newest">最近发布</option>
+          <option value="oldest">最早发布</option>
+        </select>
+      </label>
+    </div>
     <TransitionGroup class="posts-list" name="list" tag="div">
-      <article class="post" v-for="item in listItems" :key="item.href">
-        <span v-if="item.pinned" class="pinned"></span>
-        <header class="post-header">
-          <div v-if="item.cover" class="cover-container">
-            <img
-              :src="item.cover"
-              class="cover-image"
-              :alt="item.title + '-cover'"
-              loading="lazy"
-            />
-          </div>
-          <div class="header-content">
-            <div class="title">
-              <div class="title-dot" v-if="!item.cover"></div>
-              <h1 class="name">
-                <a :href="base + item.href">{{ item.title }}</a>
-              </h1>
-            </div>
-            <div class="meta-info-bar">
-              <span class="iconfont icon-time time"></span>
-              <div class="time-info">
-                <time datetime="">{{ formatDate(item.create) }}</time>
-              </div>
-              <div class="wordcount seperator">{{ item.metricText }}</div>
-            </div>
-            <ul v-if="item.tags.length" class="tags">
-              <li v-for="tag in item.tags">
-                <a v-if="item.tagsInteractive" :href="`${base}tags/`" @click="state.currTag = tag">
-                  <i class="iconfont icon-tag"></i> {{ tag }}
-                </a>
-                <span v-else class="tag-label"><i class="iconfont icon-tag"></i> {{ tag }}</span>
-              </li>
-            </ul>
-            <div class="excerpt">
-              <p>{{ item.excerpt }}</p>
-            </div>
-          </div>
-        </header>
-      </article>
+      <PostListCard
+        v-for="item in listItems"
+        :key="item.href"
+        :item="item"
+        :base="base"
+        @select-tag="state.currTag = $event"
+      />
     </TransitionGroup>
     <div v-if="totalPage != 1" class="pagination">
       <button
-        :disabled="currPage === 1"
-        :class="{ hide: currPage === 1 }"
+        :disabled="isActivePage(1)"
+        :class="{ hide: isActivePage(1) }"
         id="up"
         @click="goToPage(currPage - 1)"
       >
@@ -53,7 +30,7 @@
 
       <div class="page-numbers">
         <!-- 第一页 -->
-        <button class="page-number" :class="{ active: currPage === 1 }" @click="goToPage(1)">
+        <button class="page-number" :class="{ active: isActivePage(1) }" @click="goToPage(1)">
           1
         </button>
 
@@ -65,7 +42,7 @@
           v-for="page in visiblePageNumbers"
           :key="page"
           class="page-number"
-          :class="{ active: currPage === page }"
+          :class="{ active: isActivePage(page) }"
           @click="goToPage(page)"
         >
           {{ page }}
@@ -78,7 +55,7 @@
         <button
           v-if="totalPage > 1"
           class="page-number"
-          :class="{ active: currPage === totalPage }"
+          :class="{ active: isActivePage(totalPage) }"
           @click="goToPage(totalPage)"
         >
           {{ totalPage }}
@@ -98,40 +75,21 @@
 </template>
 <script setup lang="ts">
 import { useData } from 'vitepress'
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, toRef, watch } from 'vue'
 import { data as posts, type PostData } from '../../utils/posts.data'
-import { data as collections, type CollectionData } from '../../utils/collections.data'
+import { type CollectionData, data as collections } from '../../utils/collections.data'
 import { getPostsByCollection } from '../../utils/currentCollection'
 import { useStore } from '../../store'
-
-type ListItem = {
-  title: string
-  href: string
-  create: number
-  cover?: string
-  excerpt: string
-  tags: string[]
-  tagsInteractive: boolean
-  pinned: boolean
-  metricText: string
-}
+import PostListCard from './PostListCard.vue'
+import type { PostListItem } from '../../types/post-list'
 
 const { state } = useStore()
 const { page } = useData()
 const base = useData().site.value.base
 let handlePopState: (() => void) | null = null
+const sortMode = ref<'newest' | 'oldest'>('newest')
 
-// 日期格式化
-function formatDate(timestamp: number): string {
-  const date = new Date(timestamp)
-  return new Intl.DateTimeFormat('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(date)
-}
-
-function mapPostsToListItems(items: PostData[]): ListItem[] {
+function mapPostsToListItems(items: PostData[]): PostListItem[] {
   return items.map((post) => ({
     title: post.title,
     href: post.href,
@@ -145,7 +103,7 @@ function mapPostsToListItems(items: PostData[]): ListItem[] {
   }))
 }
 
-function mapCollectionsToListItems(items: CollectionData[]): ListItem[] {
+function mapCollectionsToListItems(items: CollectionData[]): PostListItem[] {
   return items.map((collection) => ({
     title: collection.title,
     href: collection.href,
@@ -175,14 +133,44 @@ const finalItems = computed(() => {
   return []
 })
 
+function compareTitles(a: PostListItem, b: PostListItem) {
+  return a.title.localeCompare(b.title, 'zh-CN')
+}
+
+function sortItems(items: PostListItem[]) {
+  if (sortMode.value === 'default') {
+    return items
+  }
+
+  return [...items].sort((a, b) => {
+    if (a.pinned !== b.pinned) {
+      return a.pinned ? -1 : 1
+    }
+
+    if (sortMode.value === 'newest') {
+      return b.create - a.create
+    }
+
+    if (sortMode.value === 'oldest') {
+      return a.create - b.create
+    }
+
+    if (sortMode.value === 'title-asc') {
+      return compareTitles(a, b)
+    }
+
+    return compareTitles(b, a)
+  })
+}
+
 // 文章列表长度
 const pageSize = ref(5)
 
-// 使用store中的currPage
-const currPage = computed({
-  get: () => state.currPage,
-  set: (value) => (state.currPage = value),
-})
+const currPage = toRef(state, 'currPage')
+
+function isActivePage(pageNumber: number) {
+  return currPage.value === pageNumber
+}
 
 onMounted(() => {
   updatePageFromUrl()
@@ -197,6 +185,7 @@ onUnmounted(() => {
     window.removeEventListener('popstate', handlePopState)
   }
 })
+
 function updatePageFromUrl() {
   const urlParams = new URLSearchParams(window.location.search)
   const pageParam = urlParams.get('page')
@@ -270,17 +259,28 @@ const showRightEllipsis = computed(() => {
     visiblePageNumbers.value[visiblePageNumbers.value.length - 1] < totalPage.value - 1
   )
 })
+const sortedItems = computed(() => {
+  return sortItems(finalItems.value)
+})
+
 const postsList = computed(() => {
-  return finalItems.value.slice(
+  return sortedItems.value.slice(
     (currPage.value - 1) * pageSize.value,
     currPage.value * pageSize.value,
   )
 })
 const totalPage = computed(() => {
-  return Math.ceil(finalItems.value.length / pageSize.value) || 1
+  return Math.ceil(sortedItems.value.length / pageSize.value) || 1
 })
 
 const listItems = computed(() => postsList.value)
+
+function handleSortChange() {
+  currPage.value = 1
+  const url = new URL(window.location.href)
+  url.searchParams.delete('page')
+  window.history.replaceState({}, '', url.toString())
+}
 
 // 监听文章列表
 watch(
@@ -324,197 +324,43 @@ watch(
   left: 0;
 }
 
-.posts-content {
-  article,
-  h1,
-  ul {
-    margin: 0;
-    padding: 0;
-  }
-}
-
 .posts-list {
   position: relative;
   overflow-wrap: break-word;
-
-  .post {
-    display: flex;
-    flex-direction: column;
-    margin: 0 0 50px 0;
-    padding-bottom: 16px;
-    background-color: var(--foreground-color);
-    border-radius: 32px;
-    border-left: solid 16px var(--pot-border-left);
-    background-image: var(--deco1);
-    background-size: contain;
-    background-position: right;
-    background-repeat: no-repeat;
-    box-shadow: 0px 0px 8px rgb(var(--blue-shadow-color), 0.8);
-    transition: all 0.5s;
-    .pinned {
-      position: absolute;
-      width: 42px;
-      height: 42px;
-      top: -8px;
-      right: -8px;
-      border-radius: 50px;
-      background: var(--icon-pinned) no-repeat;
-      background-size: contain;
-      box-shadow: 0 0 6px rgba(var(--blue-shadow-color), 0.65);
-    }
-
-    .post-header {
-      display: flex;
-      gap: 24px;
-      padding: 32px 40px 0;
-      // flex-direction: row-reverse;
-      position: relative;
-      align-items: stretch;
-
-      .cover-container {
-        flex: 0 0 180px;
-        height: 140px;
-        border-radius: 12px;
-        overflow: hidden;
-        position: relative;
-        margin-left: -8px;
-        margin-bottom: 15px;
-        align-self: center;
-        .cover-image {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-          &:hover {
-            transform: scale(1.05);
-          }
-        }
-      }
-
-      .header-content {
-        flex: 1;
-        min-width: 0;
-        flex-direction: column;
-        .title {
-          position: relative;
-          margin-bottom: 8px;
-        }
-        .excerpt {
-          flex: 1;
-          display: flex;
-          align-items: flex-end;
-        }
-      }
-    }
-
-    @media (max-width: 768px) {
-      .post-header {
-        flex-direction: column;
-        gap: 16px;
-        padding: 24px 20px 0;
-
-        .cover-container {
-          flex: none;
-          width: 100%;
-          height: 240px;
-          margin-left: 0;
-        }
-      }
-    }
-  }
 }
 
-.post-header {
-  padding: 32px 40px 0;
-
-  .title {
-    position: relative;
-    margin-bottom: 8px;
-
-    .title-dot {
-      width: 4px;
-      height: 20px;
-      position: absolute;
-      left: -16px;
-      top: 9.5px;
-      background: var(--pot-border-left);
-      border-radius: 2px;
-      transition: background 0.5s;
-    }
-
-    .name {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    a {
-      color: var(--font-color-grey);
-      transition: text-shadow 0.5s, color 0.5s;
-
-      &:hover {
-        text-shadow: 0 0 3px var(--font-color-grey);
-      }
-    }
-  }
-
-  .meta-info-bar {
-    display: flex;
-    margin-bottom: 7px;
-    opacity: 0.75;
-
-    .time {
-      font-size: 13px;
-      color: var(--font-color-grey);
-      margin: 3px 2px 0 0;
-      font-weight: bold;
-    }
-
-    .seperator::before {
-      content: '';
-      display: inline-block;
-      border-radius: 50%;
-      height: 4px;
-      width: 4px;
-      vertical-align: middle;
-      background-color: var(--font-color-grey);
-      margin: 0 16px;
-    }
-  }
-}
-
-.tags {
+.posts-toolbar {
   display: flex;
+  justify-content: flex-end;
+  margin: 0 0 20px;
+}
+
+.sort-control {
+  display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
-  padding: 0;
-  margin-bottom: 6px;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: solid 2px var(--foreground-color);
+  background: color-mix(in srgb, var(--foreground-color) 88%, transparent);
+  box-shadow: 0 0 8px rgb(var(--blue-shadow-color), 0.25);
+  backdrop-filter: var(--blur-val);
+}
 
-  li {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 6px;
-    margin-right: 16px;
+.sort-label {
+  color: var(--font-color-grey);
+  font-size: 14px;
+  font-weight: 600;
+}
 
-    a,
-    .tag-label {
-      color: var(--font-color-grey);
-      padding: 3px 5px;
-      color: var(--font-color-gold);
-      background-color: var(--btn-background);
-      border-radius: 5px;
-      transition: all 0.5s;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    a:hover {
-      background-color: var(--btn-hover);
-      color: var(--font-color-gold);
-    }
-  }
+.sort-control select {
+  min-width: 132px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--font-color-grey);
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .pagination {
@@ -604,74 +450,29 @@ watch(
 }
 
 @media (max-width: 768px) {
-  .posts-list {
-    .post {
-      margin: 0 8px 30px 8px;
-      background-size: cover;
-      border-left: solid 1.5vh var(--pot-border-left);
-      .pinned {
-        width: 27px;
-        height: 27px;
-        top: -2px;
-        right: 12px;
-      }
-    }
+  .posts-toolbar {
+    margin: 0 8px 16px;
   }
 
-  .post-header {
-    padding: 20px 35px 0;
-    .name {
-      font-size: 24px;
-    }
-    .title {
-      margin-bottom: 6px;
+  .sort-control {
+    width: 100%;
+    justify-content: space-between;
+    padding: 8px 12px;
+  }
 
-      .title-dot {
-        height: 18px;
-        top: 6px;
-      }
-    }
-    .meta-info-bar {
-      margin-bottom: 4px;
-      font-size: 12px;
-      .time {
-        font-size: 8px !important;
-        margin: 3px 2px 0 0 !important;
-      }
-      .seperator::before {
-        margin: 0 8px;
-      }
-    }
-  }
-  .tags {
-    li {
-      padding-top: 4px;
-      margin-right: 8px;
-      a,
-      .tag-label {
-        font-size: 12px;
-        padding: 4px 6px;
-        .icon-tag {
-          font-size: 12px;
-        }
-      }
-    }
-  }
-  .excerpt {
-    padding: 0;
-    margin-bottom: 4px;
-    font-size: 12px;
-  }
   .pagination {
     margin-top: 32px;
+
     .icon-arrow {
       font-size: 32px;
     }
+
     .page-number {
       width: 28px;
       height: 28px;
       font-size: 14px;
     }
+
     .page-numbers {
       gap: 4px;
     }

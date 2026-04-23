@@ -1,9 +1,9 @@
 ---
-title: Makefile 学习笔记
+title: Makefile 笔记
 date: 2026-04-08
-tags: [ 笔记, Makefile, C语言 ,C++ ]
+tags: [ Makefile, C ,C++ ]
 pinned: false
-collection: 计科笔记
+collection: C/C++复习
 outline:
   - title: C/C++ 编译过程
     slug: compile-flow

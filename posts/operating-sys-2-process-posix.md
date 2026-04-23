@@ -1,9 +1,9 @@
 ---
-title: Unix操作系统3 - POSIX进程API
-date: 2026-04-17
-tags: [ Unix, POSIX, C语言, 系统调用, 进程 ]
+title: 1.1.A - POSIX进程API
+date: 2026-04-17T00:00:00
+tags: [ Unix, C,POSIX, 操作系统 ]
 pinned: false
-collection: 计科笔记
+collection: Unix操作系统
 outline:
   - title: POSIX概述
     slug: posix概述
@@ -71,8 +71,7 @@ head:
 
 ---
 
-在 [进程基础](./operating-sys-1-process.md) 里，已经从操作系统视角介绍了进程是什么、PCB 如何组织进程、以及调度如何让多个进程共享
-CPU。
+在 [进程基础](./operating-sys-1-process.md) 里，已经从操作系统视角介绍了进程是什么、PCB 如何组织进程。
 
 接下来就可以从程序员视角往下走一步：当我们在 Unix 系统上写 C 程序时，究竟通过哪些接口去“碰到”这些操作系统概念？
 
@@ -86,7 +85,7 @@ CPU。
 
 ### 1. 什么是 POSIX<a id=什么是-posix></a>
 
-[Wiki]("https://en.wikipedia.org/wiki/POSIX")
+[Wiki](https://en.wikipedia.org/wiki/POSIX)
 
 POSIX是IEEE为要在各种UNIX操作系统上运行的软件而定义的一系列API标准的总称，它的名字来自 Portable Operating System
 Interface of UNIX，其正式称呼为IEEE 1003，而国际标准名称为ISO/IEC 9945。
@@ -714,7 +713,7 @@ open("a.txt", O_CREAT, 0666);
 
 ### 2. SIGCHLD <a id=SIGCHLD></a>
 
-参见[IPC通信](./operating-sys-5-ipc.md)
+参见[IPC通信](./operating-sys-8-ipc-posix.md)
 
 `SIGCHLD` 信号是指子进程终止或暂停时，内核向其父进程发送的信号，用于通知父进程处理子进程的状态变化。
 

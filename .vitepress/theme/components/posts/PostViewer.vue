@@ -538,14 +538,6 @@ const themeConfig = useBlogTheme()
       box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
     }
 
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 30px rgba(91, 166, 214, 0.2);
-
-      html[theme='dark'] & {
-        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
-      }
-    }
 
     h3 {
       margin: 14px 0 8px;
@@ -585,16 +577,31 @@ const themeConfig = useBlogTheme()
     border-radius: 16px;
     text-decoration: none;
     overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
 
     &:hover img {
       transform: scale(1.03);
       filter: var(--img-brightness) saturate(1.05);
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 30px rgba(91, 166, 214, 0.2);
+
+      html[theme='dark'] & {
+        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+      }
+
     }
   }
 
   .media-link img {
     transition: transform 0.25s ease, filter 0.25s ease;
     margin: 0;
+  }
+
+  .media-title {
+    text-align: center;
   }
 
   /**

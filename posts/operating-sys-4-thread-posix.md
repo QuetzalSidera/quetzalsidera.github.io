@@ -1,9 +1,9 @@
 ---
-title: Unix操作系统5 - POSIX线程API
-date: 2026-04-20
-tags: [ Unix, POSIX, C语言, 线程, Pthreads ]
+title: 1.2.A - POSIX线程API
+date: 2026-04-20T00:00:00
+tags: [ Unix, C,POSIX, 操作系统 ]
 pinned: false
-collection: 计科笔记
+collection: Unix操作系统
 outline:
   - title: Pthreads概述
     slug: pthreads概述
@@ -13,19 +13,19 @@ outline:
   - title: 2. 头文件与返回值约定
     slug: 头文件与返回值约定
     level: 1
-  - title: 3. 线程生命周期与 API 对应
-    slug: 线程生命周期与-api-对应
+  - title: 3. 线程生命周期
+    slug: 线程生命周期
     level: 1
 
   - title: 线程建立与退出
     slug: 线程建立与退出
-  - title: 1. pthread_create
+  - title: 1. 创建 - pthread_create
     slug: pthread_create
     level: 1
-  - title: 2. 线程函数、参数与返回值
+  - title: 2. 执行 - 线程函数、参数与返回值
     slug: 线程函数参数与返回值
     level: 1
-  - title: 3. pthread_exit 与 return
+  - title: 3. 退出 - pthread_exit 与 return
     slug: pthread_exit-与-return
     level: 1
   - title: 4. 示例：创建一个线程并等待结束
@@ -130,7 +130,7 @@ if (ret != 0) {
 
 因此，Pthreads 代码里判断错误时，通常检查“返回值是否为 0”，而不是检查“是否等于 -1”。
 
-### 3. 线程生命周期与 API 对应<a id=线程生命周期与-api-对应></a>
+### 3. 线程生命周期<a id=线程生命周期></a>
 
 从使用角度看，一个线程的生命周期里，至少有 3 个彼此不同的问题：
 
@@ -718,5 +718,3 @@ int main(void) {
 pthread_create -> 线程运行 -> return / pthread_exit / pthread_cancel
                               -> pthread_join 回收 或 pthread_detach 自动回收
 ```
-
-后面的线程相关文章，可以在这篇基础上继续进入互斥锁、条件变量、线程间通信和并发控制问题。
