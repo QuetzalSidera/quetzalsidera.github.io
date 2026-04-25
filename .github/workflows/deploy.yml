@@ -5,7 +5,7 @@ name: Deploy VitePress site to Pages
 on:
   # main 分支推送时自动部署
   push:
-    branches: [main]
+    branches: [ main ]
 
   # 允许手动触发
   workflow_dispatch:
@@ -52,6 +52,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    using: 'node24'
     needs: build
     runs-on: ubuntu-latest
     name: Deploy

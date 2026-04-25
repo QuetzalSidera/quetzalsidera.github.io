@@ -19,36 +19,51 @@ outline:
 
   - title: POSIX共享内存
     slug: POSIX共享内存
-  - title: 1. shm_open 与 ftruncate
-    slug: shm_open-与-ftruncate
+  - title: 1. shm_open
+    slug: shm_open
     level: 1
-  - title: 2. mmap、munmap 与 shm_unlink
-    slug: mmapmunmap-与-shm_unlink
+  - title: 2. ftruncate
+    slug: ftruncate
     level: 1
-  - title: 3. 共享内存与同步的边界
+  - title: 3. mmap、munmap
+    slug: mmap-munmap
+    level: 1
+  - title: 4. shm_unlink
+    slug: shm_unlink
+    level: 1
+  - title: 5. 生命周期总览
+    slug: 共享内存的生命周期总览
+    level: 1
+  - title: 6. 共享内存与同步的边界
     slug: 共享内存与同步的边界
     level: 1
-  - title: 4. 示例：生产者写，消费者读
+  - title: 7. 示例：生产者写，消费者读
     slug: 示例生产者写消费者读
     level: 1
 
-  - title: 管道与FIFO
-    slug: 管道与FIFO
+  - title: POSIX管道
+    slug: POSIX管道
   - title: 1. pipe：匿名管道
     slug: pipe匿名管道
     level: 1
-  - title: 2. 示例：fork + pipe
-    slug: 示例fork-pipe
+  - title: 2. 匿名管道示例
+    slug: 匿名管道示例
     level: 1
   - title: 3. mkfifo：命名管道
     slug: mkfifo命名管道
     level: 1
-  - title: 4. FIFO 与匿名管道的区别
-    slug: FIFO-与匿名管道的区别
+  - title: 4. 命名管道示例
+    slug: 命名管道示例
+    level: 1
+  - title: 5. 生命周期总览
+    slug: 管道的生命周期总览
+    level: 1
+  - title: 6. 命名管道与匿名管道的区别
+    slug: 命名管道-与-匿名管道的区别
     level: 1
 
-  - title: 信号
-    slug: 信号
+  - title: POSIX信号
+    slug: POSIX信号
   - title: 1. 信号作为进程间通知
     slug: 信号作为进程间通知
     level: 1
@@ -104,8 +119,6 @@ head:
 | 共享内存 | 多个进程把同一段内存映射到各自地址空间，再直接读写这段内存 | 建立后访问开销低          |
 | 消息传递 | 进程通过内核维护的通信通道交换消息或字节流         | 可能使用中断，通信开销比共享内存高 |
 
-这两种模型的差异，不在于“谁更高级”，而在于责任边界。
-
 共享内存只负责把同一段数据暴露给多个进程；至于何时写、何时读、谁先谁后、是否会并发覆盖，都需要通信双方协商。消息传递则把“通道”交给内核管理，进程通过接口完成通信，数据边界更明确，但内核介入更多。
 
 ### 2. 消息传递的三个维度<a id=消息传递的三个维度></a>
@@ -128,32 +141,44 @@ head:
 
 本篇聚焦下面四类 POSIX/Unix 常见 IPC：
 
-| 类型     | 典型 API                                      | 适合什么场景        |
+| 类型     | 典型 API                                      | 适合场景          |
 |--------|---------------------------------------------|---------------|
 | 共享内存   | `shm_open`、`ftruncate`、`mmap`               | 大块数据交换、低开销共享  |
 | 匿名管道   | `pipe`、`read`、`write`                       | 亲缘进程之间的单向字节流  |
 | 命名管道   | `mkfifo`、`open`、`read`、`write`              | 不相关进程之间的本地字节流 |
+| signal | `kill`、`sigaction`、`pause`                  | 相关联进程间的通信     |
 | socket | `socket`、`bind`、`listen`、`accept`、`connect` | 本地或网络上的双向通信   |
 
 POSIX 还提供消息队列等 IPC 机制，但本篇先聚焦与教材主线最贴近、同时在 Unix 编程里最常见的这四类接口。
 
 ## POSIX共享内存<a id=POSIX共享内存></a>
 
-### 1. shm_open 与 ftruncate<a id=shm_open-与-ftruncate></a>
+共享内存涉及三层概念：
 
-POSIX 共享内存对象通过 `shm_open` 创建或打开：
+| 层级     | 对象                   | 说明                    |
+|--------|----------------------|-----------------------|
+| 内核对象   | shm object           | 由 `shm_open` 创建，系统级唯一 |
+| 进程fd表项 | file descriptor (fd) | 每个进程独立持有              |
+| 虚拟内存   | mmap 映射              | 每个进程各自映射              |
+
+### 1. shm_open <a id=shm_open></a>
+
+`shm_open` 在内核中创建或打开一个共享内存对象，并返回文件描述符：
 
 ```c
+#include <sys/mman.h>
 int shm_open(const char *name, int oflag, mode_t mode);
 ```
 
-几个关键点如下：
+`shm_open` 的参数与返回值如下：
 
-| 参数      | 含义                                 |
-|---------|------------------------------------|
-| `name`  | 共享内存对象名，通常写成 `"/os_demo_shm"` 这种形式 |
-| `oflag` | 打开方式，例如 `O_CREAT\| O_RDWR`         |
-| `mode`  | 权限位，例如 `0666`                      |
+| 项       | 含义                              |
+|---------|---------------------------------|
+| `name`  | 共享内存对象名，通常写成形如 `"/os_demo_shm"` |
+| `oflag` | 打开方式，例如 `O_CREAT                | O_RDWR` |
+| `mode`  | 权限位，例如 `0666`                   |
+| 成功返回    | 非负文件描述符                         |
+| 失败返回    | `-1`，并设置 `errno`                |
 
 `shm_open` 成功后返回的是一个文件描述符。它还不是可直接使用的“共享区”，只是一个可被映射的内核对象。
 
@@ -168,35 +193,94 @@ int shm_open(const char *name, int oflag, mode_t mode);
 也就是说，共享内存不是“脱离文件描述符体系的特殊内存”；它更接近一个可被 `mmap` 的内核对象。后面的管道虽然不能 `mmap`
 ，但同样通过文件描述符进入用户态。
 
-创建之后，通常要立刻调用 `ftruncate` 设定大小：
+### 2. ftruncate <a id=ftruncate></a>
+
+`shm object`创建之后，`ftruncate`给`shm object`分配空间
 
 ```c
+#include <unistd.h>
 int ftruncate(int fd, off_t length);
 ```
 
+`ftruncate` 的参数与返回值如下：
+
+| 项        | 含义               |
+|----------|------------------|
+| `fd`     | 目标对象对应的文件描述符     |
+| `length` | 目标大小，单位为字节       |
+| 成功返回     | `0`              |
+| 失败返回     | `-1`，并设置 `errno` |
+
 如果不先设定对象大小，后续 `mmap` 就没有明确的映射范围。
 
-### 2. mmap、munmap 与 shm_unlink<a id=mmapmunmap-与-shm_unlink></a>
+### 3. mmap、munmap<a id=mmap-munmap></a>
 
-共享内存真正进入进程地址空间，要靠 `mmap`：
+`shm object`创建之后，需要使用`mmap`映射到进程地址空间：
 
 ```c
+#include <sys/mman.h>
 void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);
 int munmap(void *addr, size_t length);
+```
+
+`mmap` 的参数与返回值如下：
+
+| 项        | 含义                                 |
+|----------|------------------------------------|
+| `addr`   | 期望映射地址；通常传 `NULL`，交给内核选择           |
+| `length` | 映射长度，单位为字节                         |
+| `prot`   | 映射权限，例如 `PROT_READ`、`PROT_WRITE`   |
+| `flags`  | 映射方式，例如 `MAP_SHARED`、`MAP_PRIVATE` |
+| `fd`     | 被映射对象对应的文件描述符                      |
+| `offset` | 从对象哪个偏移开始映射；通常为 `0`                |
+| 成功返回     | 映射起始地址                             |
+| 失败返回     | `MAP_FAILED`，并设置 `errno`           |
+
+值得注意的是，当`flags`为`MAP_PRIVATE`时，内存是***写时复制***的， `MAP_SHARED`时内存才是真共享的。
+
+`munmap` 的参数与返回值如下：
+
+| 项        | 含义                      |
+|----------|-------------------------|
+| `addr`   | 映射起始地址，通常就是 `mmap` 的返回值 |
+| `length` | 要解除的映射长度                |
+| 成功返回     | `0`                     |
+| 失败返回     | `-1`，并设置 `errno`        |
+
+### 4. shm_unlink<a id=shm_unlink></a>
+
+`shm_unlink()`的作用是删除共享内存对象的“名字”，让它不再能通过路径访问，但不会立刻销毁内存。
+
+也就是说，`shm_unlink` 不会关闭fd，解除mmap或影响已经映射的进程。等最后一个引用消失后，内核才真正回收`shm object`。
+
+```c
+#include <sys/mman.h>
 int shm_unlink(const char *name);
 ```
 
-最常见的组合是：
+`shm_unlink` 的参数与返回值如下：
 
-| 调用                                                     | 作用                 |
-|--------------------------------------------------------|--------------------|
-| `mmap(..., PROT_READ \|  PROT_WRITE, MAP_SHARED, ...)` | 把共享内存对象映射到当前进程地址空间 |
-| `munmap`                                               | 解除当前进程中的映射         |
-| `shm_unlink`                                           | 删除共享内存对象的名字        |
+| 项      | 含义               |
+|--------|------------------|
+| `name` | 共享内存对象名          |
+| 成功返回   | `0`              |
+| 失败返回   | `-1`，并设置 `errno` |
 
-这里有一个容易混淆的点：`shm_unlink` 删除的是“名字”，不是立刻把对象从所有进程中抹掉。只要还有进程持有打开的文件描述符或映射，该对象仍会继续存在；等最后一个引用消失后，内核才真正回收它。
+### 5. 生命周期总览 <a id=共享内存的生命周期总览></a>
 
-### 3. 共享内存与同步的边界<a id=共享内存与同步的边界></a>
+| 阶段 | 系统调用         | 作用对象              | 作用范围    | 是否必须每进程执行        | 说明                            |
+|----|--------------|-------------------|---------|------------------|-------------------------------|
+| 1  | `shm_open`   | `shm object` + fd | 系统 + 进程 | 创建者执行创建，后续进程直接打开 | 创建/打开共享内存对象，返回 fd             |
+| 2  | `ftruncate`  | `shm object`      | 系统      | 创建者执行一次          | 设置共享内存大小                      |
+| 3  | `mmap`       | 虚拟内存映射            | 进程      | 是                | 将`shm object`映射到当前进程地址空间，返回指针 |
+| 4  | 读写访问         | 映射内存              | 进程      | 是                | 直接访问共享内存                      |
+| 5  | `munmap`     | 虚拟内存映射            | 进程      | 是                | 传入指针解除当前进程映射                  |
+| 6  | `close`      | 文件描述符 fd          | 进程      | 是                | 关闭当前进程 fd                     |
+| 7  | `shm_unlink` | `shm object`名字    | 系统      | 创建者执行一次          | 删除名字入口，禁止新 shm_open           |
+
+值得注意的是，只有当`shm_unlink`已调用，所有进程 `munmap`、`close(fd)`后，系统才会释放`shm object`。
+
+### 6. 共享内存与同步的边界<a id=共享内存与同步的边界></a>
 
 共享内存只解决“多个进程能看到同一段数据”，不解决“多个进程如何正确地访问这段数据”。
 
@@ -209,7 +293,7 @@ int shm_unlink(const char *name);
 从分工上看，`shm_open + mmap` 负责共享，`semaphore / mutex`
 负责协调。这一点与上一章的 [POSIX同步 API](./operating-sys-7-synchronize-posix.md) 是衔接关系，而非重复关系。
 
-### 4. 示例：生产者写，消费者读<a id=示例生产者写消费者读></a>
+### 7. 示例：生产者写，消费者读<a id=示例生产者写消费者读></a>
 
 下面给出一个示例：父进程创建共享内存，再 `fork`，子进程读取，父进程写入。
 
@@ -224,43 +308,82 @@ int shm_unlink(const char *name);
 #include <unistd.h>
 
 int main(void) {
-    const char *name = "/os_demo_shm";
+    const char* sem_name = "/tmp/sem";
+    sem_t* sem = sem_open(sem_name, O_CREAT, 0666, 0);
+    
+    const char *name = "/tmp/os_demo_shm";
     const size_t size = 4096;
 
+    //此处 O_RDWR 是必须的，否则无权限读写
     int fd = shm_open(name, O_CREAT | O_RDWR, 0666);
     ftruncate(fd, size);
 
     char *ptr = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    //fork复制了进程的地址空间，因此只需要在父进程fork之前mmap
     pid_t pid = fork();
 
     if (pid == 0) {
-        sleep(1);
+        sem_wait(sem);
         printf("child read: %s\n", ptr);
+        
+        //每个进程需要各自munmap，close以删除引用
         munmap(ptr, size);
         close(fd);
-        _exit(0);
+        
+        exit(0);
     }
 
     snprintf(ptr, size, "hello from parent");
-    wait(NULL);
+    sem_post(sem);
+    
     munmap(ptr, size);
     close(fd);
+    
+    //shm_unlink只需调用一次
     shm_unlink(name);
     return 0;
 }
 ```
 
-这个例子只演示“共享”本身。这里用 `sleep(1)` 只是为了让输出顺序稳定，避免还没写入就先读取；如果是真实并发场景，应改成显式同步，而不是依赖睡眠。
+## POSIX管道<a id=POSIX管道></a>
 
-## 管道与FIFO<a id=管道与FIFO></a>
+管道涉及两层概念：
+
+| 层级       | 对象                                     | 说明                         |
+|----------|----------------------------------------|----------------------------|
+| 内核对象     | pipe buffer / FIFO inode + pipe buffer | 内核维护的管道缓冲区（或 FIFO 对应的内核对象） |
+| 进程 fd 表项 | file descriptor (fd)                   | 每个进程独立持有的读端/写端 fd          |
+
+在 Unix 看来，管道也是一个通过文件描述符访问的内核对象，因此它沿用 `read` / `write` 这套 I/O 语义。
+
+| API                          | 关键参数                          | 成功返回                    | 失败返回             |
+|------------------------------|-------------------------------|-------------------------|------------------|
+| `open(pathname, flags, ...)` | `pathname` 为路径名，`flags` 为打开方式 | 非负文件描述符                 | `-1`，并设置 `errno` |
+| `read(fd, buf, count)`       | 从 `fd` 读取至多 `count` 字节到 `buf` | 实际读取字节数；若为 `0` 表示 `EOF` | `-1`，并设置 `errno` |
+| `write(fd, buf, count)`      | 向 `fd` 写出 `count` 字节          | 实际写出字节数                 | `-1`，并设置 `errno` |
+| `close(fd)`                  | 关闭描述符                         | `0`                     | `-1`，并设置 `errno` |
+
+也正因为管道沿用`read`/`write`这套I/O语义，关闭未使用端非常重要：
+
+- 对读端而言，只有当所有写端文件描述符都被关闭后，`read`才会返回 `0`（`EOF`）。
+- 对写端而言，只要仍然存在至少一个读端文件描述符，`write`才能正常写入；若所有读端都已关闭，则写操作会失败并触发`SIGPIPE`或返回
+  `EPIPE`。
 
 ### 1. pipe：匿名管道<a id=pipe匿名管道></a>
 
-匿名管道通过 `pipe` 创建：
+匿名管道通过 `pipe` 创建，同时将修改进程fd表项：
 
 ```c
 int pipe(int fd[2]);
 ```
+
+`pipe` 的参数与返回值如下：
+
+| 项    | 含义                           |
+|------|------------------------------|
+| `fd` | 长度为 `2` 的整型数组，用于接收读端和写端文件描述符 |
+| 成功返回 | `0`，并写入 `fd[0]` 与 `fd[1]`    |
+| 失败返回 | `-1`，并设置 `errno`             |
 
 创建成功后：
 
@@ -273,19 +396,11 @@ int pipe(int fd[2]);
 
 | 性质   | 说明                         |
 |------|----------------------------|
-| 数据形式 | 字节流                        |
-| 方向   | 单向；若要双向通信，通常要建两条管道         |
-| 典型关系 | 常用于父子进程，因为 `fork` 会继承文件描述符 |
+| 单工   | 若要双向通信，通常要建两条管道            |
+| 双方关系 | 常用于父子进程，因为 `fork` 会继承文件描述符 |
 | 生命周期 | 只在相关进程存活并持有描述符时存在          |
 
-在 Unix 看来，管道也是一个通过文件描述符访问的内核对象，因此它沿用 `read` / `write` 这套 I/O 语义。也正因为如此，关闭未使用端非常重要：
-
-- 读端只有在“所有写端引用都关闭”后，`read` 才会返回 `0`，也就是 `EOF`
-- 如果双方都忘记关闭无关端点，程序很容易停在互相等待的位置
-
-管道还有一个边界需要明确：它是字节流，不保留应用层消息边界。若多个写者并发写同一条管道，数据可能交错，因此它适合顺序字节流，不适合直接当作结构化消息队列理解。
-
-### 2. 示例：fork + pipe<a id=示例fork-pipe></a>
+### 2. 匿名管道示例<a id=匿名管道示例></a>
 
 下面是最经典的 `fork + pipe` 模式：父进程写，子进程读。
 
@@ -323,50 +438,163 @@ int main(void) {
 
 ### 3. mkfifo：命名管道<a id=mkfifo命名管道></a>
 
-命名管道通过 `mkfifo` 创建：
+命名管道通过 `mkfifo` 创建，但***不会***修改进程fd表项：
 
 ```c
 int mkfifo(const char *pathname, mode_t mode);
 ```
 
-它与匿名管道的核心差别是：FIFO 在文件系统里有名字，因此不要求通信双方有父子关系。创建之后，双方像操作普通文件一样 `open`、
-`read`、`write`、`close` 即可。
+`mkfifo` 的参数与返回值如下：
 
-最小写端：
+| 项          | 含义               |
+|------------|------------------|
+| `pathname` | FIFO 在文件系统中的路径名  |
+| `mode`     | 权限位，例如 `0666`    |
+| 成功返回       | `0`              |
+| 失败返回       | `-1`，并设置 `errno` |
+
+`mkfifo`并不会像`pipe`那样创建管道时修改进程的fd表，因此创建后还需要使用管道名称调用`open`。
+
+命名管道通过 `unlink` 删除，用于移除文件系统中的名字，但***不会***直接影响已打开的文件描述符：
 
 ```c
+int unlink(const char *pathname);
+```
+
+`unlink` 的参数与返回值如下：
+
+| 项          | 含义               |
+|------------|------------------|
+| `pathname` | 要删除的 FIFO 路径名    |
+| 成功返回       | `0`              |
+| 失败返回       | `-1`，并设置 `errno` |
+
+值得注意的是，`unlink` 只会删除文件系统中的“名字”（目录项），而不会立即销毁 FIFO 内核对象：
+
+只有当：所有 fd 都被 `close`，且命名管道已被 `unlink`时，才会被删除
+
+写端：
+
+```c
+//写前创建
 mkfifo("/tmp/os_fifo", 0666);
+
 int fd = open("/tmp/os_fifo", O_WRONLY);
 write(fd, "hello fifo", 11);
 close(fd);
 ```
 
-最小读端：
+读端：
 
 ```c
 int fd = open("/tmp/os_fifo", O_RDONLY);
 char buf[128];
 read(fd, buf, sizeof(buf));
 close(fd);
+
+//读后unlink
 unlink("/tmp/os_fifo");
 ```
 
-这里还要注意一个行为：若写端以 `O_WRONLY` 打开 FIFO，而暂时没有读端存在，`open` 往往会阻塞；反过来，仅读端打开时也可能等待写端。
+这里还要注意一个行为：若写端以 `O_WRONLY` 打开命名管道，而暂时没有读端存在，`open` 往往会阻塞；反过来，仅读端打开时也可能等待写端。
 
-### 4. FIFO 与匿名管道的区别<a id=FIFO-与匿名管道的区别></a>
+### 4. 命名管道示例<a id=匿名管道示例></a>
+
+以下是一对父子进程通过命名管道通信，并使用命名信号量同步的例子
+
+```c
+#include <unistd.h>
+#include <sys/fcntl.h>
+#include <sys/stat.h>
+#include <semaphore.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(void)
+{
+    //命名管道
+    const char* name = "/tmp/fifo";
+    mkfifo(name, 0666);
+
+    //信号量
+    const char* sem_name = "/tmp/fifo_sem";
+    sem_t* sem = sem_open(sem_name, O_CREAT, 0666, 0);
+
+    if (fork() == 0)
+    {
+        int readEnd = open(name, O_RDONLY);
+
+        const size_t buffer_size = 128;
+        char buffer[buffer_size] = {0};
+
+        sem_wait(sem);
+        
+        read(readEnd, buffer, buffer_size);
+
+        printf("read: %s\n", buffer);
+        close(readEnd);
+        
+        //销毁信号量
+        sem_close(sem);
+        sem_unlink(sem_name);
+        
+        exit(0);
+    }
+
+    int writeEnd = open(name, (O_WRONLY));
+    write(writeEnd, "hello", strlen("hello"));
+
+    close(writeEnd);
+    sem_post(sem);
+
+    unlink(name);
+    
+    exit(0);
+}
+
+```
+
+这个例子里，父子进程都先关闭自己不用的那一端。这样数据流方向和 `EOF` 语义才是清晰的。
+
+### 5. 生命周期总览<a id=管道的生命周期总览></a>
+
+匿名管道生命周期：
+
+| 阶段 | 系统调用    | 作用对象               | 作用范围 | 是否必须每进程执行 | 说明               |
+|----|---------|--------------------|------|-----------|------------------|
+| 1  | `pipe`  | pipe buffer（内核缓冲区） | 系统   | 创建者执行一次   | 在内核中创建匿名管道（无文件名） |
+| 2  | `fork`  | fd 表继承             | 进程   | 创建者执行一次   | 子进程继承父进程的读写 fd   |
+| 3  | `close` | 文件描述符 fd           | 进程   | 每个进程按需执行  | 关闭不用的读端或写端 fd    |
+| 4  | `write` | 内核 pipe buffer     | 进程   | 写端进程执行    | 将数据写入管道缓冲区       |
+| 5  | `read`  | 内核 pipe buffer     | 进程   | 读端进程执行    | 从管道缓冲区读取数据       |
+| 6  | `close` | 文件描述符 fd           | 进程   | 是         | 关闭管道端口（触发 EOF）   |
+
+命名管道生命周期：
+
+| 阶段 | 系统调用     | 作用对象             | 作用范围 | 是否必须每进程执行      | 说明                    |
+|----|----------|------------------|------|----------------|-----------------------|
+| 1  | `mkfifo` | FIFO inode（文件节点） | 系统   | 创建者执行一次        | 在文件系统创建一个命名管道（FIFO文件） |
+| 2  | `open`   | fd               | 进程   | 每个参与通信进程都需要    | 打开FIFO，生成读端或写端fd      |
+| 3  | `write`  | 内核管道缓冲区          | 进程   | 写端进程执行         | 将数据写入FIFO缓冲区          |
+| 4  | `read`   | 内核管道缓冲区          | 进程   | 读端进程执行         | 从FIFO缓冲区读取数据          |
+| 5  | `close`  | 文件描述符 fd         | 进程   | 是              | 关闭当前进程的FIFO fd        |
+| 6  | `unlink` | FIFO inode       | 系统   | 一般由创建者或最后使用者执行 | 删除FIFO文件名，释放路径入口      |
+
+### 6. 命名管道与匿名管道的区别<a id=命名管道-与-匿名管道的区别></a>
 
 这两者都属于管道，但适用边界不同：
 
-| 维度   | 匿名管道              | FIFO                |
-|------|-------------------|---------------------|
-| 命名方式 | 无名字，只靠已打开的文件描述符引用 | 有文件系统路径名            |
-| 典型关系 | 父子进程              | 不相关进程也可使用           |
-| 生命周期 | 跟随进程与描述符          | 跟随文件系统对象，直到显式删除     |
-| 通信方向 | 单向                | 语义上可双向，但实践中通常按半双工使用 |
+| 维度   | 匿名管道              | 命名管道          |
+|------|-------------------|---------------|
+| 命名方式 | 无名字，只靠已打开的文件描述符引用 | 有文件系统路径名      |
+| 典型关系 | 父子进程              | 不相关进程也可使用     |
+| 生命周期 | 跟随进程与描述符          | 跟随引用，直到所有引用消失 |
+| 通信方向 | 半双工               | 一般为半双工        |
 
-如果只是父子进程之间传一点字节流，匿名管道最直接；如果双方没有亲缘关系，但都在同一台机器上，FIFO 更自然。
+如果只是父子进程之间传一点字节流，匿名管道最直接；如果双方没有亲缘关系，但都在同一台机器上，命名管道更自然。
 
-## 信号<a id=信号></a>
+## POSIX信号<a id=POSIX信号></a>
 
 ### 1. 信号作为进程间通知<a id=信号作为进程间通知></a>
 
@@ -390,6 +618,15 @@ unlink("/tmp/os_fifo");
 int kill(pid_t pid, int sig);
 ```
 
+`kill` 的参数与返回值如下：
+
+| 项     | 含义                  |
+|-------|---------------------|
+| `pid` | 目标进程 ID             |
+| `sig` | 要发送的信号，例如 `SIGUSR1` |
+| 成功返回  | `0`                 |
+| 失败返回  | `-1`，并设置 `errno`    |
+
 `kill` 这个名字容易误导。它不只用于“杀死进程”，而是向目标进程发送一个指定信号；至于收到信号后发生什么，要看信号类型和接收方的处理方式。
 
 接收方更推荐使用 `sigaction` 安装处理函数：
@@ -398,7 +635,24 @@ int kill(pid_t pid, int sig);
 int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);
 ```
 
-这几个接口的分工可以压缩如下：
+`sigaction` 的参数与返回值如下：
+
+| 项        | 含义                       |
+|----------|--------------------------|
+| `signum` | 要处理的[信号编号](#附注-常见信号宏定义)  |
+| `act`    | 新的处理方式；若为 `NULL`，表示不修改   |
+| `oldact` | 用于接收旧的处理方式；若不关心可传 `NULL` |
+| 成功返回     | `0`                      |
+| 失败返回     | `-1`，并设置 `errno`         |
+
+`pause` 的返回语义如下：
+
+| 项      | 含义                          |
+|--------|-----------------------------|
+| 参数     | 无参数                         |
+| 被信号打断后 | 返回 `-1`，并设置 `errno = EINTR` |
+
+这几个接口的分工可以如下表述：
 
 | 接口          | 作用              |
 |-------------|-----------------|
@@ -491,6 +745,32 @@ socket 通信通常是客户端 / 服务端模型。
 
 与管道相比，`SOCK_STREAM` socket 默认是双向的，因此更适合长连接和请求 / 响应模式。
 
+服务端核心 API 的参数与返回值如下：
+
+| API                              | 关键参数                                           | 成功返回      | 失败返回             |
+|----------------------------------|------------------------------------------------|-----------|------------------|
+| `socket(domain, type, protocol)` | `domain` 为地址族，`type` 为套接字类型，`protocol` 通常为 `0` | 非负套接字描述符  | `-1`，并设置 `errno` |
+| `bind(sockfd, addr, addrlen)`    | `sockfd` 为套接字，`addr` 为本地地址结构，`addrlen` 为地址长度   | `0`       | `-1`，并设置 `errno` |
+| `listen(sockfd, backlog)`        | `sockfd` 为监听套接字，`backlog` 为等待队列长度              | `0`       | `-1`，并设置 `errno` |
+| `accept(sockfd, addr, addrlen)`  | `sockfd` 为监听套接字，后两个参数可用于接收对端地址                 | 新连接对应的描述符 | `-1`，并设置 `errno` |
+
+客户端核心 API 的参数与返回值如下：
+
+| API                              | 关键参数                                         | 成功返回     | 失败返回             |
+|----------------------------------|----------------------------------------------|----------|------------------|
+| `socket(domain, type, protocol)` | 与服务端相同                                       | 非负套接字描述符 | `-1`，并设置 `errno` |
+| `connect(sockfd, addr, addrlen)` | `sockfd` 为套接字，`addr` 为目标地址结构，`addrlen` 为地址长度 | `0`      | `-1`，并设置 `errno` |
+
+连接建立后的常用 I/O API 如下：
+
+| API                             | 关键参数                       | 成功返回                   | 失败返回             |
+|---------------------------------|----------------------------|------------------------|------------------|
+| `read(fd, buf, count)`          | 从描述符读入至多 `count` 字节到 `buf` | 实际读到的字节数；若为 `0` 表示对端关闭 | `-1`，并设置 `errno` |
+| `write(fd, buf, count)`         | 向描述符写出 `count` 字节          | 实际写出的字节数               | `-1`，并设置 `errno` |
+| `send(sockfd, buf, len, flags)` | socket 专用发送接口              | 实际发送字节数                | `-1`，并设置 `errno` |
+| `recv(sockfd, buf, len, flags)` | socket 专用接收接口              | 实际接收字节数；若为 `0` 表示对端关闭  | `-1`，并设置 `errno` |
+| `close(fd)`                     | 关闭文件描述符或套接字                | `0`                    | `-1`，并设置 `errno` |
+
 ### 3. 示例：Unix domain socket<a id=示例Unix-domain-socket></a>
 
 下面给出一个最小的 `AF_UNIX + SOCK_STREAM` 示例。这个例子不经过网络协议栈，而是在同一台机器上按“本地路径名”建立连接。
@@ -565,6 +845,33 @@ int main(void) {
 
 IPC 的主干其实很清楚：共享内存负责把同一段数据暴露给多个进程，消息传递负责通过内核维护的通道交换数据。
 
-落到 POSIX 接口上，`shm_open + mmap` 适合低开销共享，`pipe` 适合父子进程间的单向字节流，`mkfifo` 把这种字节流扩展到不相关进程，
-`socket` 则进一步提供了双向、可扩展到网络的通信模型。真正选型时，判断标准通常不是“哪个 API
-更高级”，而是“是否需要共享同一段内存、是否有亲缘关系、是否需要双向通信、是否可能跨主机”。
+`shm_open + mmap` 适合低开销共享，`pipe` 适合父子进程间的单向字节流，`mkfifo` 把这种字节流扩展到不相关进程，`signal`
+多用于简单通知，`socket` 则进一步提供了双向、可扩展到网络的通信模型。
+
+---
+
+# 附注
+
+### 1. 常见信号宏定义<a id=附注-常见信号宏定义></a>
+
+以下宏定义均位于 <signal.h>
+
+| 宏名        | 含义              | 默认行为            | 备注                       |
+|-----------|-----------------|-----------------|--------------------------|
+| `SIGINT`  | 终端中断信号（Ctrl+C）  | 终止进程            | -                        |
+| `SIGTERM` | 终止信号（kill 默认发送） | 终止进程            | -                        |
+| `SIGKILL` | 强制终止信号          | 立即终止            | 不能被捕获、阻塞或忽略              |
+| `SIGSTOP` | 停止进程            | 暂停执行            | 不能被捕获、阻塞或忽略              |
+| `SIGCONT` | 继续执行被停止的进程      | 继续执行            | -                        |
+| `SIGQUIT` | 终端退出信号（Ctrl+\）  | 终止并产生 core dump | -                        |
+| `SIGHUP`  | 挂起信号（终端断开）      | 终止进程            | -                        |
+| `SIGALRM` | 定时器到期信号         | 终止进程            | -                        |
+| `SIGCHLD` | 子进程状态改变         | 忽略（默认）          | 常用于`wait / waitpid`回收子进程 |
+| `SIGPIPE` | 向无读端的管道写数据      | 终止进程            | -                        |
+| `SIGSEGV` | 非法内存访问（段错误）     | 终止并产生 core dump | -                        |
+| `SIGBUS`  | 总线错误（内存访问异常）    | 终止并产生 core dump | -                        |
+| `SIGFPE`  | 算术异常（如除零）       | 终止并产生 core dump | -                        |
+| `SIGUSR1` | 用户自定义信号1        | 终止进程            | -                        |
+| `SIGUSR2` | 用户自定义信号2        | 终止进程            | -                        |
+| `SIGTRAP` | 调试断点信号          | 终止并产生 core dump | -                        |
+| `SIGABRT` | 调用 `abort()` 触发 | 终止并产生 core dump | -                        |

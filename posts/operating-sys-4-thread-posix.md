@@ -550,10 +550,26 @@ int pthread_cancel(pthread_t thread);
 
 线程取消里最重要的两个概念分别是：
 
-| 概念                  | 作用              |
+| 概念                  | 作用              | 
 |---------------------|-----------------|
-| 撤销状态 `cancel state` | 决定线程当前是否响应取消请求  |
-| 撤销类型 `cancel type`  | 决定线程以什么方式响应取消请求 |
+| 撤销状态 `cancel state` | 决定线程当前是否响应取消请求  |   
+| 撤销类型 `cancel type`  | 决定线程以什么方式响应取消请求 |   
+
+`cancel state`:
+
+| 宏                        | 含义             |
+|--------------------------|----------------|
+| `PTHREAD_CANCEL_ENABLE`  | 允许线程响应取消请求（默认） |
+| `PTHREAD_CANCEL_DISABLE` | 禁止线程响应取消请求     |
+
+`cancel type`:
+
+| 宏                             | 含义             |
+|-------------------------------|----------------|
+| `PTHREAD_CANCEL_DEFERRED`     | 延迟取消（默认，安全点取消） |
+| `PTHREAD_CANCEL_ASYNCHRONOUS` | 异步取消（立刻终止）     |
+
+异步取消虽然直接，但风险很高。因为线程可能正在持有锁、修改共享数据或管理某些资源，若被立即打断，就可能留下不一致状态。因此在实际代码里，更常见的做法是使用延迟取消。
 
 相关函数原型如下：
 
@@ -575,26 +591,6 @@ pthread_setcancelstate(oldstate, NULL);
 ```
 
 `pthread_setcanceltype` 的 `oldtype` 也是同样的用法。
-
-可以压缩成下面这个组合表：
-
-| 状态 / 类型                       | 含义             |
-|-------------------------------|----------------|
-| `PTHREAD_CANCEL_DISABLE`      | 暂不响应取消请求       |
-| `PTHREAD_CANCEL_ENABLE`       | 允许响应取消请求       |
-| `PTHREAD_CANCEL_DEFERRED`     | 延迟取消，到达撤销点再终止  |
-| `PTHREAD_CANCEL_ASYNCHRONOUS` | 异步取消，收到请求后尽快终止 |
-
-默认情况下，线程通常采用：
-
-| 默认项  | 默认值                       |
-|------|---------------------------|
-| 撤销状态 | `PTHREAD_CANCEL_ENABLE`   |
-| 撤销类型 | `PTHREAD_CANCEL_DEFERRED` |
-
-这意味着：线程默认是“可以被取消”的，但通常只会在合适的撤销点结束，而不是被立刻打断。
-
-异步取消虽然直接，但风险很高。因为线程可能正在持有锁、修改共享数据或管理某些资源，若被立即打断，就可能留下不一致状态。因此在实际代码里，更常见的做法是使用延迟取消。
 
 ### 3. pthread_testcancel<a id=pthread_testcancel></a>
 

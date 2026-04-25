@@ -345,22 +345,33 @@ watch(
   background: color-mix(in srgb, var(--foreground-color) 88%, transparent);
   box-shadow: 0 0 8px rgb(var(--blue-shadow-color), 0.25);
   backdrop-filter: var(--blur-val);
+  line-height: 1.3;
 }
 
 .sort-label {
   color: var(--font-color-grey);
   font-size: 14px;
   font-weight: 600;
+  height: 18px; /* 固定高度 */
+  line-height: 18px; /* 行高 = 高度 */
 }
 
 .sort-control select {
   min-width: 132px;
+  height: 18px; /* 固定高度 */
+  line-height: 18px; /* 行高 = 高度 */
   border: 0;
   outline: none;
   background: transparent;
   color: var(--font-color-grey);
   font-size: 14px;
   cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+
 }
 
 .pagination {
