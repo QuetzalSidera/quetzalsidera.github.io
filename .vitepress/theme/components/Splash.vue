@@ -1,10 +1,11 @@
 <template>
-  <div v-if="isVisible" class="splash-container" v-html="svgContent"></div>
+  <div v-if="isVisible&&!isDev" class="splash-container" v-html="svgContent"></div>
 </template>
 
 <script setup>
-import { onMounted, ref, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import anime from 'animejs'
+import { useStore } from '../store'
 
 const svgContent =
   ref(`<svg viewBox="0 0 1728 1117" preserveAspectRatio="xMinYMin slice" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -47,7 +48,8 @@ const svgContent =
 </svg>
 `)
 const isVisible = ref(true)
-import { useStore } from '../store'
+
+const isDev = import.meta.env.DEV
 const { state } = useStore()
 
 const createBreathingAnimation = () => {
