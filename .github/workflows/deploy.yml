@@ -52,7 +52,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    using: 'node24'
+#    using: 'node24'
     needs: build
     runs-on: ubuntu-latest
     name: Deploy
