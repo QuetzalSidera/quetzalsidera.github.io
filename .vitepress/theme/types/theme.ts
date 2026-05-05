@@ -1,4 +1,4 @@
-import type { IconDefinition } from '@fortawesome/fontawesome-common-types'
+import { IconDefinition } from '@fortawesome/free-brands-svg-icons'
 
 export interface ThemeLinkItem {
   name: string
@@ -19,6 +19,7 @@ export interface BlogThemeConfig {
   social: ThemeSocialItem[]
   spineVoiceLang: 'zh' | 'jp'
   footerName: string
+  recordName: string
   poweredList: ThemeLinkItem[]
   clientID: string
   // clientSecret: string

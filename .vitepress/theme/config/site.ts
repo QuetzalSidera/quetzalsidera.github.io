@@ -45,6 +45,7 @@ export const blogThemeConfig: BlogThemeConfig = {
   ],
   spineVoiceLang: 'zh',
   footerName: 'QuetzalSidera',
+  recordName: '粤ICP备2025477459号',
   poweredList: [
     { name: 'VitePress', url: 'https://github.com/vuejs/vitepress' },
     { name: 'GitHub Pages', url: 'https://docs.github.com/zh/pages' },

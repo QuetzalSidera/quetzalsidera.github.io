@@ -1,13 +1,15 @@
 <template>
   <footer class="container">
     <div class="footer-info">
-      <span>© {{ new Date().getFullYear() }} {{ footerName }} </span>
+      <span>© {{ new Date().getFullYear() }} {{ footerName }} <a href="https://beian.miit.gov.cn">{{ recordName
+        }}</a>
+</span>
       <br />
       <span
-        >Powered by
+      >Powered by
         <span class="powered-list" v-for="(obj, ind) in poweredList" :key="obj.url"
-          ><a :href="obj.url">{{ obj.name }}</a
-          >{{ ind < poweredList.length - 1 ? ' & ' : '' }}</span
+        ><a :href="obj.url">{{ obj.name }}</a
+        >{{ ind < poweredList.length - 1 ? ' & ' : '' }}</span
         ></span
       >
     </div>
@@ -21,7 +23,9 @@ import { useBlogTheme } from '../composables/useBlogTheme'
 
 const themeConfig = useBlogTheme()
 const footerName = themeConfig.footerName
+const recordName = themeConfig.recordName
 const poweredList = themeConfig.poweredList
+
 </script>
 <style scoped lang="less">
 footer {
@@ -38,7 +42,7 @@ footer {
   border-left: solid 2px var(--foreground-color);
   border-right: solid 2px var(--foreground-color);
   background: linear-gradient(0.75turn, transparent, var(--foreground-color) 25%),
-    var(--triangle-background);
+  var(--triangle-background);
   backdrop-filter: var(--blur-val);
   box-shadow: 0px 0px 8px rgb(var(--blue-shadow-color), 0.8);
 }
@@ -60,6 +64,7 @@ footer {
   .footer-info {
     font-size: 12px;
   }
+
   .footer-logo {
     img {
       height: 26px;
