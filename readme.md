@@ -38,7 +38,7 @@
 - `bgm.mp3`：背景音乐
 - `banner_video.mp4`：视频横幅资源，当前未启用
 
-如果后续要换皮肤，可以优先改这里，不需要满仓库翻箱倒柜。 
+如果后续要换皮肤，可以优先改这里，不需要满仓库翻箱倒柜。
 
 ## 文章写法
 
@@ -119,3 +119,9 @@ pnpm run preview
 ## 鸣谢
 
 - [vitepress-theme-bluearchive](https://github.com/Alittfre/vitepress-theme-bluearchive) 提供了本项目使用与改造的初始模板
+- [vitepress-theme-sakura](https://github.com/flaribbit/vitepress-theme-sakura) 提供参考
+- [vitepress X BA logo](https://github.com/nulla2011/bluearchive-logo) 非常好 BA logo 生成器
+- [Anime.js Fireworks canvas demo](https://codepen.io/juliangarnier/pen/gmOwJX)
+  and [hexo-theme-yun](https://github.com/YunYouJun/hexo-theme-yun) 点击烟花效果 🎉
+- [spine-runtimes](https://github.com/esotericsoftware/spine-runtimes) spine 运行时
+- [Blueaka@kivo.fun](https://kivo.fun/) BA 游戏字体
