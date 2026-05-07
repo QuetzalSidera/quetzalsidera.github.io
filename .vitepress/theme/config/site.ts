@@ -52,6 +52,7 @@ export const blogThemeConfig: BlogThemeConfig = {
     { name: 'Markdown', url: 'https://www.markdownguide.org/' },
   ],
   clientID: 'Ov23lih50I0dC7NzyGSY',
+  clientSecret: '98c9ad89f7dac281a97ea3f5ad7dbd09fda5a973',
   repo: 'quetzalsidera.github.io',
   owner: 'QuetzalSidera',
   admin: ['QuetzalSidera'],

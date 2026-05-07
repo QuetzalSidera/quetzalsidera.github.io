@@ -22,7 +22,7 @@ export interface BlogThemeConfig {
   recordName: string
   poweredList: ThemeLinkItem[]
   clientID: string
-  // clientSecret: string
+  clientSecret: string
   repo: string
   owner: string
   admin: string[]
