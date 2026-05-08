@@ -1,7 +1,7 @@
 ---
 title: 3.5 - 虚拟文件系统及POSIX API
 date: 2026-05-08T00:00:00
-tags: [ Unix, C, POSIX, 操作系统, 文件系统 ]
+tags: [ Unix, C,POSIX, 操作系统 ]
 pinned: false
 collection: Unix操作系统
 outline:

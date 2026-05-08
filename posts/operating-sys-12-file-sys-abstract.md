@@ -1,7 +1,7 @@
 ---
 title: 3.2 - 文件系统抽象
 date: 2026-05-05T00:00:00
-tags: [ Unix, 操作系统, 文件系统 ]
+tags: [ Unix, C,POSIX, 操作系统 ]
 pinned: false
 collection: Unix操作系统
 outline:
@@ -64,8 +64,10 @@ head:
 
 ---
 
-文件系统对上提供“按名字访问持久数据”，对下依赖“按块访问磁盘”。因此，本篇只讨论文件、目录与卷上的基本磁盘结构；磁盘硬件细节放到后续硬件篇，权限、一致性与
-RAID 放到保护篇，POSIX 接口放到文件系统 API 篇。
+文件系统对上提供“按名字访问持久数据”，对下依赖“按块访问磁盘”。因此，本篇先讨论文件、目录与卷上的基本磁盘结构；
+磁盘硬件细节放到后续[硬件篇](./operating-sys-13-file-sys-hardware.md)，
+权限、一致性与 RAID 放到[保护篇](./operating-sys-14-file-sys-protection.md)，
+POSIX 接口放到[虚拟文件系统与 API 篇](./operating-sys-15-file-sys-posix.md)。
 
 ## 文件结构<a id=文件结构></a>
 

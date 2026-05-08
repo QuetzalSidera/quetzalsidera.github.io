@@ -1,7 +1,7 @@
 ---
 title: 3.4 - 文件系统的保护
 date: 2026-05-07T00:00:00
-tags: [ Unix, 操作系统, 文件系统 ]
+tags: [ Unix, C,POSIX, 操作系统 ]
 pinned: false
 collection: Unix操作系统
 outline:

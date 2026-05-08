@@ -1,6 +1,7 @@
 ---
 title: Unix操作系统
 date: 2026-04-08
-description: 整理操作系统、系统调用、构建工具等方向的学习记录，阶段性技术笔记。
+description: 《操作系统概念》与《操作系统导论》的笔记，同时偏向Unix系统，整理涉及的POSIX API。
 tags: [ 计科, 学习记录 ]
+cover: /Imgs/operating-sys/cover.png
 ---
