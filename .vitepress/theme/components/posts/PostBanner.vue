@@ -10,7 +10,7 @@
           day: '2-digit',
         }).format(new Date(currentPost.create))
       }}
-      | 约{{ currentPost.wordCount }}字
+      | 约{{ currentPost.wordCount }}字 | {{currentPost.collection}}
     </span>
   </div>
 </template>

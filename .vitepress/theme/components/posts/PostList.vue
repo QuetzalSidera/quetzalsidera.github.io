@@ -81,7 +81,7 @@ import { type CollectionData, data as collections } from '../../utils/collection
 import { getPostsByCollection } from '../../utils/currentCollection'
 import { useStore } from '../../store'
 import PostListCard from './PostListCard.vue'
-import type { PostListItem } from '../../types/post-list'
+import type { PostCollectionInfo, PostListItem } from '../../types/post-list'
 
 const { state } = useStore()
 const { page } = useData()
@@ -89,27 +89,36 @@ const base = useData().site.value.base
 let handlePopState: (() => void) | null = null
 const sortMode = ref<'newest' | 'oldest'>('newest')
 
-function mapPostsToListItems(items: PostData[]): PostListItem[] {
-  return items.map((post) => ({
-    title: post.title,
-    href: post.href,
-    create: post.create,
-    cover: post.cover,
-    excerpt: post.excerpt || '',
-    tags: post.tags ?? [],
-    tagsInteractive: true,
-    pinned: !!post.pinned,
-    metricText: `约${post.wordCount}字`,
-  }))
+function mapPostsToListItems(posts: PostData[], collections: CollectionData[]): PostListItem[] {
+  return posts.map((post) => {
+    const collection = collections.find((collection) => collection.title === post.collection)
+    const postCollectionInfo: PostCollectionInfo | undefined = collection && {
+      title: collection.title,
+      href: collection.href,
+    }
+    return ({
+      title: post.title,
+      href: post.href,
+      create: post.create,
+      cover: post.cover,
+      excerpt: post.excerpt || '',
+      collection: postCollectionInfo,
+      tags: post.tags ?? [],
+      tagsInteractive: true,
+      pinned: !!post.pinned,
+      metricText: `约${post.wordCount}字`,
+    })
+  })
 }
 
-function mapCollectionsToListItems(items: CollectionData[]): PostListItem[] {
-  return items.map((collection) => ({
+function mapCollectionsToListItems(collections: CollectionData[]): PostListItem[] {
+  return collections.map((collection) => ({
     title: collection.title,
     href: collection.href,
     create: collection.create,
     cover: collection.cover,
     excerpt: collection.description || '',
+    collection: undefined,
     tags: collection.tags ?? [],
     tagsInteractive: false,
     pinned: false,
@@ -119,16 +128,16 @@ function mapCollectionsToListItems(items: CollectionData[]): PostListItem[] {
 
 const finalItems = computed(() => {
   if (page.value.filePath === 'index.md') {
-    return mapPostsToListItems(posts)
+    return mapPostsToListItems(posts, collections)
   } else if (page.value.filePath === 'tags/index.md') {
-    return mapPostsToListItems(state.selectedPosts)
+    return mapPostsToListItems(state.selectedPosts, collections)
   } else if (page.value.filePath === 'collections/index.md') {
     return mapCollectionsToListItems(collections)
   } else if (
     page.value.filePath?.startsWith('collections/') &&
     page.value.filePath !== 'collections/index.md'
   ) {
-    return mapPostsToListItems(state.selectedPosts)
+    return mapPostsToListItems(state.selectedPosts, collections)
   }
   return []
 })

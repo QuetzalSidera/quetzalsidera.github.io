@@ -22,7 +22,15 @@
           <div class="time-info">
             <time datetime="">{{ formatDate(item.create) }}</time>
           </div>
-          <div class="wordcount seperator">{{ item.metricText }}</div>
+          <div class="seperator"></div>
+          <div class="wordcount">{{ item.metricText }}</div>
+          <div class="seperator" v-if="item.collection"></div>
+
+          <a :href="'/'+item.collection.href" class="collection" v-if="item.collection">
+            <FontAwesomeIcon :icon="faLink" v-if="item.collection" class="collection-icon" />
+            {{ item.collection.title }}
+          </a>
+
         </div>
         <ul v-if="item.tags.length" class="tags">
           <li v-for="tag in item.tags" :key="tag">
@@ -42,6 +50,8 @@
 
 <script setup lang="ts">
 import type { PostListItem } from '../../types/post-list'
+import FontAwesomeIcon from '../FontAwesomeIcon.vue'
+import { faLink } from '@fortawesome/free-solid-svg-icons'
 
 defineProps<{
   item: PostListItem
@@ -181,6 +191,28 @@ function formatDate(timestamp: number): string {
     margin: 3px 2px 0 0;
     font-weight: bold;
   }
+
+  .wordcount, .collection {
+    color: var(--font-color-grey);
+  }
+
+  .collection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+
+    .collection-icon {
+      margin-right: 4px;
+    }
+
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
 
   .seperator::before {
     content: '';
