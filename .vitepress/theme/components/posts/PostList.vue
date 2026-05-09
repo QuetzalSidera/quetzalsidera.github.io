@@ -147,10 +147,6 @@ function compareTitles(a: PostListItem, b: PostListItem) {
 }
 
 function sortItems(items: PostListItem[]) {
-  if (sortMode.value === 'default') {
-    return items
-  }
-
   return [...items].sort((a, b) => {
     if (a.pinned !== b.pinned) {
       return a.pinned ? -1 : 1

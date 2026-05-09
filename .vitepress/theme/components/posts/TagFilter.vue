@@ -108,7 +108,6 @@ onUnmounted(() => {
     window.removeEventListener('popstate', handlePopState)
   }
   active.value = null
-  state.selectedPosts = []
 })
 </script>
 <style scoped lang="less">

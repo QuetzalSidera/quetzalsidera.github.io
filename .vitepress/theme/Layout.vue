@@ -27,8 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watchEffect } from 'vue'
-import Splash from './components/Splash.vue'
+import { computed, watch } from 'vue'
 import Navbar from './components/layout/Navbar.vue'
 import BannerHero from './components/home/BannerHero.vue'
 import WelcomeBox from './components/home/WelcomeBox.vue'
@@ -39,6 +38,7 @@ import CollectionBanner from './components/collections/CollectionBanner.vue'
 import PostViewer from './components/posts/PostViewer.vue'
 import PostBanner from './components/posts/PostBanner.vue'
 import NotFound from './components/NotFound.vue'
+import Splash from './components/Splash.vue'
 import ToTop from './components/ToTop.vue'
 import Fireworks from './components/Fireworks.vue'
 import Footer from './components/Footer.vue'
@@ -127,6 +127,7 @@ const heroKey = computed(() => {
 })
 
 const contentComponent = computed(() => {
+
   return isHomePage.value || isTagPage.value || isCollectionsIndexPage.value || isCollectionDetailPage.value
     ? PostList
     : PostViewer
@@ -138,39 +139,51 @@ const contentKey = computed(() => {
     : `post-viewer-${currentPageKey.value}`
 })
 
-watchEffect(() => {
-  const currentCollection = resolveCurrentCollection({
-    relativePath: page.value.relativePath,
-    routePath: route.path,
-    base,
-  })
+watch(
+  [
+    () => page.value.relativePath,
+    () => route.path,
+    isTagPage,
+    isCollectionsIndexPage,
+    isCollectionDetailPage,
+  ],
+  () => {
+    const currentCollection = resolveCurrentCollection({
+      relativePath: page.value.relativePath,
+      routePath: route.path,
+      base,
+    })
 
-  if (isCollectionsIndexPage.value) {
+    if (isCollectionsIndexPage.value) {
+      state.currCollection = ''
+      state.selectedPosts = []
+      state.currPost = createEmptyPost()
+      return
+    }
+
+    if (isCollectionDetailPage.value) {
+      state.currCollection = currentCollection?.slug ?? ''
+      state.selectedPosts = [...(currentCollection?.posts ?? [])]
+      state.currPost = createEmptyPost()
+      return
+    }
+
+    const currentPost = resolveCurrentPost({
+      relativePath: page.value.relativePath,
+      routePath: route.path,
+      base,
+    })
+
+    if (!isTagPage.value) {
+      state.selectedPosts = []
+    }
     state.currCollection = ''
-    state.selectedPosts = []
-    state.currPost = createEmptyPost()
-    return
-  }
+    state.currPost = currentPost ?? createEmptyPost()
+  },
+  { immediate: true, flush: 'sync' },
+)
 
-  if (isCollectionDetailPage.value) {
-    state.currCollection = currentCollection?.slug ?? ''
-    state.selectedPosts = currentCollection?.posts ?? []
-    state.currPost = createEmptyPost()
-    return
-  }
 
-  const currentPost = resolveCurrentPost({
-    relativePath: page.value.relativePath,
-    routePath: route.path,
-    base,
-  })
-
-  if (!isTagPage.value) {
-    state.selectedPosts = []
-  }
-  state.currCollection = ''
-  state.currPost = currentPost ?? createEmptyPost()
-})
 </script>
 
 <style lang="less">
