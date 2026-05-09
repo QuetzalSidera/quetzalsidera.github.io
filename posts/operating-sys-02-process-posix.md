@@ -7,14 +7,14 @@ collection: Unix操作系统
 outline:
   - title: POSIX概述
     slug: posix概述
-  - title: 1. 什么是 POSIX
-    slug: 什么是-posix
+  - title: 1. POSIX 的定义
+    slug: posix-的定义
     level: 1
   - title: 2. POSIX、系统调用、ISO C、C 标准库的关系
     slug: POSIX-系统调用-ISO-C-C-标准库的关系
     level: 1
-  - title: 3. 为什么需要学习POSIX API
-    slug: 为什么需要学习-POSIX-API
+  - title: 3. 学习 POSIX API 的意义
+    slug: 学习-posix-api-的意义
     level: 1
 
   - title: 一些基础API
@@ -71,19 +71,17 @@ head:
 
 ---
 
-在 [进程基础](./operating-sys-1-process.md) 里，已经从操作系统视角介绍了进程是什么、PCB 如何组织进程。
+在 [进程基础](./operating-sys-01-process.md) 里，已经从操作系统视角介绍了进程是什么、PCB 如何组织进程。本篇从程序员视角出发，介绍操作这些进程概念的具体
+POSIX 接口。
 
-接下来就可以从程序员视角往下走一步：当我们在 Unix 系统上写 C 程序时，究竟通过哪些接口去“碰到”这些操作系统概念？
+作为操作系统部分的第一篇 POSIX 文章，本篇先对 POSIX 做概述，然后分组介绍两类 API：
 
-这篇文章是操作系统部分的第一篇 POSIX 文章，因此先对POSIX做一些概述：
-
-- 介绍什么是 POSIX，以及它和 Unix 编程的关系
-- 介绍一些后续文章会不断用到的基础 API，例如 `open`、`read`、`write`、`close`
-- 介绍最核心的一组进程 API，例如 `fork`、`exec`、`wait`、`waitpid`
+- 后续文章会反复用到的基础 I/O API：`open`、`read`、`write`、`close`
+- 最核心的进程控制 API：`fork`、`exec`、`wait`、`waitpid`
 
 ## POSIX概述<a id=posix概述></a>
 
-### 1. 什么是 POSIX<a id=什么是-posix></a>
+### 1. POSIX 的定义<a id=posix-的定义></a>
 
 [Wiki](https://en.wikipedia.org/wiki/POSIX)
 
@@ -101,9 +99,7 @@ Stallman命名为“Posix”。
 
 ### 2. POSIX、系统调用、ISO C、C 标准库的关系 <a id=POSIX-系统调用-ISO-C-C-标准库的关系></a>
 
-这里有一个很容易混淆的问题：POSIX、系统调用、ISO C、C 标准库到底是什么关系？
-
-可以分成下面几层：
+POSIX、系统调用、ISO C、C 标准库是四个容易混淆的概念，其关系如下：
 
 - ***POSIX***：一套Unix标准，既定义Unix系统调用的规范接口，又定义其C语言的规范封装（POSIX C）。
 - ***系统调用***：是操作系统内核留给应用程序的一个接口，属于 操作系统内核（kernel），***不是***C语言的一部分。
@@ -124,11 +120,12 @@ FILE *fopen(const char *filename, const char *mode)
 int open(const char *, int, ...)
 ```
 
-前者（ISO C）是C语言规范中打开文件的标准调用，后者（POSIX C）是对系统调用的浅封装。在`glibc`里，`open()`函数最终会调用
-`syscall()`发起一个系统调用：
+前者（ISO C）是C语言规范中打开文件的标准调用，确保了跨平台的一致性；后者（POSIX C）是对系统调用的浅封装，只在POSIX兼容的系统上有效。
+在`glibc`里，`open()`函数最终会调用`syscall()`发起一个系统调用：
+
+`syscall()` 是 `glibc` 中的一个特殊函数，作为 C 语言发起系统调用的通用入口：
 
 ```c
-//syscall函数是glibc中的一个特殊函数，是C语言与系统调用的接口
 syscall(SYS_open, pathname, flags, mode);
 ```
 
@@ -165,18 +162,16 @@ import "golang.org/x/sys/unix"
 fd, _ := unix.Open("a.txt", unix.O_RDONLY, 0)
 ```
 
-### 3. 为什么需要学习POSIX API<a id=为什么需要学习-POSIX-API></a>
+### 3. 学习 POSIX API 的意义<a id=学习-posix-api-的意义></a>
 
-从学习操作系统的角度看，POSIX 很适合作为“概念”和“代码”之间的连接层，与此同时，操作系统的编程实践也是必不可少的。
-
-前面在理论文章里提到过很多对象：
+POSIX API 是操作系统”概念”与”代码”之间的连接层，理论文章中提到的对象通过具体接口得到深化：
 
 - 进程创建
 - PID
 - 文件描述符
 - 阻塞与等待
 
-而在实际编程时，这些概念往往会落实成具体接口：
+这些概念往往在使用具体接口时得到深化：
 
 | 操作系统概念     | POSIX API                                |
 |------------|------------------------------------------|
@@ -283,15 +278,12 @@ ssize_t write(int fd, const void *buf, size_t count);
 int close(int fd);
 ```
 
-它的作用可以理解成：把当前进程文件描述符表中的这个表项释放掉。
-
-如果一个文件打开后不再使用，通常应该及时 `close`，否则就会造成文件描述符泄漏。
-
-父子进程在 `fork` 之后会复制fd表，所以在后续做重定向、管道和 IPC 时，经常要显式关闭自己不用的那一端。
+`close` 释放当前进程文件描述符表中的指定表项。打开的文件不再使用时应及时 `close`，否则造成文件描述符泄漏。`fork` 后父子进程各有一份
+fd 表副本，因此在重定向、管道和 IPC 场景中，需要显式关闭自己不用的那一端。
 
 ## POSIX 进程 API<a id=posix-进程-API></a>
 
-有了前面的基础接口后，再看进程 API 会更自然一些。因为进程创建与程序执行，本身也经常伴随文件描述符的继承、重定向和关闭。
+进程创建与程序执行经常伴随文件描述符的继承、重定向和关闭，因此基础 I/O 接口是理解进程 API 的前置知识。
 
 ### 1. getpid 与 getppid<a id=getpid-与-getppid></a>
 
@@ -368,7 +360,7 @@ int main(void) {
 }
 ```
 
-#### fork 复制了什么 <a id=fork-复制了什么></a>
+#### fork 的资源复制 <a id=fork-的资源复制></a>
 
 子进程得到了父进程的以下内容：
 
@@ -433,7 +425,7 @@ waitpid(child_pid, NULL, 0);
 
 表示等待 `child_pid` 对应的那个子进程结束。
 
-#### status 使用方法 <a id=status></a>
+#### 解析 status <a id=status></a>
 
 `status` 不是简单的“0 或 1”，而是一组经过编码的状态信息，通常要配合宏来解析：
 
@@ -458,14 +450,14 @@ if (WIFEXITED(status)) {
 
 ### 4. exec：替换当前进程<a id=exec-替换当前进程></a>
 
-`exec`使用用一个新程序替换当前进程的执行内容。
+`exec` 用一个新程序替换当前进程的执行内容：
 
 - PID 通常不变
 - 但代码段、数据段、栈等会被新程序替换
 
 因此，exec后续的代码一般不会执行，除非exec失败，此时exec返回-1。
 
-#### 常见成员 <a id=常见成员></a>
+#### exec 函数族 <a id=exec-函数族></a>
 
 | 函数       | 参数形式 | 会不会使用 PATH 环境变量搜索 | 能不能自定义环境变量 |
 |----------|------|-------------------|------------|
@@ -535,7 +527,7 @@ int main(int argc, char* argv[])
  the caller's environment, not from the envp argument.
 ```
 
-意味着在`envp`参数中，即使指定环境变量PATH，也不会对`exec`调用时的文件搜索起作用。这是容易理解的，因为调用时的环境变量是继承自当前线程的，
+意味着在`envp`参数中，即使指定环境变量PATH，也不会对`exec`调用时的文件搜索起作用。调用 `exec` 时的环境变量继承自当前线程，
 `envp`参数指定的是覆写后的环境变量
 
 ### 5. exit与_exit: 退出程序<a id=_exit-与-exit-退出程序></a>
@@ -668,7 +660,7 @@ int main(void) {
 - `open`、`read`、`write`、`close` 是最基础的一组文件 / I/O 接口
 - `getpid`、`fork`、`exec`、`exit`、`wait`、`waitpid` 构成了最核心的进程控制接口
 
-后面的线程、重定向、管道和进程通信内容，都会在这两组基础接口之上继续展开。
+线程、重定向、管道和进程通信均在上述两组基础接口之上展开。
 
 ---
 
@@ -713,7 +705,7 @@ open("a.txt", O_CREAT, 0666);
 
 ### 2. SIGCHLD <a id=SIGCHLD></a>
 
-参见[IPC通信](./operating-sys-8-ipc-posix.md)
+参见[进程间通信](./operating-sys-08-ipc-posix.md)
 
 `SIGCHLD` 信号是指子进程终止或暂停时，内核向其父进程发送的信号，用于通知父进程处理子进程的状态变化。
 
