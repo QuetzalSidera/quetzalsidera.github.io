@@ -5,8 +5,8 @@ tags: [ Unix, C,POSIX, 操作系统 ]
 pinned: false
 collection: Unix操作系统
 outline:
-  - title: 引例 - 为什么需要同步
-    slug: 引例-为什么需要同步
+  - title: 同步的动机
+    slug: 同步的动机
   - title: 1. 共享资源的竞争条件
     slug: 共享资源的竞争条件
     level: 1
@@ -14,8 +14,8 @@ outline:
     slug: 线程执行的先后顺序
     level: 1
 
-  - title: 如何实现同步
-    slug: 如何实现同步
+  - title: 同步机制
+    slug: 同步机制
   - title: 1. 硬件同步原语
     slug: 硬件同步原语
     level: 1
@@ -29,8 +29,8 @@ outline:
     slug: 条件变量
     level: 1
 
-  - title: 同步中的问题
-    slug: 同步中的问题
+  - title: 同步的副作用
+    slug: 同步的副作用
   - title: 1. 忙等待与阻塞等待
     slug: 忙等待与阻塞等待
     level: 1
@@ -74,11 +74,9 @@ head:
 
 ---
 
-在 [进程（线程）调度](./operating-sys-5-scheduling.md) 里，已经讨论过多个执行实体如何共享
-CPU。本篇转向另一个同样基础的问题：多个执行实体共享数据和资源时，系统怎样约束它们的执行次序，使结果保持正确。实践部分位于 [POSIX同步 API](./operating-sys-7-synchronize-posix.md)
-中。
+在 [进程（线程）调度](./operating-sys-05-scheduling.md) 中已讨论多执行实体如何共享 CPU。本篇聚焦多执行实体共享数据与资源时的执行次序约束。实践部分位于 [POSIX同步 API](./operating-sys-07-synchronize-posix.md)。
 
-## 引例 - 为什么需要同步<a id=引例-为什么需要同步></a>
+## 同步的动机<a id=同步的动机></a>
 
 ### 1. 共享资源的竞争条件<a id=共享资源的竞争条件></a>
 
@@ -100,7 +98,7 @@ mov [counter], eax
 
 例如，一个线程负责初始化全局配置、连接池或缓冲区，另一个线程负责真正使用这些对象。即使两者并不同时修改同一块内存，后者也必须等前者完成初始化之后才能继续。
 
-## 如何实现同步<a id=如何实现同步></a>
+## 同步机制<a id=同步机制></a>
 
 ### 1. 硬件同步原语<a id=硬件同步原语></a>
 
@@ -145,9 +143,9 @@ void* consume(void* arg)
 条件变量（`condition variable`）用来表达“条件不满足就等待，条件满足再继续”。它本身不提供互斥，因此通常与锁一起使用。
 
 典型场景是生产者消费者模型。消费者拿到锁之后发现队列为空，此时它不应该继续自旋，也不应该在持锁状态下等待，而是应当睡眠，等生产者放入数据后再被唤醒。条件变量正是用来表达这种等待条件的工具。具体
-API 位于后文的 [POSIX同步 API](./operating-sys-7-synchronize-posix.md)。
+API 位于后文的 [POSIX同步 API](./operating-sys-07-synchronize-posix.md)。
 
-## 同步中的问题<a id=同步中的问题></a>
+## 同步的副作用<a id=同步的副作用></a>
 
 ### 1. 忙等待与阻塞等待<a id=忙等待与阻塞等待></a>
 
@@ -256,5 +254,5 @@ $$
 
 同步处理的其实是两类约束：共享资源上的互斥访问，以及执行流之间的先后顺序。硬件同步原语提供基础能力，锁、信号量和条件变量把这些能力组织成可用的同步工具；而忙等待、饥饿、优先级反转和死锁，则是同步引入的典型副作用。
 
-接下来的 [POSIX同步 API](./operating-sys-7-synchronize-posix.md) 会把这些概念与 `pthread_mutex_t`、`pthread_cond_t`、
+接下来的 [POSIX同步 API](./operating-sys-07-synchronize-posix.md) 会把这些概念与 `pthread_mutex_t`、`pthread_cond_t`、
 `sem_t` 和 `pthread_rwlock_t` 等具体接口相结合。

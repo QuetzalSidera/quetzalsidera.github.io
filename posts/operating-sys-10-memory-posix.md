@@ -69,14 +69,12 @@ head:
 
 ---
 
-在 [内存基础](./operating-sys-9-memory.md) 里，已经从操作系统视角讨论了分页、页表、`TLB`、交换和内存映射。接下来把这些概念落到用户态最常碰到的一组接口上。
+[内存基础](./operating-sys-09-memory.md) 中已从操作系统视角讨论分页、页表、`TLB`、交换和内存映射。本篇将这些概念落到用户态最常用的内存接口上，分为两部分：
 
-这一篇主要分成两部分：
+1. 系统调用级内存接口：`mmap`、`munmap`、`mprotect`、`msync`
+2. 用户态库提供的动态内存分配：`malloc`、`calloc`、`realloc`、`free`
 
-1. 更接近系统调用的一组内存接口，如 `mmap`、`munmap`、`mprotect`、`msync`。
-2. 用户态库提供的动态内存分配接口，如 `malloc`、`calloc`、`realloc`、`free`。
-
-二者都和“申请内存”有关，但层级不同。前者直接改变进程地址空间，后者由 `libc` 分配器在用户态管理堆块。
+前者直接改变进程地址空间，后者由 `libc` 分配器在用户态管理堆块。
 
 ## 内存API概述<a id=内存api概述></a>
 
@@ -109,7 +107,7 @@ head:
 | 系统调用  | `brk`、`sbrk`                       | 堆         | 用于改变堆大小   |
 | 用户库函数 | `malloc`、`calloc`、`realloc`、`free` | 分配器维护的内存块 | 在用户态完成块管理 |
 
-共享内存相关系统调用参见 [POSIX进程间通信](./operating-sys-8-ipc-posix.md)。
+共享内存相关系统调用参见 [POSIX进程间通信](./operating-sys-08-ipc-posix.md)。
 
 ## 系统调用<a id=系统调用></a>
 

@@ -101,12 +101,9 @@ head:
 
 ---
 
-在 [进程基础](./operating-sys-1-process.md)
-里，已经讨论过进程彼此隔离的地址空间；在 [POSIX同步 API](./operating-sys-7-synchronize-posix.md)
-里，又讨论了多个执行流如何协调访问共享资源。接下来要处理的是另一个问题：彼此独立的进程怎样交换数据。
+[进程基础](./operating-sys-01-process.md) 中已讨论进程彼此隔离的地址空间，[POSIX同步 API](./operating-sys-07-synchronize-posix.md) 讨论了多执行流如何协调访问共享资源。本篇聚焦***进程间通信***：彼此独立的进程如何交换数据。
 
-通信部分的理论主干相对集中，因此本篇将***进程间通信***的基本模型和 POSIX 接口合并到同一篇里，重点放在最常见的几类 Unix
-进程间通信模型上：共享内存、匿名管道、FIFO 与 socket。
+通信部分的理论主干相对集中，因此将基本模型与 POSIX 接口合并为同一篇，重点放在共享内存、匿名管道、FIFO 与 socket。
 
 ## IPC概述<a id=IPC概述></a>
 
@@ -291,7 +288,7 @@ int shm_unlink(const char *name);
 - 基于协议的单写者 / 单读者约束
 
 从分工上看，`shm_open + mmap` 负责共享，`semaphore / mutex`
-负责协调。这一点与上一章的 [POSIX同步 API](./operating-sys-7-synchronize-posix.md) 是衔接关系，而非重复关系。
+负责协调。这一点与上一章的 [POSIX同步 API](./operating-sys-07-synchronize-posix.md) 是衔接关系，而非重复关系。
 
 ### 7. 示例：生产者写，消费者读<a id=示例生产者写消费者读></a>
 
