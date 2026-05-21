@@ -7,6 +7,10 @@ export const siteMeta = {
   title: 'QuetzalSidera 的个人博客',
   description: '记录项目、技术栈、阅读和兴趣的个人博客',
   hostname: 'https://quetzalsidera.me',
+  author: 'QuetzalSidera',
+  themeColor: '#7fbcff',
+  defaultOgImage: '/og-image.webp',
+  defaultKeywords: ['QuetzalSidera', '个人博客', '技术博客', 'VitePress', '机器人', '操作系统', '算法'],
 }
 
 export const siteHead: HeadConfig[] = [
@@ -27,7 +31,7 @@ export const siteHead: HeadConfig[] = [
 
 export const blogThemeConfig: BlogThemeConfig = {
   menuList: [
-    { name: '首页', url: '' },
+    { name: '首页', url: '/' },
     { name: '标签', url: 'tags/' },
     { name: '文集', url: 'collections/' },
   ],
