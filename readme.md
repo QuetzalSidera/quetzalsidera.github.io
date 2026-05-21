@@ -18,7 +18,7 @@
 
 ## 主题配置
 
-主题主要配置文件在 [`.vitepress/config.mts`](/Users/qianshuang/Project/WebProject/Blog/.vitepress/config.mts)。
+主题主要配置文件在 [`.vitepress/config.mts`](.vitepress/config.mts)。
 
 当前已经补齐并启用的配置项包括：
 
