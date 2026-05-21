@@ -53,6 +53,15 @@ head:
 
 ---
 
+<Image
+src="/Imgs/operating-sys/cover.png"
+alt="操作系统导论"
+align="right"
+:wrap="true"
+maxHeight="28rem"
+caption="本文集的参考教材：操作系统导论"
+/>
+
 每当介绍操作系统时，往往无非分成这样几个章节
 
 1. 概述 - 操作系统的作用/组成/发展历史

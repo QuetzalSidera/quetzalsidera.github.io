@@ -4,8 +4,7 @@
     :class="{ postViewer: state.currPost.href, loadingComplete: !state.splashLoading }"
   >
     <slot></slot>
-
-    <canvas id="wave"></canvas>
+    <canvas id="wave" class="wave"></canvas>
     <video autoplay muted loop class="bg-video" v-if="videoBanner">
       <source src="../../assets/banner/banner_video.mp4" type="video/mp4" />
     </video>
@@ -22,6 +21,7 @@ const themeConfig = useBlogTheme()
 const videoBanner = themeConfig.videoBanner
 
 const { state } = useStore()
+
 class SiriWave {
   K: number
   F: number
@@ -150,7 +150,7 @@ function initAll() {
 
 function debounce(func: () => void, wait: number) {
   let timeout: number | undefined
-  return function () {
+  return function() {
     clearTimeout(timeout)
     timeout = window.setTimeout(() => {
       func()
@@ -178,15 +178,12 @@ onUnmounted(() => {
 </script>
 <style scoped lang="less">
 .banner {
-  transform: translateZ(0);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 0;
   width: 100%;
-  height: 75vh;
+  height: min(700px, 80dvh);
   mask: linear-gradient(to top, transparent, var(--general-background-color) 5%);
   perspective: 1000px;
   overflow: hidden;
@@ -221,15 +218,15 @@ onUnmounted(() => {
   }
 }
 
-.postViewer {
-  height: 50vh;
-}
 
 .bg-img {
+  z-index: -1;
   background-image: url(../../assets/banner/banner.webp);
+
   html[theme='dark'] & {
     background-image: url(../../assets/banner/banner_dark.webp), url(../../assets/banner/banner.webp);
   }
+
   position: absolute;
   top: 0;
   width: 100%;
@@ -255,4 +252,9 @@ onUnmounted(() => {
   bottom: 0;
   z-index: 50;
 }
+
+.wave {
+  max-width: 100%;
+}
+
 </style>

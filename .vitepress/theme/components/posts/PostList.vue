@@ -1,5 +1,5 @@
 <template>
-  <div class="container posts-content">
+  <div class="posts-content">
     <div class="posts-toolbar">
       <label class="sort-control">
         <span class="sort-label">排序</span>
@@ -312,6 +312,13 @@ watch(
 )
 </script>
 <style scoped lang="less">
+.posts-content {
+  width: min(100%, var(--max-content-width));
+  max-width: var(--max-content-width);
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
 .list-move,
 .list-enter-active,
 .list-leave-active {
@@ -332,6 +339,7 @@ watch(
 .posts-list {
   position: relative;
   overflow-wrap: break-word;
+  overflow: visible;
 }
 
 .posts-toolbar {
@@ -383,7 +391,7 @@ watch(
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 50px;
+  margin: 25px 0;
   padding: 0;
 
   button {
@@ -471,7 +479,6 @@ watch(
   }
 
   .sort-control {
-    width: 100%;
     justify-content: space-between;
     padding: 8px 12px;
   }

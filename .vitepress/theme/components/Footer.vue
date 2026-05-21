@@ -1,5 +1,5 @@
 <template>
-  <footer class="container">
+  <footer class="footer-container">
     <div class="footer-info">
       <span>© {{ new Date().getFullYear() }} {{ footerName }} <a href="https://beian.miit.gov.cn">{{ recordName
         }}</a>
@@ -28,6 +28,12 @@ const poweredList = themeConfig.poweredList
 
 </script>
 <style scoped lang="less">
+.footer-container {
+  width: min(100%, var(--max-content-width));
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+}
+
 footer {
   display: flex;
   align-items: center;

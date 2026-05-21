@@ -2,14 +2,14 @@
   <ul class="tags">
     <li :class="['item', { active: active === tag }]" v-for="(_, tag) in tagData">
       <a href="javascript:void(0)" @click="setTag(tag)"
-        ><i class="iconfont icon-tag"></i> {{ tag }}</a
+      ><i class="iconfont icon-tag"></i> {{ tag }}</a
       >
     </li>
   </ul>
 </template>
 <script setup lang="ts">
 import { data as posts, type PostData } from '../../utils/posts.data'
-import { ref, watch, onUnmounted, onMounted } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useStore } from '../../store'
 
 const active = ref<string | null>(null)
@@ -126,14 +126,16 @@ onUnmounted(() => {
   border-radius: 32px;
   border: solid 2px var(--foreground-color);
   backdrop-filter: var(--blur-val);
-  width: 768px;
-  z-index: 100;
+  width: 700px;
+  max-height: 70%;
+  margin: 0 10px;
+  overflow: scroll;
+  scrollbar-width: none;
 
   li {
     margin: 8px;
 
     a {
-      color: var(--font-color-grey);
       padding: 3px 5px;
       color: var(--font-color-gold);
       background-color: var(--btn-background);
@@ -149,11 +151,14 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
   .tags {
-    width: auto;
+    width: 75vw;
+
     li {
       margin: 4px;
+
       a {
         font-size: 12px;
+
         .icon-tag {
           font-size: 12px;
         }

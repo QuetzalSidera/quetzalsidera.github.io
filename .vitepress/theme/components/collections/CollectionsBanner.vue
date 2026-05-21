@@ -1,11 +1,12 @@
+<script setup lang="ts">
+import Banner from '../shared/Banner.vue'
+</script>
 <template>
-  <div class="post-banner">
-    <h1 class="title">文集</h1>
-  </div>
+  <Banner title="文集"></Banner>
 </template>
 
 <style scoped lang="less">
-.post-banner {
+.collections-banner {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,14 +16,14 @@
   z-index: 100;
   transition: color 0.5s;
 
-  .title {
+  .collections-banner-title {
     font-size: 4.5vw;
     margin: 0;
     text-align: center;
   }
 
   @media (max-width: 768px) {
-    .title {
+    .collections-banner-title {
       font-size: 5vh;
     }
   }

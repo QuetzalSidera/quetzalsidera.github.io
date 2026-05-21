@@ -1,7 +1,7 @@
 <template>
   <Splash></Splash>
   <template v-if="!page.isNotFound">
-    <main style="min-height: 100vh">
+    <main class='main'>
       <Navbar></Navbar>
       <BannerHero>
         <transition name="fade" mode="out-in">
@@ -17,7 +17,6 @@
     <ClientOnly>
       <SpinePlayer></SpinePlayer>
     </ClientOnly>
-    <ToTop></ToTop>
     <!-- 背景音乐元素 -->
     <audio id="background-music" loop>
       <source src="./assets/banner/bgm.mp3" type="audio/mpeg" />
@@ -39,7 +38,6 @@ import PostViewer from './components/posts/PostViewer.vue'
 import PostBanner from './components/posts/PostBanner.vue'
 import NotFound from './components/NotFound.vue'
 import Splash from './components/Splash.vue'
-import ToTop from './components/ToTop.vue'
 import Fireworks from './components/Fireworks.vue'
 import Footer from './components/Footer.vue'
 // @ts-ignore
@@ -199,15 +197,15 @@ watch(
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  --max-content-width: 1200px;
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
 
 body {
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   background-image: var(--theme-background-image);
   background-color: var(--general-background-color);
   background-size: cover;
@@ -220,6 +218,14 @@ body {
   color: var(--font-color-grey);
   font-family: 'Blueaka', sans-serif;
   transition: background-color 0.5s, color 0.5s;
+}
+
+.main {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 :root[theme='light'] {
@@ -255,9 +261,4 @@ a {
   background: var(--scrollbar-track-color);
 }
 
-@media (max-width: 768px) {
-  .container {
-    width: 100vw;
-  }
-}
 </style>

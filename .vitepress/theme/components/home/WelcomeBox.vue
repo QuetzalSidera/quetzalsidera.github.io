@@ -6,7 +6,7 @@
     @mouseleave="reset"
     :style="{ transform: `rotateY(${calcY}deg) rotateX(${calcX}deg)` }"
   >
-    <span class="welcome-text">{{ welcomeText }}</span>
+    <Banner :title="welcomeText" class="welcome-text"></Banner>
     <transition name="fade" appear>
       <div
         class="info-box"
@@ -36,6 +36,7 @@
 import { onMounted, ref } from 'vue'
 import { useBlogTheme } from '../../composables/useBlogTheme'
 import FontAwesomeIcon from '../FontAwesomeIcon.vue'
+import Banner from '../shared/Banner.vue'
 
 const themeConfig = useBlogTheme()
 const name = themeConfig.name
@@ -96,22 +97,21 @@ onMounted(() => {
 
 <style scoped lang="less">
 .welcome-box {
-  margin-top: 4.2vw;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 100;
   transition: transform 0.2s, color 0.5s, text-shadow 0.5s;
 }
 
 .welcome-text {
   font-size: 4.5vw;
+  margin: 0 10px 5vw;
   font-weight: bold;
   color: var(--welcome-text-color);
   text-shadow: var(--welcome-text-shadow);
   text-align: center;
-  margin-bottom: 5vw;
   user-select: none;
 }
 
@@ -120,11 +120,12 @@ onMounted(() => {
   flex-direction: column;
   align-items: center;
   position: relative;
-  padding: 6vh 2vw 3vh;
+  padding: 3.75vw 2vw 3vh;
   width: 40vw;
   border-radius: 3vw;
   box-shadow: var(--info-box-shadow);
-  backdrop-filter: var(--blur-val) saturate(120%);
+  border: none;
+  backdrop-filter: var(--blur-val);
 
   .avatar {
     position: absolute;
@@ -203,14 +204,14 @@ onMounted(() => {
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   .welcome-text {
     font-size: 5vh;
     margin-bottom: 10vh;
   }
 
   .info-box {
-    padding: 5vh 6vw 2vh;
+    padding: 5vh 6vw 5vh;
     width: 75vw;
     border-radius: 4vh;
 

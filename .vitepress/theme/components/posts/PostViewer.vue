@@ -1,22 +1,26 @@
 <template>
   <div class="post-viewer">
-    <div class="view-box container">
+    <div class="view-box">
       <content class="content" />
       <Gitalk v-if="themeConfig.clientID"></Gitalk>
     </div>
-    <PostOutline></PostOutline>
+    <PostSideList></PostSideList>
   </div>
 </template>
 <script setup lang="ts">
 import Gitalk from '../Gitalk.vue'
-import PostOutline from './PostOutline.vue'
 import { useBlogTheme } from '../../composables/useBlogTheme'
+import PostSideList from './PostSideList.vue'
+import { Content } from 'vitepress'
 
 const themeConfig = useBlogTheme()
 </script>
 <style lang="less">
 .post-viewer {
-  width: 100%;
+  width: min(100%, var(--max-content-width));
+  max-width: var(--max-content-width);
+  margin: 0 auto 25px;
+  overflow: visible;
 }
 
 .view-box {
@@ -70,7 +74,7 @@ const themeConfig = useBlogTheme()
   blockquote {
     margin: 16px 0;
     border-left: 3px solid #5cd3ff;
-    padding-left: 16px;
+    padding: 2px 5px 2px 16px;
     background-color: #5cd4ff25;
     border-radius: 8px;
 
@@ -124,6 +128,7 @@ const themeConfig = useBlogTheme()
     line-height: 40px;
     font-size: 35px;
     scroll-margin-top: 96px;
+    width: 100%;
   }
 
   h2 {
@@ -133,6 +138,7 @@ const themeConfig = useBlogTheme()
     padding-top: 24px;
     border-top: 2px dashed #ced4da;
     scroll-margin-top: 96px;
+    width: 100%;
 
     .header-anchor {
       top: 24px;
@@ -515,94 +521,94 @@ const themeConfig = useBlogTheme()
     font-weight: bold;
   }
 
-  .media-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-    margin: 24px 0 32px;
-  }
-
-  .media-card {
-    margin: 0;
-    padding: 16px;
-    border: 1px solid rgba(115, 184, 226, 0.35);
-    border-radius: 22px;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(232, 246, 255, 0.72));
-    box-shadow: 0 10px 24px rgba(91, 166, 214, 0.12);
-    backdrop-filter: blur(8px);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-
-    html[theme='dark'] & {
-      border-color: rgba(157, 124, 216, 0.35);
-      background: linear-gradient(180deg, rgba(39, 40, 59, 0.92), rgba(27, 28, 42, 0.82));
-      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
-    }
-
-
-    h3 {
-      margin: 14px 0 8px;
-      font-size: 18px;
-      line-height: 1.5;
-    }
-
-    p {
-      margin: 0;
-      font-size: 14px;
-      line-height: 1.8;
-      color: var(--font-color-grey);
-    }
-
-    code {
-      font-size: 0.95em;
-    }
-  }
-
-  .media-card img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    border-radius: 16px;
-    border: 1px solid rgba(255, 255, 255, 0.55);
-    background: rgba(255, 255, 255, 0.35);
-
-    html[theme='dark'] & {
-      border-color: rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.04);
-    }
-  }
-
-  .media-link {
-    display: block;
-    border-radius: 16px;
-    text-decoration: none;
-    overflow: hidden;
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-
-    &:hover img {
-      transform: scale(1.03);
-      filter: var(--img-brightness) saturate(1.05);
-    }
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 30px rgba(91, 166, 214, 0.2);
-
-      html[theme='dark'] & {
-        box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
-      }
-
-    }
-  }
-
-  .media-link img {
-    transition: transform 0.25s ease, filter 0.25s ease;
-    margin: 0;
-  }
-
-  .media-title {
-    text-align: center;
-  }
+  //.media-grid {
+  //  display: grid;
+  //  grid-template-columns: repeat(2, minmax(0, 1fr));
+  //  gap: 20px;
+  //  margin: 24px 0 32px;
+  //}
+  //
+  //.media-card {
+  //  margin: 0;
+  //  padding: 16px;
+  //  border: 1px solid rgba(115, 184, 226, 0.35);
+  //  border-radius: 22px;
+  //  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(232, 246, 255, 0.72));
+  //  box-shadow: 0 10px 24px rgba(91, 166, 214, 0.12);
+  //  backdrop-filter: blur(8px);
+  //  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  //
+  //  html[theme='dark'] & {
+  //    border-color: rgba(157, 124, 216, 0.35);
+  //    background: linear-gradient(180deg, rgba(39, 40, 59, 0.92), rgba(27, 28, 42, 0.82));
+  //    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+  //  }
+  //
+  //
+  //  h3 {
+  //    margin: 14px 0 8px;
+  //    font-size: 18px;
+  //    line-height: 1.5;
+  //  }
+  //
+  //  p {
+  //    margin: 0;
+  //    font-size: 14px;
+  //    line-height: 1.8;
+  //    color: var(--font-color-grey);
+  //  }
+  //
+  //  code {
+  //    font-size: 0.95em;
+  //  }
+  //}
+  //
+  //.media-card img {
+  //  display: block;
+  //  width: 100%;
+  //  aspect-ratio: 4 / 3;
+  //  object-fit: cover;
+  //  border-radius: 16px;
+  //  border: 1px solid rgba(255, 255, 255, 0.55);
+  //  background: rgba(255, 255, 255, 0.35);
+  //
+  //  html[theme='dark'] & {
+  //    border-color: rgba(255, 255, 255, 0.08);
+  //    background: rgba(255, 255, 255, 0.04);
+  //  }
+  //}
+  //
+  //.media-link {
+  //  display: block;
+  //  border-radius: 16px;
+  //  text-decoration: none;
+  //  overflow: hidden;
+  //  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  //
+  //  &:hover img {
+  //    transform: scale(1.03);
+  //    filter: var(--img-brightness) saturate(1.05);
+  //  }
+  //
+  //  &:hover {
+  //    transform: translateY(-4px);
+  //    box-shadow: 0 16px 30px rgba(91, 166, 214, 0.2);
+  //
+  //    html[theme='dark'] & {
+  //      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+  //    }
+  //
+  //  }
+  //}
+  //
+  //.media-link img {
+  //  transition: transform 0.25s ease, filter 0.25s ease;
+  //  margin: 0;
+  //}
+  //
+  //.media-title {
+  //  text-align: center;
+  //}
 
   /**
  * others

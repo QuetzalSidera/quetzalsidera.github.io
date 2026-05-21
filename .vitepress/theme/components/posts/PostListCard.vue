@@ -1,5 +1,5 @@
 <template>
-  <article class="post">
+  <article class="post-list-card">
     <span v-if="item.pinned" class="pinned"></span>
     <header class="post-header">
       <div v-if="item.cover" class="cover-container">
@@ -73,7 +73,7 @@ function formatDate(timestamp: number): string {
 </script>
 
 <style scoped lang="less">
-.post {
+.post-list-card {
   display: flex;
   flex-direction: column;
   margin: 0 0 50px 0;
@@ -85,7 +85,7 @@ function formatDate(timestamp: number): string {
   background-size: contain;
   background-position: right;
   background-repeat: no-repeat;
-  box-shadow: 0px 0px 8px rgb(var(--blue-shadow-color), 0.8);
+  box-shadow: 0 0 8px rgb(var(--blue-shadow-color), 0.8);
   transition: all 0.5s;
 }
 
@@ -184,6 +184,7 @@ function formatDate(timestamp: number): string {
   display: flex;
   margin-bottom: 7px;
   opacity: 0.75;
+  flex-wrap: wrap;
 
   .time {
     font-size: 13px;
@@ -259,7 +260,7 @@ function formatDate(timestamp: number): string {
 }
 
 @media (max-width: 768px) {
-  .post {
+  .post-list-card {
     margin: 0 8px 30px;
     background-size: cover;
     border-left: solid 1.5vh var(--pot-border-left);

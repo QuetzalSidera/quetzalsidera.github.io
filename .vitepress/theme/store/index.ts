@@ -14,6 +14,8 @@ interface StoreState {
   spinePlayerEnabled: boolean
   showDropdownMenu: boolean
   darkMode: 'light' | 'dark' | 'system'
+  //是否展示文章导航
+  outlineState: 'expanded' | 'expanding' | 'collapsing' | 'collapsed',
 }
 
 const state: StoreState = reactive({
@@ -28,6 +30,7 @@ const state: StoreState = reactive({
   spinePlayerEnabled: false,
   showDropdownMenu: false,
   darkMode: 'system',
+  outlineState: 'expanded',
 })
 
 export function useStore() {

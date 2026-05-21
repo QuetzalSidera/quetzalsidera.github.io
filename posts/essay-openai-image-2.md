@@ -1,5 +1,5 @@
 ---
-title: OpenAI-Image-2浅尝
+title: OpenAI-Image-2 浅尝
 date: 2026-04-22
 tags: [ AI, OpenAI ]
 pinned: false
@@ -7,56 +7,91 @@ collection: 随笔
 head:
   - - meta
     - name: description
-      content: 第一次使用 OpenAI-Image-2 的感想
+      content: OpenAI Image-2 去水印、漫画翻嵌、招生海报三个场景的试用记录与评价。
   - - meta
     - name: keywords
-      content: OpenAI-Image-2 ,OpenAI,图像生成
+      content: OpenAI-Image-2, OpenAI, 图像生成, 去水印, 漫画翻嵌, 海报生成
 ---
 
-第一次使用 OpenAI-Image-2 的感想
+本文记录 `Image-2`在去水印、漫画翻嵌、招生海报三个场景的试用结果。
+
+---
+OpenAI 在 2026 年 4 月 21 日发布了 `Image-2`，于是急不可耐直接开吃😋。
+
+## 1. 去水印
+
+原图角色主体明确，水印区域覆盖在画面上，背景不算复杂，适合观察模型的补图能力。
+
+<Image
+src="/Imgs/OpenAI-Image-2-Test/阿洛娜与普拉娜.png"
+alt="阿洛娜与普拉娜去水印结果"
+align="right"
+:wrap="true"
+maxHeight="26rem"
+caption="处理后：主体还原完整，但边缘和局部细节仍有修补痕迹。"
+/>
+
+<Image
+src="/Imgs/OpenAI-Image-2-Test/阿洛娜与普拉娜（原图）.jpeg"
+alt="阿洛娜与普拉娜原图"
+align="right"
+:wrap="true"
+maxHeight="26rem"
+caption="原图：带有水印的角色插画。"
+/>
+
+角色主体未被严重破坏，颜色衔接和大块面补全自然，堪称完美。
+
+## 2. 漫画翻嵌
+
+翻嵌漫画比去水印更复杂——除补图外还需替换文本、识别对话框位置、控制中文排版、维持画面阅读节奏。
+
+<Image
+src="/Imgs/OpenAI-Image-2-Test/漫画（翻嵌）.png"
+alt="漫画翻嵌结果"
+align="right"
+:wrap="true"
+maxHeight="28rem"
+caption="处理后：中文文本可读性明显提升，画面氛围基本保留。"
+/>
+
+<Image
+src="/Imgs/OpenAI-Image-2-Test/漫画.jpg"
+alt="漫画原图"
+align="right"
+:wrap="true"
+maxHeight="28rem"
+caption="原图：待翻嵌的漫画页面。"
+/>
+
+此前多数模型在中文上不稳定。但`Image-2`输出的基本上可以用来发布了（最方便烤肉的一集）。
+
+问题仍在：标点排版不太干净，字体样式学习还是欠佳，原图看字体边缘很明显是圆体，而翻嵌字体的圆角貌似没了。
+
+字距与气泡边缘贴合不稳定，字体粗细也不是特别协调。
+
+但无论如何，自用或者用来给汉化组做前期处理应该是很足够了。
+
+## 3. 招生海报
+
+海报是综合任务：要求构图、视觉重心安排、中文字渲染，同时不能出现过度"AI 感"。
+
+<Image
+src="/Imgs/OpenAI-Image-2-Test/海报.jpg"
+alt="招生海报"
+align="center"
+:wrap="false"
+maxHeight="30rem"
+caption="招生海报测试图。"
+/>
+
+当时生成那一瞬间确实给我震惊到了，甚至还原了学校的Logo，而图片提示词还没有标题长...
+
+虽然背景不太恰当，部分字体与二维码依然果冻化，但应该是远远领先同类模型了。
 
 ---
 
-今天早上看见新闻，昨天OpenAI发布了Image-2模型，感觉网上反响还挺大的，于是浅尝😋
+试用后感觉`Image-2`已经可以满足很多非正式商业需求了。
 
-不得不说GPT终于知道怎么写字（中文）了
-
-感觉细节处理还是有些问题，二维码还是有些果冻化
-
-但是用来翻嵌漫画，画一些简单宣传海报或者同人图应该是是完全足够了
-
-# 1. 去水印
-
-<div class="media-grid">
-  <article class="media-card">
-    <img  src="/Imgs/OpenAI-Image-2-Test/阿洛娜与普拉娜（原图）.jpeg" alt="阿洛娜与普拉娜（原图）" />
-    <h3 class="media-title">原图</h3>
-  </article>
- <article class="media-card">
-    <img  src="/Imgs/OpenAI-Image-2-Test/阿洛娜与普拉娜.png" alt="阿洛娜与普拉娜" />
-    <h3 class="media-title">去水印</h3>
-  </article>
-</div>
-
-# 2.翻嵌漫画
-
-<div class="media-grid">
-  <article class="media-card">
-    <img  src="/Imgs/OpenAI-Image-2-Test/漫画.jpg" alt="漫画（原图）" />
-    <h3 class="media-title">原图</h3>
-  </article>
- <article class="media-card">
-    <img  src="/Imgs/OpenAI-Image-2-Test/漫画（翻嵌）.png" alt="漫画（翻嵌）" />
-    <h3 class="media-title">翻嵌</h3>
-  </article>
-</div>
-
-# 3.招生海报
-
-<article class="media-card">
-    <img  src="/Imgs/OpenAI-Image-2-Test/海报.jpg" alt="海报" />
-    <h3 class="media-title">招生海报</h3>
-  </article>
-
-
+除此之外，好像OpenAI也把各个模型的识图能力同步提高了，拿来写实验报告与作业准确度提高了很多。
 

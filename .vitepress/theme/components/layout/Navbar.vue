@@ -1,5 +1,5 @@
 <template>
-  <header :class="{ postViewer: state.currPost.href }" class="container">
+  <header :class="{ postViewer: state.currPost.href }" class="header-container">
     <nav>
       <span class="logo">
         <img @dragstart.prevent src="../../assets/icon/navLogo.svg" alt="" />
@@ -75,29 +75,31 @@ const handleNavClick = (url: string) => {
 </script>
 
 <style scoped lang="less">
-.container {
+.header-container {
   --navbar-height: 72px;
-  --navbar-side-gap: 16px;
-
+  width: min(100%, var(--max-content-width));
+  max-width: var(--max-content-width);
+  margin: 0 auto;
 }
 
-.postViewer {
-  height: 50vh;
-}
 
 header {
-  height: 75vh;
+  width: 100%;
+  min-width: 100%;
 
   nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    width: min(1200px, 100dvw);
+
+    height: var(--navbar-height);
     position: fixed;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: min(1200px, 100vw);
-    height: var(--navbar-height);
+
     z-index: 200;
     box-sizing: border-box;
     padding: 0 16px;
@@ -120,16 +122,18 @@ header {
   }
 
   .menu {
+    max-width: 70%;
+    min-width: 50%;
+
     ul {
       width: 100%;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-around;
       padding: 0;
       margin: 0;
 
       li {
-        margin: 0 64px;
 
         a {
           display: block;
@@ -138,8 +142,8 @@ header {
           font-size: 20px;
           font-weight: 600;
           color: var(--font-color-grey);
-          transition: all 0.5s;
           transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+          text-wrap: nowrap;
 
           &:hover {
             color: var(--font-color-gold);
@@ -184,15 +188,12 @@ header {
 }
 
 @media (max-width: 768px) {
-  .container {
+  .header-container {
     --navbar-height: 64px;
-    --navbar-side-gap: 8px;
   }
 
   header {
-    nav {
-      width: calc(100vw - (var(--navbar-side-gap) * 2));
-    }
+
 
     .logo {
       img {
@@ -203,8 +204,6 @@ header {
     .menu {
       ul {
         li {
-          margin: 0 10px;
-
           a {
             font-size: 16px;
           }

@@ -1,6 +1,7 @@
 // https://vitepress.dev/guide/custom-theme
 import Layout from './Layout.vue'
 import type { Theme } from 'vitepress'
+import Image from './components/shared/Image.vue'
 import 'normalize.css'
 import '@fontsource/jetbrains-mono'
 import './assets/icon/iconfont.css'
@@ -11,6 +12,8 @@ import './components/spine/spine-player.css'
 export default {
   Layout,
   enhanceApp({ app, router, siteData }) {
+    app.component('Image', Image)
+
     // ...
   },
 } satisfies Theme
