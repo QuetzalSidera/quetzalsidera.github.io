@@ -1,6 +1,5 @@
 {
   "name": "quetzalsidera-blog",
-  "packageManager": "pnpm@9.0.0",
   "version": "0.0.1",
   "description": "QuetzalSidera 的个人博客，基于 VitePress",
   "type": "module",
