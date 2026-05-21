@@ -15,8 +15,7 @@
     "less": "^4.2.2",
     "markdown-it-mathjax3": "^4.3.2",
     "vitepress": "^1.6.3",
-    "vue": "^3.5.13",
-    "wrangler": "^4.93.0"
+    "vue": "^3.5.13"
   },
   "scripts": {
     "dev": "vitepress dev",
@@ -29,6 +28,7 @@
     "@fortawesome/free-regular-svg-icons": "^7.2.0",
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "animejs": "^3.2.2",
+    "gitalk": "^1.8.0",
     "gray-matter": "^4.0.3",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.14.0",

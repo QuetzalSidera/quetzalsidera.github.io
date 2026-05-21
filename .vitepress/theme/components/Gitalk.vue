@@ -1,18 +1,21 @@
 <template>
   <div class="gitalk-container gt-container">
-    <div id="gitalk-container"></div>
+    <div ref="containerRef"></div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
+import Gitalk from 'gitalk'
+import 'gitalk/dist/gitalk.css'
 import md5 from 'md5'
 import { useBlogTheme } from '../composables/useBlogTheme'
 
 const themeConfig = useBlogTheme()
-declare var Gitalk: any
+const containerRef = ref<HTMLElement | null>(null)
+
 onMounted(() => {
-  if (typeof window === 'undefined' || typeof Gitalk === 'undefined') {
+  if (typeof window === 'undefined' || !containerRef.value) {
     return
   }
 
@@ -28,7 +31,8 @@ onMounted(() => {
 
   try {
     const gitalk = new Gitalk(commentConfig)
-    gitalk.render('gitalk-container')
+    containerRef.value.innerHTML = ''
+    gitalk.render(containerRef.value)
   } catch (error) {
     console.error('Gitalk 初始化失败:', error)
   }

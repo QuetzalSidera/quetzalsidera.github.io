@@ -15,8 +15,6 @@ export const siteMeta = {
 
 export const siteHead: HeadConfig[] = [
   ['link', { rel: 'shortcut icon', href: '/favicon.webp' }],
-  ['link', { rel: 'stylesheet', href: 'https://unpkg.com/gitalk/dist/gitalk.css' }],
-  ['script', { src: 'https://unpkg.com/gitalk/dist/gitalk.min.js' }],
   ['link', { rel: 'stylesheet', href: '/font/Blueaka/Blueaka.css' }],
   ['link', { rel: 'stylesheet', href: '/font/Blueaka_Bold/Blueaka_Bold.css' }],
   ['link', { rel: 'stylesheet', href: '/styles/fancybox.css' }],
