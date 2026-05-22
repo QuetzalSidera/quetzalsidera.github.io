@@ -4,6 +4,7 @@ date: 2026-05-21T00:00:00
 tags: [ Cloudflare, GitHub, VitePress, 个人博客 ]
 pinned: false
 collection: 个人博客的更新记录
+cover: /Image/Memes/Alice_CAPTCHA.webp
 outline:
   - title: 概要
     slug: 概要

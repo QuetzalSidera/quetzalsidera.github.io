@@ -4,6 +4,8 @@ date: 2026-05-22T00:00:00
 tags: [ 个人博客,TypeScript,VitePress ]
 pinned: false
 collection: 个人博客的更新记录
+cover: /Image/Background/基沃托斯体育馆.webp
+
 outline:
   - title: 概要
     slug: 概要

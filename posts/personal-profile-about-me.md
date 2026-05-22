@@ -4,6 +4,7 @@ date: 2026-04-07
 tags: [ 自我介绍, 个人博客 ]
 pinned: true
 collection: 个人档案
+cover: /Image/Portrait/阿洛娜_比心.webp
 outline:
   - title: 主线剧情
     slug: 主线剧情
@@ -47,7 +48,7 @@ outline:
 
   - title: 文化建设
     slug: 文化建设
-    
+
 head:
   - - meta
     - name: description
