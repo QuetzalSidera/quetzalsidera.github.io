@@ -26,6 +26,62 @@ head:
 
 ---
 
+<script setup lang="ts">
+import Image from '../.vitepress/theme/components/shared/Image.vue'
+import { path as miscellaneousImagePath } from '@Miscellaneous/path'
+
+const createImage = (name: keyof typeof miscellaneousImagePath, alt: string, caption: string, captionLink: string) => ({
+  src: miscellaneousImagePath[name],
+  alt,
+  align: 'center' as const,
+  wrap: false,
+  maxHeight: '16rem',
+  caption,
+  captionLink,
+})
+
+const gameImages = [
+  createImage('蔚蓝档案', '蔚蓝档案', '《蔚蓝档案》：“一切奇迹的起点”', 'https://bluearchive-cn.com'),
+  createImage('我的世界', '我的世界', 'Minecraft：无限续杯的创作沙盒。', 'https://www.minecraft.net/zh-hans'),
+]
+
+const bookImages = [
+  createImage('精神分析引论', '精神分析引论', '《精神分析引论》', 'https://weread.qq.com/web/reader/6d332150727c90136d3799b'),
+  createImage('发现的乐趣', '发现的乐趣', '《发现的乐趣》', 'https://weread.qq.com/web/reader/7af32ba05e01507af3447c7'),
+  createImage('逃避自由', '逃避自由', '《逃避自由》', 'https://weread.qq.com/web/bookDetail/f70322c0811e33942g014cf5'),
+  createImage('爱的艺术', '爱的艺术', '《爱的艺术》', 'https://weread.qq.com/web/reader/d7d32d70722dd429d7d723d'),
+  createImage('娱乐至死', '娱乐至死', '《娱乐至死》', 'https://weread.qq.com/web/reader/aef326f05d0f19aef085d2b'),
+  createImage('我的世界观', '我的世界观', '《我的世界观》', 'https://weread.qq.com/web/bookDetail/83c329e07166cdd783c051d'),
+]
+
+const bangumiImages = [
+  createImage('星之梦', '星之梦', '《星之梦》', 'https://www.bilibili.com/bangumi/play/ep90842'),
+  createImage('可塑性记忆', '可塑性记忆', '《可塑性记忆》', 'https://www.imdb.com/title/tt4603222/'),
+  createImage('孤独摇滚', '孤独摇滚', '《孤独摇滚》', 'https://www.bilibili.com/bangumi/play/ep693247'),
+  createImage('东方幼灵梦', '东方幼灵梦', '《东方幼灵梦》', 'https://baike.baidu.com/item/%E4%B8%9C%E6%96%B9%E5%B9%BC%E7%81%B5%E6%A2%A6/7904133'),
+  createImage('你的名字', '你的名字', '《你的名字》', 'https://www.imdb.com/title/tt5311514/'),
+  createImage('大鱼海棠', '大鱼海棠', '《大鱼海棠》', 'https://www.imdb.com/title/tt1920885/'),
+]
+
+const movieImages = [
+  createImage('冰雪奇缘', '冰雪奇缘', '《冰雪奇缘》', 'https://www.bilibili.com/bangumi/play/ss46052'),
+  createImage('冰雪奇缘II', '冰雪奇缘 II', '《冰雪奇缘 II》', 'https://www.bilibili.com/bangumi/play/ss46062'),
+  createImage('头脑特工队', '头脑特工队', '《头脑特工队》', 'https://www.bilibili.com/bangumi/play/ss46265'),
+  createImage('狮子王', '狮子王', '《狮子王》', 'https://www.bilibili.com/bangumi/play/ss46258'),
+  createImage('心灵奇旅', '心灵奇旅', '《心灵奇旅》', 'https://www.bilibili.com/bangumi/play/ss46248'),
+  createImage('泰山', '泰山', '《泰山》', 'https://www.imdb.com/title/tt0120855'),
+]
+
+const musicImages = [
+  createImage('Ones-hope', 'Ones hope', 'Ones hope', 'https://www.bilibili.com/video/BV1A14y1n7hK'),
+  createImage('温柔的回忆', '温柔的回忆', '温柔的回忆', 'https://www.bilibili.com/video/BV1Ag4y1b7pa'),
+  createImage('ShowYourself', 'Show Yourself', 'Show Yourself', 'https://www.bilibili.com/video/BV1oh4y1Z72f'),
+  createImage('像风一样自由', '像风一样自由', '像风一样自由', 'https://www.bilibili.com/video/BV1Ba4y1Q7NE'),
+  createImage('Greensleeves', 'Greensleeves', 'Greensleeves', 'https://www.bilibili.com/video/BV1P8411o7PL'),
+  createImage('Time-for-Miracles', 'Time for Miracles', 'Time for Miracles', 'https://www.bilibili.com/video/BV1EzHDzLE6R/'),
+]
+</script>
+
 # 文化建设
 
 这一板块的名字叫“文化建设”。我很喜欢这个说法，因为它听起来不像简单的“列爱好”，若将“文化”这一词从 “社会” 领域迁移到 “个人” 身上，也许个人的兴趣爱好、价值观也能被称为“文化”吧。
@@ -42,24 +98,7 @@ head:
 一个偏角色与故事，一个偏创造与自由。放在一起看，像两家完全不同口味的小店，但我都愿意反复回访。
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; align-items: start;">
-  <Image
-    src="/Imgs/Games/蔚蓝档案.jpeg"
-    alt="蔚蓝档案"
-    align="center"
-    :wrap="false"
-    maxHeight="16rem"
-    caption="《蔚蓝档案》：“一切奇迹的起点”"
-    captionLink="https://bluearchive-cn.com"
-  />
-  <Image
-    src="/Imgs/Games/我的世界.jpg"
-    alt="我的世界"
-    align="center"
-    :wrap="false"
-    maxHeight="16rem"
-    caption="Minecraft：无限续杯的创作沙盒。"
-    captionLink="https://www.minecraft.net/zh-hans"
-  />
+  <Image v-for="image in gameImages" :key="image.src" v-bind="image" />
 </div>
 
 ## 阅读
@@ -78,12 +117,7 @@ head:
 这些书放在一起看，像一桌风格完全不同的老师。有的负责拆解人心，有的负责提醒你保持好奇，有的则会温柔但不客气地问一句：“你现在这套活法，真的是你自己选的吗？”
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; align-items: start;">
-  <Image src="/Imgs/Books/精神分析引论.jpeg" alt="精神分析引论" align="center" :wrap="false" maxHeight="16rem" caption="《精神分析引论》" captionLink="https://weread.qq.com/web/reader/6d332150727c90136d3799b" />
-  <Image src="/Imgs/Books/发现的乐趣.png" alt="发现的乐趣" align="center" :wrap="false" maxHeight="16rem" caption="《发现的乐趣》" captionLink="https://weread.qq.com/web/reader/7af32ba05e01507af3447c7" />
-  <Image src="/Imgs/Books/逃避自由.jpeg" alt="逃避自由" align="center" :wrap="false" maxHeight="16rem" caption="《逃避自由》" captionLink="https://weread.qq.com/web/bookDetail/f70322c0811e33942g014cf5" />
-  <Image src="/Imgs/Books/爱的艺术.jpg" alt="爱的艺术" align="center" :wrap="false" maxHeight="16rem" caption="《爱的艺术》" captionLink="https://weread.qq.com/web/reader/d7d32d70722dd429d7d723d" />
-  <Image src="/Imgs/Books/娱乐至死.jpeg" alt="娱乐至死" align="center" :wrap="false" maxHeight="16rem" caption="《娱乐至死》" captionLink="https://weread.qq.com/web/reader/aef326f05d0f19aef085d2b" />
-  <Image src="/Imgs/Books/我的世界观.jpeg" alt="我的世界观" align="center" :wrap="false" maxHeight="16rem" caption="《我的世界观》" captionLink="https://weread.qq.com/web/bookDetail/83c329e07166cdd783c051d" />
+  <Image v-for="image in bookImages" :key="image.src" v-bind="image" />
 </div>
 
 ## 番剧与动画电影
@@ -102,12 +136,7 @@ head:
 这些作品有的像月光，有的像晚风，也有的像你某段时间的影子。平时它们安安静静地待在记忆角落里，但只要被提起，情绪就会立刻“啪”一下上线。
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; align-items: start;">
-  <Image src="/Imgs/Bangumi/星之梦.jpeg" alt="星之梦" align="center" :wrap="false" maxHeight="16rem" caption="《星之梦》" captionLink="https://www.bilibili.com/bangumi/play/ep90842" />
-  <Image src="/Imgs/Bangumi/可塑性记忆.png" alt="可塑性记忆" align="center" :wrap="false" maxHeight="16rem" caption="《可塑性记忆》" captionLink="https://www.imdb.com/title/tt4603222/" />
-  <Image src="/Imgs/Bangumi/孤独摇滚.jpg" alt="孤独摇滚" align="center" :wrap="false" maxHeight="16rem" caption="《孤独摇滚》" captionLink="https://www.bilibili.com/bangumi/play/ep693247" />
-  <Image src="/Imgs/Bangumi/东方幼灵梦.jpeg" alt="东方幼灵梦" align="center" :wrap="false" maxHeight="16rem" caption="《东方幼灵梦》" captionLink="https://baike.baidu.com/item/%E4%B8%9C%E6%96%B9%E5%B9%BC%E7%81%B5%E6%A2%A6/7904133" />
-  <Image src="/Imgs/Bangumi/你的名字.jpg" alt="你的名字" align="center" :wrap="false" maxHeight="16rem" caption="《你的名字》" captionLink="https://www.imdb.com/title/tt5311514/" />
-  <Image src="/Imgs/Bangumi/大鱼海棠.jpg" alt="大鱼海棠" align="center" :wrap="false" maxHeight="16rem" caption="《大鱼海棠》" captionLink="https://www.imdb.com/title/tt1920885/" />
+  <Image v-for="image in bangumiImages" :key="image.src" v-bind="image" />
 </div>
 
 ## 电影
@@ -126,12 +155,7 @@ head:
 如果说有些电影是在讲故事，那这些作品更像在悄悄帮人整理情绪。看完不一定立刻满血复活，但通常会比点开前更愿意继续往前走一点。
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; align-items: start;">
-  <Image src="/Imgs/Movies/冰雪奇缘.jpg" alt="冰雪奇缘" align="center" :wrap="false" maxHeight="16rem" caption="《冰雪奇缘》" captionLink="https://www.bilibili.com/bangumi/play/ss46052" />
-  <Image src="/Imgs/Movies/冰雪奇缘II.jpeg" alt="冰雪奇缘 II" align="center" :wrap="false" maxHeight="16rem" caption="《冰雪奇缘 II》" captionLink="https://www.bilibili.com/bangumi/play/ss46062" />
-  <Image src="/Imgs/Movies/头脑特工队.jpg" alt="头脑特工队" align="center" :wrap="false" maxHeight="16rem" caption="《头脑特工队》" captionLink="https://www.bilibili.com/bangumi/play/ss46265" />
-  <Image src="/Imgs/Movies/狮子王.jpeg" alt="狮子王" align="center" :wrap="false" maxHeight="16rem" caption="《狮子王》" captionLink="https://www.bilibili.com/bangumi/play/ss46258" />
-  <Image src="/Imgs/Movies/心灵奇旅.jpg" alt="心灵奇旅" align="center" :wrap="false" maxHeight="16rem" caption="《心灵奇旅》" captionLink="https://www.bilibili.com/bangumi/play/ss46248" />
-  <Image src="/Imgs/Movies/泰山.jpg" alt="泰山" align="center" :wrap="false" maxHeight="16rem" caption="《泰山》" captionLink="https://www.imdb.com/title/tt0120855" />
+  <Image v-for="image in movieImages" :key="image.src" v-bind="image" />
 </div>
 
 ## 音乐
@@ -150,10 +174,5 @@ head:
 这些曲目像是一串不同口味的情绪钥匙。想安静一点、想被鼓励一下、想短暂离开现实喘口气时，它们总能有人值班，不会让耳机里只剩下沉默。
 
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; align-items: start;">
-  <Image src="/Imgs/Musics/Ones-hope.jpg" alt="Ones hope" align="center" :wrap="false" maxHeight="16rem" caption="Ones hope" captionLink="https://www.bilibili.com/video/BV1A14y1n7hK" />
-  <Image src="/Imgs/Musics/温柔的回忆.jpeg" alt="温柔的回忆" align="center" :wrap="false" maxHeight="16rem" caption="温柔的回忆" captionLink="https://www.bilibili.com/video/BV1Ag4y1b7pa" />
-  <Image src="/Imgs/Musics/ShowYourself.jpeg" alt="Show Yourself" align="center" :wrap="false" maxHeight="16rem" caption="Show Yourself" captionLink="https://www.bilibili.com/video/BV1oh4y1Z72f" />
-  <Image src="/Imgs/Musics/像风一样自由.jpeg" alt="像风一样自由" align="center" :wrap="false" maxHeight="16rem" caption="像风一样自由" captionLink="https://www.bilibili.com/video/BV1Ba4y1Q7NE" />
-  <Image src="/Imgs/Musics/Greensleeves.jpg" alt="Greensleeves" align="center" :wrap="false" maxHeight="16rem" caption="Greensleeves" captionLink="https://www.bilibili.com/video/BV1P8411o7PL" />
-  <Image src="/Imgs/Musics/Time-for-Miracles.jpeg" alt="Time for Miracles" align="center" :wrap="false" maxHeight="16rem" caption="Time for Miracles" captionLink="https://www.bilibili.com/video/BV1EzHDzLE6R/" />
+  <Image v-for="image in musicImages" :key="image.src" v-bind="image" />
 </div>

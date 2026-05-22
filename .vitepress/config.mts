@@ -1,6 +1,7 @@
 import { defineConfigWithTheme } from 'vitepress'
 // @ts-ignore
 import mdItCustomAttrs from 'markdown-it-custom-attrs'
+import { resolve } from 'node:path'
 import { blogThemeConfig, siteHead, siteMeta } from './theme/config/site'
 import { createSeoHead, derivePageDescription } from './theme/config/seo'
 import type { BlogThemeConfig } from './theme/types/theme'
@@ -22,6 +23,15 @@ export default defineConfigWithTheme<BlogThemeConfig>({
   },
   transformHead: (context) => {
     return createSeoHead(context)
+  },
+  vite: {
+    resolve: {
+      alias: {
+        '@public': resolve(process.cwd(), 'public'),
+        '@Image': resolve(process.cwd(), 'public/Image'),
+        '@Miscellaneous': resolve(process.cwd(), 'public/Image/Miscellaneous'),
+      },
+    },
   },
   themeConfig: blogThemeConfig,
   markdown: {

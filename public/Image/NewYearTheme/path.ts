@@ -1,0 +1,11 @@
+export const path = {
+  "圣娅_万": "/Image/NewYearTheme/圣娅_万.webp",
+  "小鸟游星野_快": "/Image/NewYearTheme/小鸟游星野_快.webp",
+  "日奈_新": "/Image/NewYearTheme/日奈_新.webp",
+  "未花_事": "/Image/NewYearTheme/未花_事.webp",
+  "清澄晶_意": "/Image/NewYearTheme/清澄晶_意.webp",
+  "白洲梓_倒福": "/Image/NewYearTheme/白洲梓_倒福.webp",
+  "白洲梓_年": "/Image/NewYearTheme/白洲梓_年.webp",
+  "砂狼白子_乐": "/Image/NewYearTheme/砂狼白子_乐.webp",
+  "鬼方佳代子_如": "/Image/NewYearTheme/鬼方佳代子_如.webp"
+} as const;

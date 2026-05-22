@@ -3,6 +3,12 @@
     "target": "es2016",
     "module": "es2022",
     "moduleResolution": "Node",
+    "baseUrl": ".",
+    "paths": {
+      "@public/*": ["public/*"],
+      "@Image/*": ["public/Image/*"],
+      "@Miscellaneous/*": ["public/Image/Miscellaneous/*"]
+    },
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,

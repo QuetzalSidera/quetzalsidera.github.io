@@ -1,0 +1,20 @@
+export const path = {
+  "乐队合照1": "/Image/GroupPhoto/乐队合照1.webp",
+  "乐队合照2": "/Image/GroupPhoto/乐队合照2.webp",
+  "乐队合照3": "/Image/GroupPhoto/乐队合照3.webp",
+  "千禧年的孩子们": "/Image/GroupPhoto/千禧年的孩子们.webp",
+  "妮露和爱丽丝1": "/Image/GroupPhoto/妮露和爱丽丝1.webp",
+  "妮露和爱丽丝2": "/Image/GroupPhoto/妮露和爱丽丝2.webp",
+  "妮露和爱丽丝3": "/Image/GroupPhoto/妮露和爱丽丝3.webp",
+  "妮露和爱丽丝4": "/Image/GroupPhoto/妮露和爱丽丝4.webp",
+  "妮露和爱丽丝5": "/Image/GroupPhoto/妮露和爱丽丝5.webp",
+  "妮露和爱丽丝6": "/Image/GroupPhoto/妮露和爱丽丝6.webp",
+  "妮露和爱丽丝7_宽版": "/Image/GroupPhoto/妮露和爱丽丝7_宽版.webp",
+  "妮露和爱丽丝8_宽版": "/Image/GroupPhoto/妮露和爱丽丝8_宽版.webp",
+  "妮露和爱丽丝9_宽版": "/Image/GroupPhoto/妮露和爱丽丝9_宽版.webp",
+  "游戏开发部合照": "/Image/GroupPhoto/游戏开发部合照.webp",
+  "游戏开发部合照2": "/Image/GroupPhoto/游戏开发部合照2.webp",
+  "爱丽丝和柯伊": "/Image/GroupPhoto/爱丽丝和柯伊.webp",
+  "联邦理事会长和老师": "/Image/GroupPhoto/联邦理事会长和老师.webp",
+  "阿洛娜与普拉娜": "/Image/GroupPhoto/阿洛娜与普拉娜.webp"
+} as const;

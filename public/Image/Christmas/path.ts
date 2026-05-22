@@ -1,0 +1,10 @@
+export const path = {
+  "伊吕波": "/Image/Christmas/伊吕波.webp",
+  "圣娅_亲吻礼物": "/Image/Christmas/圣娅_亲吻礼物.webp",
+  "日奈_嘟嘴": "/Image/Christmas/日奈_嘟嘴.webp",
+  "清澄晶": "/Image/Christmas/清澄晶.webp",
+  "狐坂若藻_哭哭": "/Image/Christmas/狐坂若藻_哭哭.webp",
+  "玛丽": "/Image/Christmas/玛丽.webp",
+  "睦月_酷": "/Image/Christmas/睦月_酷.webp",
+  "黒馆晴奈": "/Image/Christmas/黒馆晴奈.webp"
+} as const;

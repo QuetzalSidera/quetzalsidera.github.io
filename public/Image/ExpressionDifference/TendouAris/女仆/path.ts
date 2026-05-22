@@ -1,0 +1,13 @@
+export const path = {
+  "勇者的坚定": "/Image/ExpressionDifference/TendouAris/女仆/勇者的坚定.webp",
+  "哦_疑问": "/Image/ExpressionDifference/TendouAris/女仆/哦_疑问.webp",
+  "坏了坏了_吃惊": "/Image/ExpressionDifference/TendouAris/女仆/坏了坏了_吃惊.webp",
+  "坏了坏了_完蛋了": "/Image/ExpressionDifference/TendouAris/女仆/坏了坏了_完蛋了.webp",
+  "坏了坏了_担心": "/Image/ExpressionDifference/TendouAris/女仆/坏了坏了_担心.webp",
+  "平静": "/Image/ExpressionDifference/TendouAris/女仆/平静.webp",
+  "平静_睁眼": "/Image/ExpressionDifference/TendouAris/女仆/平静_睁眼.webp",
+  "开心地笑": "/Image/ExpressionDifference/TendouAris/女仆/开心地笑.webp",
+  "开心地笑_睁眼": "/Image/ExpressionDifference/TendouAris/女仆/开心地笑_睁眼.webp",
+  "微笑": "/Image/ExpressionDifference/TendouAris/女仆/微笑.webp",
+  "掉小珍珠了_睁眼": "/Image/ExpressionDifference/TendouAris/女仆/掉小珍珠了_睁眼.webp"
+} as const;

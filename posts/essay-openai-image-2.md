@@ -16,29 +16,66 @@ head:
 本文记录 `Image-2`在去水印、漫画翻嵌、招生海报三个场景的试用结果。
 
 ---
+
+<script setup lang="ts">
+import Image from '../.vitepress/theme/components/shared/Image.vue'
+import {path as miscellaneousImagePath} from '@Miscellaneous/path'
+
+const watermarkResultImage = {
+  src: miscellaneousImagePath['阿洛娜与普拉娜'],
+  alt: '阿洛娜与普拉娜去水印结果',
+  align: 'right',
+  wrap: true,
+  maxHeight: '26rem',
+  caption: '处理后：主体还原完整，但边缘和局部细节仍有修补痕迹。',
+} as const
+
+const watermarkSourceImage = {
+  src: miscellaneousImagePath['阿洛娜与普拉娜_原图'],
+  alt: '阿洛娜与普拉娜原图',
+  align: 'right',
+  wrap: true,
+  maxHeight: '26rem',
+  caption: '原图：带有水印的角色插画。',
+} as const
+
+const mangaResultImage = {
+  src: miscellaneousImagePath['漫画_翻嵌'],
+  alt: '漫画翻嵌结果',
+  align: 'right',
+  wrap: true,
+  maxHeight: '28rem',
+  caption: '处理后：中文文本可读性明显提升，画面氛围基本保留。',
+} as const
+
+const mangaSourceImage = {
+  src: miscellaneousImagePath['漫画'],
+  alt: '漫画原图',
+  align: 'right',
+  wrap: true,
+  maxHeight: '28rem',
+  caption: '原图：待翻嵌的漫画页面。',
+} as const
+
+const posterImage = {
+  src: miscellaneousImagePath['海报'],
+  alt: '招生海报',
+  align: 'center',
+  wrap: false,
+  maxHeight: '30rem',
+  caption: '招生海报测试图。',
+} as const
+</script>
+
 OpenAI 在 2026 年 4 月 21 日发布了 `Image-2`，于是急不可耐直接开吃😋。
 
 ## 1. 去水印
 
 原图角色主体明确，水印区域覆盖在画面上，背景不算复杂，适合观察模型的补图能力。
 
-<Image
-src="/Imgs/OpenAI-Image-2-Test/阿洛娜与普拉娜.png"
-alt="阿洛娜与普拉娜去水印结果"
-align="right"
-:wrap="true"
-maxHeight="26rem"
-caption="处理后：主体还原完整，但边缘和局部细节仍有修补痕迹。"
-/>
+<Image v-bind="watermarkResultImage" />
 
-<Image
-src="/Imgs/OpenAI-Image-2-Test/阿洛娜与普拉娜（原图）.jpeg"
-alt="阿洛娜与普拉娜原图"
-align="right"
-:wrap="true"
-maxHeight="26rem"
-caption="原图：带有水印的角色插画。"
-/>
+<Image v-bind="watermarkSourceImage" />
 
 角色主体未被严重破坏，颜色衔接和大块面补全自然，堪称完美。
 
@@ -46,23 +83,9 @@ caption="原图：带有水印的角色插画。"
 
 翻嵌漫画比去水印更复杂——除补图外还需替换文本、识别对话框位置、控制中文排版、维持画面阅读节奏。
 
-<Image
-src="/Imgs/OpenAI-Image-2-Test/漫画（翻嵌）.png"
-alt="漫画翻嵌结果"
-align="right"
-:wrap="true"
-maxHeight="28rem"
-caption="处理后：中文文本可读性明显提升，画面氛围基本保留。"
-/>
+<Image v-bind="mangaResultImage" />
 
-<Image
-src="/Imgs/OpenAI-Image-2-Test/漫画.jpg"
-alt="漫画原图"
-align="right"
-:wrap="true"
-maxHeight="28rem"
-caption="原图：待翻嵌的漫画页面。"
-/>
+<Image v-bind="mangaSourceImage" />
 
 此前多数模型在中文上不稳定。但`Image-2`输出的基本上可以用来发布了（最方便烤肉的一集）。
 
@@ -76,14 +99,7 @@ caption="原图：待翻嵌的漫画页面。"
 
 海报是综合任务：要求构图、视觉重心安排、中文字渲染，同时不能出现过度"AI 感"。
 
-<Image
-src="/Imgs/OpenAI-Image-2-Test/海报.jpg"
-alt="招生海报"
-align="center"
-:wrap="false"
-maxHeight="30rem"
-caption="招生海报测试图。"
-/>
+<Image v-bind="posterImage" />
 
 当时生成那一瞬间确实给我震惊到了，甚至还原了学校的Logo，而图片提示词还没有标题长...
 
@@ -94,4 +110,3 @@ caption="招生海报测试图。"
 试用后感觉`Image-2`已经可以满足很多非正式商业需求了。
 
 除此之外，好像OpenAI也把各个模型的识图能力同步提高了，拿来写实验报告与作业准确度提高了很多。
-
