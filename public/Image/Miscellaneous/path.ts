@@ -1,4 +1,14 @@
 export const path = {
+  // /Image/Miscellaneous/blog-change-log/01-to-cloudflare
+  "01-commit": "/Image/Miscellaneous/blog-change-log/01-to-cloudflare/01-commit.webp",
+  aliyun: "/Image/Miscellaneous/blog-change-log/01-to-cloudflare/aliyun.webp",
+  "custom-domain": "/Image/Miscellaneous/blog-change-log/01-to-cloudflare/custom-domain.webp",
+  deploy: "/Image/Miscellaneous/blog-change-log/01-to-cloudflare/deploy.webp",
+  dns: "/Image/Miscellaneous/blog-change-log/01-to-cloudflare/dns.webp",
+
+  // /Image/Miscellaneous/blog-change-log/02-image-refine
+  "02-commit": "/Image/Miscellaneous/blog-change-log/02-image-refine/02-commit.webp",
+
   // /Image/Miscellaneous/essay-openai-image-2
   "海报": "/Image/Miscellaneous/essay-openai-image-2/海报.webp",
   "漫画": "/Image/Miscellaneous/essay-openai-image-2/漫画.webp",
@@ -50,11 +60,4 @@ export const path = {
   "Time-for-Miracles": "/Image/Miscellaneous/personal-profile-hobbies/Musics/Time-for-Miracles.webp",
   "像风一样自由": "/Image/Miscellaneous/personal-profile-hobbies/Musics/像风一样自由.webp",
   "温柔的回忆": "/Image/Miscellaneous/personal-profile-hobbies/Musics/温柔的回忆.webp",
-
-  // /Image/Miscellaneous/project-blog-to-cloudflare
-  aliyun: "/Image/Miscellaneous/project-blog-to-cloudflare/aliyun.webp",
-  commit: "/Image/Miscellaneous/project-blog-to-cloudflare/commit.webp",
-  "custom-domain": "/Image/Miscellaneous/project-blog-to-cloudflare/custom-domain.webp",
-  deploy: "/Image/Miscellaneous/project-blog-to-cloudflare/deploy.webp",
-  dns: "/Image/Miscellaneous/project-blog-to-cloudflare/dns.webp",
 } as const;

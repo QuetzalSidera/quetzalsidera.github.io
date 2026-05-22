@@ -3,7 +3,7 @@ title: 从 GitHub 到 Cloudflare
 date: 2026-05-21T00:00:00
 tags: [ Cloudflare, GitHub, VitePress, 博客 ]
 pinned: false
-collection: 个人项目
+collection: 个人博客的更新记录
 outline:
   - title: 概要
     slug: 概要
