@@ -374,6 +374,7 @@ const themeConfig = useBlogTheme()
       flex-grow: 1;
       overflow-x: scroll;
       overflow-y: hidden;
+      scrollbar-width: none;
     }
 
     .line-numbers-wrapper {

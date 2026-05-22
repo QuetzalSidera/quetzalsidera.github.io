@@ -94,12 +94,12 @@ pnpm run preview
 
 仓库内已经带有 GitHub Pages 工作流：
 
-- [deploy.yml](/Users/qianshuang/Project/WebProject/Blog/.github/workflows/deploy.yml)
+- [deploy.yml](.github/workflows/deploy.yml)
 
 默认会在 `main` 分支更新时自动构建并发布。  
 如果后续更换域名，只需要同步修改：
 
-- [config.mts](/Users/qianshuang/Project/WebProject/Blog/.vitepress/config.mts) 里的 `sitemap.hostname`
+- [config.mts](.vitepress/config.mts) 里的 `sitemap.hostname`
 - GitHub Pages 或自定义域名设置
 
 ## 迁移结果
@@ -111,10 +111,6 @@ pnpm run preview
 - 爱好页图片整理到 `public/Imgs/`
 - 图片卡片排版与外链跳转补齐
 - README、包信息与项目结构更新为当前博客版本
-
-## 说明
-
-`readmeRaw.txt` 保留了原主题仓库说明，当前 `readme.md` 则是已经适配本博客项目后的版本。
 
 ## 鸣谢
 

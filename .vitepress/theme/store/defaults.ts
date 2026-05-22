@@ -4,6 +4,7 @@ export function createEmptyPost(): PostData {
   return {
     id: 0,
     title: '',
+    outline: [],
     content: '',
     href: '',
     create: 0,

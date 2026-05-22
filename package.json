@@ -14,11 +14,13 @@
     "less": "^4.2.2",
     "markdown-it-mathjax3": "^4.3.2",
     "vitepress": "^1.6.3",
-    "vue": "^3.5.13"
+    "vue": "^3.5.13",
+    "vue-tsc": "^3.3.1"
   },
   "scripts": {
     "dev": "vitepress dev",
-    "build": "vitepress build",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.json",
+    "build": "pnpm typecheck && vitepress build",
     "preview": "vitepress preview"
   },
   "dependencies": {

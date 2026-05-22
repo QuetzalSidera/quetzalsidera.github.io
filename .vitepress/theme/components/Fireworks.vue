@@ -101,7 +101,7 @@ function createFireworks() {
       draw() {
         ctx.save()
         ctx.translate(this.x, this.y)
-        ctx.rotate((this.angle * Math.PI) / 180)
+        ctx.rotate(((this.angle ?? 0) * Math.PI) / 180)
         ctx.beginPath()
         ctx.moveTo(0, -this.radius!)
         ctx.lineTo(this.radius! * Math.sin(Math.PI / 3), this.radius! * Math.cos(Math.PI / 3))
