@@ -1,6 +1,6 @@
 ---
-title: 1.1.A - 习题课
-date: 2026-05-15T00:00:00
+title: 2.1.A - 习题课
+date: 2026-05-22T10:00:00
 tags: [ 机器人, 机构学, 数学基础, 习题 ]
 pinned: false
 collection: 机器人机构学
@@ -30,13 +30,13 @@ outline:
 head:
   - - meta
     - name: description
-      content: 机构学数学基础的配套习题——线矢量的 Plücker 坐标计算与正规化、格拉斯曼条件填空、互易积公式求公垂线距离与交角、旋量节距计算与坐标不变性证明。
+      content: 机构学旋量基础的配套习题——线矢量的 Plücker 坐标计算与正规化、格拉斯曼条件填空、互易积公式求公垂线距离与交角、旋量节距计算与坐标不变性证明。
   - - meta
     - name: keywords
       content: Plücker坐标, 线矢量, 旋量, 互易积, 节距, 公垂线, 习题
 ---
 
-机构学数学基础常见的习题整理
+机构学旋量基础常见的习题整理
 
 ---
 本文的参考笔记部分位于[机构学的数学基础](./robot-kinematics-01-basic.md)中

@@ -77,7 +77,7 @@ const demoImage = {
 
 相关提交参见[feat: 优化图片引用](https://github.com/QuetzalSidera/quetzalsidera.github.io/commit/8bd4bbdace7938815a7bae22faaa388d9952e5e8)
 
-> 把博客里分散的原生图片写法、硬编码路径和不一致的资源格式，整理成一套可复用的文章写法。
+> 统一博客里的图片组件、取消硬编码路径和不一致的资源格式。
 
 <Image v-bind="commitImage" />
 
