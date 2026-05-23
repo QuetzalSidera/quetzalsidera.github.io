@@ -60,4 +60,10 @@ export const path = {
   "Time-for-Miracles": "/Image/Miscellaneous/personal-profile-hobbies/Musics/Time-for-Miracles.webp",
   "像风一样自由": "/Image/Miscellaneous/personal-profile-hobbies/Musics/像风一样自由.webp",
   "温柔的回忆": "/Image/Miscellaneous/personal-profile-hobbies/Musics/温柔的回忆.webp",
+
+  // /Image/Miscellaneous/robot-kinematics
+  "Scott-Russell": "/Image/Miscellaneous/robot-kinematics/Scott-Russell.webp",
+  "open-close": "/Image/Miscellaneous/robot-kinematics/open-close.webp",
+  "table4-1": "/Image/Miscellaneous/robot-kinematics/table4-1.webp",
+  "table4-1(2)": "/Image/Miscellaneous/robot-kinematics/table4-1(2).webp",
 } as const;
