@@ -1,6 +1,6 @@
 ---
 title: 3.1 - 机构学的群论基础
-date: 2026-05-25T00:00:00
+date: 2026-05-24T00:00:00
 tags: [ 机器人, 机构学, 数学基础 ]
 pinned: false
 collection: 机器人机构学

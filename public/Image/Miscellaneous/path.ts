@@ -62,9 +62,14 @@ export const path = {
   "温柔的回忆": "/Image/Miscellaneous/personal-profile-hobbies/Musics/温柔的回忆.webp",
 
   // /Image/Miscellaneous/robot-kinematics
+  "3R": "/Image/Miscellaneous/robot-kinematics/3R.webp",
+  "3-RRR": "/Image/Miscellaneous/robot-kinematics/3-RRR.webp",
   "Reciprocal Screws": "/Image/Miscellaneous/robot-kinematics/Reciprocal Screws.webp",
+  Sarrus: "/Image/Miscellaneous/robot-kinematics/Sarrus.webp",
   "Scott-Russell": "/Image/Miscellaneous/robot-kinematics/Scott-Russell.webp",
+  Stewart: "/Image/Miscellaneous/robot-kinematics/Stewart.webp",
   "open-close": "/Image/Miscellaneous/robot-kinematics/open-close.webp",
   "table4-1": "/Image/Miscellaneous/robot-kinematics/table4-1.webp",
   "table4-1(2)": "/Image/Miscellaneous/robot-kinematics/table4-1(2).webp",
+  "旋量系": "/Image/Miscellaneous/robot-kinematics/旋量系.webp",
 } as const;

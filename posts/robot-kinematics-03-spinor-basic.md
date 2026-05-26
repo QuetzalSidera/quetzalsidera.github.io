@@ -29,18 +29,44 @@ outline:
     slug: 旋量互易
     level: 1
 
+  - title: 3. 旋量系
+    slug: 旋量系
+  - title: 3.1 线性相关性
+    slug: 旋量系-线性相关性
+    level: 1
+  - title: 3.2 定义与分类
+    slug: 旋量系-定义与分类
+    level: 1
+
+
+  - title: 4. 互易旋量系
+    slug: 互易旋量系
+  - title: 4.1 定义与维数关系
+    slug: 互易旋量系-定义与维数关系
+    level: 1
+  - title: 4.2 几何关系
+    slug: 互易旋量系-几何关系
+    level: 1
+  - title: 4.3 基底的求法
+    slug: 互易旋量系-基底的求法
+    level: 1
+  - title: 4.4 自互易旋量系
+    slug: 旋量系-自互易旋量系
+    level: 1
+
   - title: 小结
     slug: 小结
 head:
   - - meta
     - name: description
-      content: 机器人机构学系列第四篇，介绍机构学分析的旋量基础——线几何（$Plücker$ 坐标、格拉斯曼线几何）以及旋量与旋量系的基本概念与运算。
+      content: 机器人机构学系列第四篇，介绍机构学分析的旋量基础——线几何（$Plücker$ 坐标、格拉斯曼线几何）、旋量系与互易旋量系的定义与分类、以及互易旋量系基底的零空间求法与 $Gram$-$Schmidt$ 正交化法。
   - - meta
     - name: keywords
-      content: 机器人机构学, 数学基础, 向量运算, 点积, 叉积, 矩阵, 线性空间, 雅可比, 线几何, $Plücker$坐标, 格拉斯曼线几何, 旋量, 旋量系
+      content: 机器人机构学, 数学基础, 向量运算, 点积, 叉积, 矩阵, 线性空间, 雅可比, 线几何, $Plücker$坐标, 格拉斯曼线几何, 旋量, 旋量系, 互易旋量系, 自互易旋量系, 零空间法, $Gram$-$Schmidt$正交化
 ---
 
-介绍机构学分析的旋量基础——线几何（Plücker 坐标、格拉斯曼线几何）以及旋量与旋量系的基本概念与运算。
+介绍机构学分析的旋量基础——线几何（Plücker 坐标、格拉斯曼线几何）、旋量与互易积、旋量系与互易旋量系的定义与分类、以及互易旋量系基底的求法（零空间法与
+Gram-Schmidt 互易正交化）。
 
 ---
 
@@ -55,6 +81,17 @@ const reciprocalScrews = {
   wrap: false,
   maxHeight: '26rem',
   caption: '旋量互异的几何意义',
+} as const
+
+
+
+const spinorSys = {
+  src: miscellaneousImagePath['旋量系'],
+  alt: '不同的旋量系',
+  align: 'right',
+  wrap: true,
+  maxHeight: '26rem',
+  caption: '不同的旋量系',
 } as const
 
 </script>
@@ -177,8 +214,8 @@ h = \frac{\boldsymbol{s} \cdot \boldsymbol{s}^0}{\boldsymbol{s} \cdot \boldsymbo
 $$
 
 > **证明**：
->
-由 $\boldsymbol{\$} = p\hat{\boldsymbol{\$}} = (\boldsymbol{s}; \boldsymbol{s}^0) = p(\hat{\boldsymbol{s}}; \boldsymbol{r}\times\hat{\boldsymbol{s}} + h\hat{\boldsymbol{s}})$
+> 由
+> $\boldsymbol{\$} = p\hat{\boldsymbol{\$}} = (\boldsymbol{s}; \boldsymbol{s}^0) = p(\hat{\boldsymbol{s}}; \boldsymbol{r}\times\hat{\boldsymbol{s}} + h\hat{\boldsymbol{s}})$
 > ，有
 > $\boldsymbol{s} = p\hat{\boldsymbol{s}}$，$\boldsymbol{s}^0 = p(\boldsymbol{r}\times\hat{\boldsymbol{s}} + h\hat{\boldsymbol{s}})$。
 > 则
@@ -412,15 +449,193 @@ $\boldsymbol{\$}_1 \circ \boldsymbol{\$}_2 = p_1p_2\big[(h_1+h_2)\cos\alpha_{12}
 #### 旋量互易的几何意义
 <Image v-bind="reciprocalScrews" />
 
+## 3. 旋量系<a id=旋量系></a>
+
+### 3.1 线性相关性<a id=旋量系-线性相关性></a>
+
+当 $n$ 个旋量 $\boldsymbol{\$}_i$（$i=1,2,\ldots,n$）线性相关时，存在一组不全为零的系数 $\omega_i$ 使得：
+
+$$
+\sum_{i=1}^{n} \omega_i \boldsymbol{\$}_i = \boldsymbol{0}
+$$
+
+**旋量系的相关性与坐标系选择无关**。
+
+将 $n$ 个旋量的 $Plücker$ 坐标排成 $n \times 6$ 矩阵：
+
+$$
+\boldsymbol{A} = \begin{bmatrix}
+L_1 & M_1 & N_1 & P_1^* & Q_1^* & R_1^* \\
+L_2 & M_2 & N_2 & P_2^* & Q_2^* & R_2^* \\
+\vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+L_n & M_n & N_n & P_n^* & Q_n^* & R_n^*
+\end{bmatrix}
+$$
+
+旋量集的秩 $r = \operatorname{rank}(\boldsymbol{A})$ 即为其中线性无关旋量的个数。若 $r < n$
+，旋量集线性相关。
+> 坐标变换可以视为右乘可逆矩阵，不改变秩，因此旋量系的相关性与坐标系选择无关。
+### 3.2 定义与分类<a id=旋量系-定义与分类></a>
+
+$n$ 个线性无关的旋量张成一个 **$n$ 阶旋量系**（`screw system`），记作 $\mathcal{S}_n$：
+
+$$
+\mathcal{S}_n = \operatorname{span}\{\boldsymbol{\$}_1, \boldsymbol{\$}_2, \ldots, \boldsymbol{\$}_n\}
+$$
+
+三维刚体运动的自由度为 6（3 转动 + 3 平动），因此旋量系最高为 **6 阶**。根据阶数从低到高分为旋量一系至旋量六系。
+
+> **6 阶旋量系的标准基**：
+>
+> $$
+> \begin{aligned}
+> \boldsymbol{\$}_1 &= (1, 0, 0;\; 0, 0, 0) \\
+> \boldsymbol{\$}_2 &= (0, 1, 0;\; 0, 0, 0) \\
+> \boldsymbol{\$}_3 &= (0, 0, 1;\; 0, 0, 0) \\
+> \boldsymbol{\$}_4 &= (0, 0, 0;\; 1, 0, 0) \\
+> \boldsymbol{\$}_5 &= (0, 0, 0;\; 0, 1, 0) \\
+> \boldsymbol{\$}_6 &= (0, 0, 0;\; 0, 0, 1)
+> \end{aligned}
+> $$
+>
+> 前三个为沿坐标轴的纯转动（线矢量），后三个为沿坐标轴的纯平动（偶量），线性无关且两两互易正交。
+
+按所含旋量的节距特征，旋量系可细分为以下子类：
+
+| 类型         | 条件                     |
+|------------|------------------------|
+| **自互易旋量系** | 基旋量两两互易积为零             |
+| **偶量系**    | 所有元素均为偶量（$h=\infty$）   | 
+| **直线旋量系**  | 存在一组由 $n$ 条线性无关线矢量组成的基 | 
+| **线系**     | 所有元素均为线矢量（$h=0$）       | |
+
+<Image v-bind="spinorSys"/>
+
+**不变旋量系**（`invariant screw system`
+）在位形变化时形式保持不变，所表征的运动具有连续性（不限于瞬时）。不变旋量系与位移子群一一对应（见[机构学的群论基础](./robot-kinematics-06-group.md)
+），是连接旋量理论与群论分析的桥梁。
+
+## 4. 互易旋量系<a id=互易旋量系></a>
+
+### 4.1 定义与维数关系<a id=互易旋量系-定义与维数关系></a>
+
+对于 $n$ 阶旋量系 $\mathcal{S}$，所有与 $\mathcal{S}$ 中每个旋量均互易的旋量构成其**互易旋量系**（
+`reciprocal screw system`），记作 $\mathcal{S}^r$：
+
+$$
+\mathcal{S}^r = \{\boldsymbol{\$}^r \mid \boldsymbol{\$}_i \circ \boldsymbol{\$}^r = 0,\; \forall \boldsymbol{\$}_i \in \mathcal{S}\}
+$$
+
+**维数关系**
+
+$$dim(\mathcal{S})+dim(\mathcal{S}^r)=6$$
+
+即两者阶数之和恒为 6。
+
+> **推导**：将 $\mathcal{S}$ 的 $n$ 个基旋量排成 $n \times 6$ 矩阵 $\boldsymbol{A}$
+。互易条件 $\boldsymbol{\$}_i \circ \boldsymbol{\$}^r = 0$（$i=1,\ldots,n$）等价于齐次线性方程组：
+>
+> $$
+> \boldsymbol{A} \boldsymbol{\Delta} \boldsymbol{\$}^r = \boldsymbol{0}
+> $$
+>
+> $\boldsymbol{A} \boldsymbol{\Delta}$ 为 $n \times 6$ 矩阵。由 $\mathcal{S}$ 的 $n$
+个基线性无关，$\operatorname{rank}(\boldsymbol{A} \boldsymbol{\Delta}) = n$。解空间维数为 $6-n$，即 $\mathcal{S}^r$ 的阶数。
+
+互易关系是对称的：$(\mathcal{S}^r)^r = \mathcal{S}$。
+
+### 4.2 几何关系<a id=互易旋量系-几何关系></a>
+
+由[旋量互易的几何意义](#旋量互易的几何意义)，可导出旋量系与其互易旋量系之间的四条几何对应：
+
+| 关系        | 内容                                                                    |
+|-----------|-----------------------------------------------------------------------|
+| 线矢量-线矢量   | $\mathcal{S}$ 中的**线矢量**与 $\mathcal{S}^r$ 中的**线矢量**必**共面**（相交或平行）      |
+| 线矢量-偶量    | $\mathcal{S}$ 中的**线矢量**与 $\mathcal{S}^r$ 中的**偶量**方向线必**正交**           |
+| 偶量-线矢量    | $\mathcal{S}$ 中的**偶量**方向线与 $\mathcal{S}^r$ 中所有旋量的轴线及线矢量均**正交**        |
+| 一般旋量-一般旋量 | 两系中一般旋量的轴线满足 $(h_i + h_j)\cos\alpha_{ij} - a_{ij}\sin\alpha_{ij} = 0$ |
+
+机构学意义：自由度空间（运动旋量系）与约束空间（约束力旋量系）正是通过上述互易几何关系建立对偶——运动旋量系的互易旋量系即为其约束力旋量系。
+
+### 4.3 基底的求法<a id=互易旋量系-基底的求法></a>
+
+给定 $n$ 阶旋量系 $\mathcal{S}$ 的 $n$ 个基旋量，求解其互易旋量系 $\mathcal{S}^r$ 的 $6-n$
+个基旋量，有零空间法和 $Gram$-$Schmidt$ 互易正交化两种标准方法，以下仅介绍零空间法。
+
+#### a. 零空间法
+
+将 $n$ 个基旋量的 $Plücker$ 坐标排成 $n \times 6$ 矩阵 $\boldsymbol{A}$，构造互易约束矩阵：
+
+$$
+\boldsymbol{J} = \boldsymbol{A} \boldsymbol{\Delta} \in \mathbb{R}^{n \times 6}
+$$
+其中互易矩阵$\boldsymbol{\Delta}$:
+$$\boldsymbol{\Delta}=\begin{pmatrix}0 & I\\I & 0 \end{pmatrix}$$
+其作用是将矩阵乘法转换为互易积，等价于将$\boldsymbol{A}$的左边三列搬到右边。
+
+互易条件 $\boldsymbol{\$}_i \circ \boldsymbol{\$}^r = 0$（$i=1,\ldots,n$
+）等价于齐次线性方程组 $\boldsymbol{J} \boldsymbol{\$}^r = \boldsymbol{0}$。求得一组基础解系即为 $\mathcal{S}^r$ 的 $6-n$
+个基旋量。
+
+> **例**：绕 $x$ 轴的转动（线矢量）与沿 $x$ 轴的平动（偶量）构成 2 阶旋量系：
+>
+> $$
+> \begin{aligned}
+> \boldsymbol{\$}_1 &= (1, 0, 0;\; 0, 0, 0) \\
+> \boldsymbol{\$}_2 &= (0, 0, 0;\; 1, 0, 0)
+> \end{aligned}
+> $$
+>
+>构造
+> $\boldsymbol{J} = \boldsymbol{A} \boldsymbol{\Delta} = \begin{bmatrix} 0 & 0 & 0 & 1 & 0 & 0 \\ 1 & 0 & 0 & 0 & 0 & 0 \end{bmatrix}$
+> ，求解 $\boldsymbol{J} \boldsymbol{\$}^r = \boldsymbol{0}$ 得 $6-2=4$ 个互易基旋量：
+>
+> $$
+> \begin{aligned}
+> \boldsymbol{\$}_1^r &= (0, 1, 0;\; 0, 0, 0) \quad \text{——绕 $y$ 轴的约束力} \\
+> \boldsymbol{\$}_2^r &= (0, 0, 1;\; 0, 0, 0) \quad \text{——绕 $z$ 轴的约束力} \\
+> \boldsymbol{\$}_3^r &= (0, 0, 0;\; 0, 1, 0) \quad \text{——沿 $y$ 轴的约束力偶} \\
+> \boldsymbol{\$}_4^r &= (0, 0, 0;\; 0, 0, 1) \quad \text{——沿 $z$ 轴的约束力偶}
+> \end{aligned}
+> $$
+>
+> 4 个互易基旋量约束了除绕 $x$ 转动与沿 $x$ 平动以外的全部 4 个自由度，恰好对应 $x$ 轴圆柱副（$C$ 副）的约束力系。
+
+### 4.4 自互易旋量系<a id=旋量系-自互易旋量系></a>
+
+将 $n$ 阶旋量系的基旋量排为 $6 \times n$
+列向量矩阵 $\boldsymbol{A} = [\boldsymbol{\$}_1 \; \boldsymbol{\$}_2 \; \cdots \; \boldsymbol{\$}_n]$。其**自互易矩阵**为：
+
+$$
+\boldsymbol{M} = \boldsymbol{A}^{\mathrm{T}} \boldsymbol{\Delta} \boldsymbol{A} =
+\begin{bmatrix}
+\boldsymbol{\$}_1 \circ \boldsymbol{\$}_1 & \boldsymbol{\$}_1 \circ \boldsymbol{\$}_2 & \cdots & \boldsymbol{\$}_1 \circ \boldsymbol{\$}_n \\[2pt]
+\boldsymbol{\$}_2 \circ \boldsymbol{\$}_1 & \boldsymbol{\$}_2 \circ \boldsymbol{\$}_2 & \cdots & \boldsymbol{\$}_2 \circ \boldsymbol{\$}_n \\[2pt]
+\vdots & \vdots & \ddots & \vdots \\[2pt]
+\boldsymbol{\$}_n \circ \boldsymbol{\$}_1 & \boldsymbol{\$}_n \circ \boldsymbol{\$}_2 & \cdots & \boldsymbol{\$}_n \circ \boldsymbol{\$}_n
+\end{bmatrix}
+$$
+
+
+若 $\boldsymbol{M} = \boldsymbol{0}$（即基中任意两旋量的互易积均为零），则 $\mathcal{S}_n$ 为**自互易旋量系**。
+
+此时可得：
+$$dim(\mathcal{S})+dim(\mathcal{S}^r)=2dim(\mathcal{S})=6$$
+即：
+$$dim(\mathcal{S})=3$$
+
+
 ## 小结<a id=小结></a>
 
-旋量、线矢量与偶量的关系是本章的核心结论：
+旋量系与互易旋量系是机构自由度与约束分析的核心工具——运动旋量系（自由度空间）与约束力旋量系（互易旋量系）通过互易关系构成对偶：
 
-| 对象  | $h$      | Plücker 坐标                                                                                                        | 物理意义       |
-|-----|----------|-------------------------------------------------------------------------------------------------------------------|------------|
-| 旋量  | 任意       | $(\boldsymbol{s};\; \boldsymbol{s}^0) = (\boldsymbol{s};\; \boldsymbol{r}\times\boldsymbol{s} + h\boldsymbol{s})$ | 转动与平动的同轴耦合 |
-| 线矢量 | $0$      | $(\boldsymbol{s};\; \boldsymbol{r}\times\boldsymbol{s})$                                                          | 纯转动或纯力     |
-| 偶量  | $\infty$ | $(\boldsymbol{0};\; \boldsymbol{s})$                                                                              | 纯平动或纯力偶    |
+| 对象       | 核心内容                                                                                                                              |
+|----------|-----------------------------------------------------------------------------------------------------------------------------------|
+| 旋量       | 具有节距的直线，$(\boldsymbol{s};\; \boldsymbol{r}\times\boldsymbol{s} + h\boldsymbol{s})$；$h=0$ 退化为线矢量（纯力/纯转动），$h=\infty$ 退化为偶量（纯力偶/纯平动） |
+| $n$ 阶旋量系 | $n$ 个线性无关旋量的张成空间；最高 6 阶；相关性由 $Plücker$ 坐标矩阵的秩判定，与坐标系无关                                                                            |
+| 自互易旋量系   | 基中任意两旋量互易积均为零；自互易矩阵 $\boldsymbol{M}=\boldsymbol{0}$，所有特征值为零                                                                       |
+| 互易旋量系    | 与已知旋量系中所有旋量均互易的旋量集合；阶数满足 $\dim(\mathcal{S}) + \dim(\mathcal{S}^r) = 6$                                                            |
+| 基底求法     | 零空间法（求解 $\boldsymbol{A}\boldsymbol{\Delta}\boldsymbol{\$}^r = \boldsymbol{0}$）通用高效；$Gram$-$Schmidt$ 互易正交化几何直观                     |
 
-线矢量是旋量在 $h=0$ 时的退化——此时对偶部仅有线矩（$\boldsymbol{r}\times\boldsymbol{s}$）；偶量是 $h=\infty$
-时的退化——此时原部消失，仅剩方向矢量。一般旋量可分解为同轴的线矢量与偶量之和：$\boldsymbol{\$} = (\boldsymbol{s}; \boldsymbol{r}\times\boldsymbol{s}) + (\boldsymbol{0}; h\boldsymbol{s})$。
+一般旋量可分解为同轴的线矢量与偶量之和：$\boldsymbol{\$} = (\boldsymbol{s}; \boldsymbol{r}\times\boldsymbol{s}) + (\boldsymbol{0}; h\boldsymbol{s})$
+。旋量系与位移子群的对应关系见[机构学的群论基础](./robot-kinematics-06-group.md)。
