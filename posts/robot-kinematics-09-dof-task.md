@@ -482,7 +482,7 @@ $$
 $$\mathcal{S}^r \boldsymbol{\Delta} \boldsymbol{\$} = \boldsymbol{0}$$
 可得
 $$\mathcal{S}_f=\operatorname{span}\left\{ (0,0,1,-2b,2c,0)\right\}$$
-即，此机构仅有$F = \dim(\mathcal{S}_f)=1$个自由度，运动形式是绕过点$(-2c,-2b,0)$，$(0,0,1)$为轴线方向的转动
+即，此机构仅有$F = \dim(\mathcal{S}_f)=1$个自由度，运动形式是绕轴转动。旋转轴过点$(-2c,-2b,0)$，方向向量为$(0,0,1)$。
 
 ### c. 公共约束分析{#Scott-Russell-公共约束分析}
 根据上文的$\mathcal{S}_{bi}$，可得机构总运动旋量系 $\mathcal{S}_m$：

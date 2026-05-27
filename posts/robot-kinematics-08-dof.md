@@ -114,11 +114,11 @@ const scottRussell = {
 
 const threeR = {
   src: miscellaneousImagePath['3R'],
-  alt: '3R并联机器人',
+  alt: '3R串联机器人',
   align: 'right',
   wrap: true,
   maxHeight: '8rem',
-  caption: '3R并联机器人',
+  caption: '3R串联机器人',
 } as const
 
 const threeRRR = {
