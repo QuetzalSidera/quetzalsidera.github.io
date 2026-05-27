@@ -1,9 +1,25 @@
 <script setup lang="ts">
 import { faFilePdf } from '@fortawesome/free-solid-svg-icons'
 import FontAwesomeIcon from '../FontAwesomeIcon.vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const isGenerating = ref(false)
+const progress = ref(0)
+
+const buttonStyle = computed(() => ({
+  '--download-progress': `${progress.value}%`,
+}))
+
+const progressStyle = computed(() => {
+  const radius = 18
+  const circumference = 2 * Math.PI * radius
+  const offset = circumference * (1 - progress.value / 100)
+
+  return {
+    strokeDasharray: `${circumference}`,
+    strokeDashoffset: `${offset}`,
+  }
+})
 
 const waitForImages = async (root: ParentNode) => {
   const images = Array.from(root.querySelectorAll('img'))
@@ -23,6 +39,21 @@ const waitForImages = async (root: ParentNode) => {
 const nextFrame = () => new Promise<void>((resolve) => {
   window.requestAnimationFrame(() => resolve())
 })
+
+const yieldToMain = async () => {
+  await nextFrame()
+
+  if ('requestIdleCallback' in window) {
+    await new Promise<void>((resolve) => {
+      window.requestIdleCallback(() => resolve(), { timeout: 50 })
+    })
+  }
+}
+
+const setProgress = async (value: number, label: string) => {
+  progress.value = Math.max(0, Math.min(100, Math.round(value)))
+  await nextFrame()
+}
 
 const buildExportNode = (title: string, content: HTMLElement) => {
   const shell = document.createElement('div')
@@ -252,18 +283,24 @@ const downloadPdf = async () => {
   document.body.appendChild(exportNode)
 
   isGenerating.value = true
+  progress.value = 0
 
   try {
+    await setProgress(8, '准备中')
     await waitForImages(exportNode)
-    await nextFrame()
+    await setProgress(16, '加载资源')
+    await yieldToMain()
 
     const html2canvasModule = await import('html2canvas')
     const jspdfModule = await import('jspdf')
     const html2canvas = html2canvasModule.default
     const { jsPDF } = jspdfModule
     const filename = `${title}.pdf`
+    const renderScale = Math.min(Math.max(window.devicePixelRatio || 1, 1.5), 2)
+
+    await setProgress(28, '渲染页面')
     const canvas = await html2canvas(exportNode, {
-      scale: 3,
+      scale: renderScale,
       useCORS: true,
       backgroundColor: '#ffffff',
       logging: false,
@@ -274,6 +311,9 @@ const downloadPdf = async () => {
     if (canvas.width === 0 || canvas.height === 0) {
       throw new Error('PDF canvas render failed')
     }
+
+    await setProgress(62, '生成分页')
+    await yieldToMain()
 
     const pdf = new jsPDF({
       unit: 'mm',
@@ -291,6 +331,7 @@ const downloadPdf = async () => {
     const contentHeight = pageHeight - marginTop - marginBottom
     const mmPerPx = contentWidth / canvas.width
     const pageSliceHeightPx = Math.max(1, Math.floor(contentHeight / mmPerPx))
+    const totalPages = Math.max(1, Math.ceil(canvas.height / pageSliceHeightPx))
 
     let renderedPages = 0
 
@@ -323,11 +364,10 @@ const downloadPdf = async () => {
         pdf.addPage()
       }
 
-      const pageImage = pageCanvas.toDataURL('image/jpeg', 0.98)
       const renderedHeight = sliceHeight * mmPerPx
 
       pdf.addImage(
-        pageImage,
+        pageCanvas,
         'JPEG',
         marginLeft,
         marginTop,
@@ -336,8 +376,14 @@ const downloadPdf = async () => {
       )
 
       renderedPages += 1
+      await setProgress(
+        62 + Math.round((renderedPages / totalPages) * 28),
+        `生成分页 ${renderedPages}/${totalPages}`,
+      )
+      await yieldToMain()
     }
 
+    await setProgress(94, '写入文件')
     const pdfBlob = pdf.output('blob')
     const downloadUrl = URL.createObjectURL(pdfBlob)
     const downloadLink = document.createElement('a')
@@ -348,8 +394,11 @@ const downloadPdf = async () => {
     downloadLink.click()
     downloadLink.remove()
     URL.revokeObjectURL(downloadUrl)
+    await setProgress(100, '已完成')
   } finally {
+    await nextFrame()
     isGenerating.value = false
+    progress.value = 0
     exportNode.remove()
   }
 }
@@ -358,17 +407,29 @@ const downloadPdf = async () => {
 <template>
   <button
     class="download-pdf-button"
+    :style="buttonStyle"
     :disabled="isGenerating"
-    :title="isGenerating ? '正在生成PDF' : '下载PDF'"
+    :title="isGenerating ? `正在生成PDF：${progress}%` : '下载PDF'"
     @click="downloadPdf"
   >
-    <FontAwesomeIcon :icon="faFilePdf"></FontAwesomeIcon>
+    <svg class="download-pdf-button__progress" viewBox="0 0 44 44" aria-hidden="true">
+      <circle class="download-pdf-button__track" cx="22" cy="22" r="18" />
+      <circle
+        class="download-pdf-button__ring"
+        cx="22"
+        cy="22"
+        r="18"
+        :style="progressStyle"
+      />
+    </svg>
+    <FontAwesomeIcon :icon="faFilePdf" class="download-pdf-button__icon"></FontAwesomeIcon>
   </button>
 </template>
 
 <style scoped lang="less">
 .download-pdf-button {
   //样式来自于SideList
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -382,10 +443,42 @@ const downloadPdf = async () => {
   box-shadow: var(--sidelist-button-box-shadow);
   backdrop-filter: var(--sidelist-button-backdrop-filter);
   cursor: pointer;
+  overflow: hidden;
 
   &:disabled {
     opacity: 0.65;
     cursor: progress;
   }
+}
+
+.download-pdf-button__progress {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  width: 100%;
+  height: 100%;
+  rotate: -90deg;
+  pointer-events: none;
+}
+
+.download-pdf-button__track,
+.download-pdf-button__ring {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.download-pdf-button__track {
+  stroke: rgba(var(--blue-shadow-color), 0.16);
+}
+
+.download-pdf-button__ring {
+  stroke: var(--color-blue);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.12s linear;
+}
+
+.download-pdf-button__icon {
+  position: relative;
+  z-index: 1;
 }
 </style>

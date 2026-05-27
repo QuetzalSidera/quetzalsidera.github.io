@@ -503,9 +503,9 @@ $$
 | 1  | 建立分支约束旋量集 $\langle\mathcal{S}^r\rangle$ | $\langle\mathcal{S}^r\rangle = \mathcal{S}^{r}_{b1} \oplus \mathcal{S}^{r}_{b2} \oplus \cdots \oplus \mathcal{S}^{r}_{bp}$（直和，保留重复） |
 | 2  | 合成机构总运动旋量系 $\mathcal{S}_m$              | $\mathcal{S}_m = \mathcal{S}_{b1} \cup \mathcal{S}_{b2} \cup \cdots \cup \mathcal{S}_{bp}$                                          |
 | 3  | 求机构总约束旋量系 $\mathcal{S}^c$               | 求解 $\mathcal{S}_m \boldsymbol{\Delta} \boldsymbol{\$}^c = \boldsymbol{0}$                                                           |
-| 5  | 求动平台补约束旋量系 $\mathcal{S}^r_c$            | $\mathcal{S}^r = \mathcal{S}^c \cup \mathcal{S}^r_c$                                                                                |
-| 6  | 求补约束旋量集 $\langle\mathcal{S}^r_c\rangle$ | 根据$\langle\mathcal{S}^r\rangle = \mathcal{S}^c \oplus \langle\mathcal{S}^r_c\rangle$，求得动平台补约束旋量集$\langle\mathcal{S}^r_c\rangle$     |
-| 7  | 冗余约束数                                   | $\nu = \operatorname{card}(\langle\mathcal{S}^r_c\rangle) - \dim(\mathcal{S}^r_c)$                                                  |
+| 4  | 求动平台补约束旋量系 $\mathcal{S}^r_c$            | $\mathcal{S}^r = \mathcal{S}^c \cup \mathcal{S}^r_c$                                                                                |
+| 5  | 求补约束旋量集 $\langle\mathcal{S}^r_c\rangle$ | 根据$\langle\mathcal{S}^r\rangle = \mathcal{S}^c \oplus \langle\mathcal{S}^r_c\rangle$，求得动平台补约束旋量集$\langle\mathcal{S}^r_c\rangle$     |
+| 6  | 冗余约束数                                   | $\nu = \operatorname{card}(\langle\mathcal{S}^r_c\rangle) - \dim(\mathcal{S}^r_c)$                                                  |
 
 
 > 值得注意的是，$\langle\mathcal{S}^r\rangle$ 中的尖括号 $\langle\cdot\rangle$ 表示**约束旋量的多重集合**
