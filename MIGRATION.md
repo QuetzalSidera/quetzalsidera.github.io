@@ -13,7 +13,7 @@
 
 - **可读性**：Markdown 文章无须重写，frontmatter 字段保持兼容。
 - **可维护性**：组件用 React + CSS Modules，状态层从 Vue `reactive` 切到 React 友好的方案（Zustand / Context）。
-- **可部署性**：构建产物仍能托管在 GitHub Pages（`next export` 静态导出）。
+- **可部署性**：构建产物仍能托管在 **Cloudflare Pages**（项目名 `quetzalsidera-blog`，自定义域名 `quetzalsidera.me`），Next.js 走静态导出 → `wrangler pages deploy`。
 - **可回退性**：迁移期间 `.vitepress/` 与 `main` 分支不被破坏，随时能切回旧版构建。
 
 非目标：
@@ -37,7 +37,7 @@
 | 数学公式      | `markdown-it-mathjax3`                                               | `remark-math` + `rehype-katex` 或 `rehype-mathjax`               |
 | 代码高亮      | Shiki（`solarized-dark`）                                            | Shiki（Nextra 内置）或 `rehype-pretty-code`                       |
 | 自定义图片属性 | `markdown-it-custom-attrs`（注入 `data-fancybox=gallery`）           | 自定义 remark/rehype 插件，或在 MDX 组件层包装 `<img>`           |
-| 部署          | `pnpm run build`（vitepress build） → GitHub Pages                   | `pnpm build && pnpm export` → GitHub Pages                       |
+| 部署          | `pnpm run build`（vitepress build）→ `wrangler pages deploy .vitepress/dist` | `pnpm build`（next build / export）→ `wrangler pages deploy out` |
 | 评论          | Gitalk（GitHub OAuth）                                               | 同 Gitalk，React 包装（或换 giscus，待定）                       |
 | 字体          | `@fontsource/jetbrains-mono` + 自定义 Blueaka 字体                   | 不变（继续从 `public/font` 加载）                                |
 
@@ -156,9 +156,13 @@
 
 - [ ] 视觉走查（与 main 分支并排对比）
 - [ ] Lighthouse / Pagespeed 检查
-- [ ] 改 GitHub Pages 工作流为 `next build && next export`
-- [ ] 删除 `.vitepress/`，整理 `package.json` 依赖
-- [ ] PR `react-migration` → `main`
+- [ ] 改 `.github/workflows/deploy.yml`：
+  - 构建命令从 `pnpm build`（VitePress）→ `pnpm build`（Next.js，必要时附加 `next export` / Next 15 的 `output: 'export'`）
+  - `wrangler pages deploy` 的目录从 `.vitepress/dist` → Next 静态导出目录（`out/`）
+  - `--project-name=quetzalsidera-blog` 保持不变
+- [ ] 在 Cloudflare Pages 控制台用 `react-migration` 分支建一个 preview deployment，先看一眼线上效果（可选）
+- [ ] 删除 `.vitepress/`，整理 `package.json` 依赖（保留 `wrangler`）
+- [ ] PR `react-migration` → `main`，触发正式部署
 
 ---
 
@@ -172,8 +176,9 @@
 4. **代码高亮主题**：保留 `solarized-dark`，注意行号样式。
 5. **Spine 立绘**：spine-runtimes 是浏览器端 canvas，要用 `next/dynamic({ ssr: false })`。
 6. **Gitalk**：构造时需要 `clientID` / `clientSecret` / `repo`。当前 `clientSecret` 写在前端配置里（同 VitePress 时期），上线前确认是否要换 giscus 或迁到环境变量。
-7. **`base` 路径**：原 VitePress 用 `useData().site.value.base` 处理 GitHub Pages 子路径。迁移到 Next.js 后用 `next.config.mjs` 的 `basePath` + `assetPrefix`。
-8. **`.html` 后缀**：原文章 href 形如 `posts/xxx.html`。Next 默认无 `.html`；需要保留旧链接的话用 `trailingSlash: true` 或 redirects 兜底。
+7. **`base` 路径**：原 VitePress 用 `useData().site.value.base` 处理站点子路径，目前线上是 Cloudflare Pages 根路径（自定义域名 `quetzalsidera.me`），`base` 实际是 `/`。迁移到 Next.js 后无需设置 `basePath`，但代码里"用 base 拼链接"的地方仍要保留 `/` 兜底以防换部署形态。
+8. **`.html` 后缀**：原文章 href 形如 `posts/xxx.html`。Next 默认无 `.html`；为兼容已被外部引用的旧链接，建议 `next.config.mjs` 设 `trailingSlash: true` 或写 `_redirects` 兜底（Cloudflare Pages 支持 `_redirects` / `_headers` 文件，放在 `public/` 即可被一并部署）。
+9. **Cloudflare Pages 静态限制**：`next export` 不支持 `getServerSideProps` / API Routes，迁移过程中如果出现这类需求需提前替换为构建期生成或第三方服务。
 
 ---
 

@@ -57,7 +57,8 @@ quetzalsidera.github.io/
 ├─ index.md                    # 首页
 ├─ ignore/                     # 不入构建的草稿
 ├─ env.d.ts / tsconfig.json
-├─ package.json                # 现含 vitepress / vue / less，将逐步替换为 next / nextra / react
+├─ package.json                # 现含 vitepress / vue / less / wrangler，将逐步替换为 next / nextra / react
+├─ .github/workflows/deploy.yml # Cloudflare Pages 部署工作流（main 分支触发）
 ├─ MIGRATION.md                # 迁移规划（请先读）
 └─ README.md
 ```
@@ -135,7 +136,14 @@ quetzalsidera.github.io/
 6. 迁移装饰类组件（Splash / Fireworks / Spine / Music / BGM）。
 7. SEO（OG / Twitter / JSON-LD）补齐。
 8. 联调 Gitalk、搜索、PDF 下载、目录、置顶等细节。
-9. GitHub Actions 切到 Next 静态导出，PR 合并回 main。
+9. 改 `.github/workflows/deploy.yml`：构建命令切到 Next，`wrangler pages deploy` 的目录从 `.vitepress/dist` 改成 Next 的产物目录（如 `out/`），项目名 `quetzalsidera-blog` 保持不变；最后 PR 合并回 `main`。
+
+## 4.1 部署提醒
+
+- 线上是 **Cloudflare Pages**（不是 GitHub Pages），仓库名 `quetzalsidera.github.io` 是历史命名。
+- 触发方式：`push` 到 `main`，GitHub Actions 跑 `wrangler pages deploy <dist> --project-name=quetzalsidera-blog`。
+- Secrets：`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` 已在仓库设置中，本地无需配置。
+- `react-migration` 分支不会触发部署，可以放心构建实验。
 
 ---
 
