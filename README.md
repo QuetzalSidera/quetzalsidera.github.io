@@ -17,9 +17,9 @@
 - 源框架：VitePress 1.x + Vue 3 SFC + Less + 内联 `<style>`
 - 目标框架：Nextra（基于 Next.js）+ React + CSS Modules
 - 内容形式：保持现有 Markdown / MDX，frontmatter 字段尽量保持向后兼容
-- 部署方式：**Cloudflare Pages**（自定义域名 `quetzalsidera.me`），由 GitHub Actions 触发 `wrangler pages deploy`，迁移后产物目录由 `.vitepress/dist` 切换为 Next.js 静态导出目录（如 `out/`）
+- 部署方式：**Cloudflare Pages + Git Integration**（自定义域名 `quetzalsidera.me`）。Cloudflare 直接监听 GitHub 仓库的 `main` 分支推送，构建命令、产物目录、环境变量均在 Cloudflare Pages 控制台配置；迁移后产物目录由 `.vitepress/dist` 切换为 Next.js 静态导出目录（`out/`）。
 
-> 仓库名虽然是 `quetzalsidera.github.io`，但 GitHub Pages 部署已停用，线上托管全部走 Cloudflare Pages（项目名 `quetzalsidera-blog`）。
+> 仓库名虽然是 `quetzalsidera.github.io`，但 GitHub Pages 部署已停用，仓库内也已移除 GitHub Actions（`.github/`），线上托管全部走 Cloudflare Pages（项目名 `quetzalsidera-blog`）。
 
 迁移的详细规划与对照表见 [`MIGRATION.md`](./MIGRATION.md)。
 面向后续协作 Agent 的项目导览与约束见 [`AGENT.md`](./AGENT.md)。
@@ -34,7 +34,7 @@
 | 数据加载   | `*.data.mts` (Node 端 `gray-matter`) | Next.js 静态生成 + 同等 frontmatter 解析 |
 | 路由       | 文件路由（`posts/*.md`）           | 文件路由（`pages/posts/*.mdx`）          |
 | 包管理器   | pnpm                               | pnpm                                     |
-| 部署       | Cloudflare Pages（vitepress build → `wrangler pages deploy`） | Cloudflare Pages（next build / export → `wrangler pages deploy`） |
+| 部署       | Cloudflare Pages Git Integration（构建命令 `pnpm build`，产物 `.vitepress/dist`） | Cloudflare Pages Git Integration（构建命令 `pnpm build`，产物 `out/`） |
 
 ## 主题配置
 
@@ -126,22 +126,29 @@ pnpm run preview
 - `collections/`：文集索引页
 - `tags/`：标签页入口
 - `public/`：静态资源
-- `.github/workflows/`：Cloudflare Pages 部署工作流（`deploy.yml`）
 - `MIGRATION.md`：VitePress → Nextra 迁移规划
 - `AGENT.md`：协作 Agent 的项目导览与约束
+
+> 部署：由 Cloudflare Pages 通过 Git Integration 自动监听 GitHub 仓库 `main` 分支，无需仓库内 CI 配置文件。
 
 ## 部署说明
 
 部署目标是 **Cloudflare Pages**（项目名 `quetzalsidera-blog`），自定义域名 `quetzalsidera.me`。
 GitHub Pages 已停用，仓库名 `quetzalsidera.github.io` 仅为历史命名。
+仓库内不保留任何 CI 配置文件（`.github/` 已移除）。
 
-工作流文件：[`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
+接入方式：**Cloudflare Pages Git Integration**
 
-- 触发：`push` 到 `main`
-- 步骤：`pnpm install --frozen-lockfile` → `pnpm build` → `pnpm exec wrangler pages deploy .vitepress/dist --project-name=quetzalsidera-blog`
-- Secrets：`CLOUDFLARE_API_TOKEN`、`CLOUDFLARE_ACCOUNT_ID`（在仓库 Settings → Secrets 配置）
+- Cloudflare 直接监听本仓库 `main` 分支的推送
+- 构建命令、Node 版本、产物目录、环境变量都在 Cloudflare Pages 控制台配置
+- 当前配置（VitePress 阶段）：
+  - 构建命令：`pnpm install && pnpm build`
+  - 产物目录：`.vitepress/dist`
+- 迁移完成后改为（Nextra 阶段）：
+  - 构建命令：`pnpm install && pnpm build`
+  - 产物目录：`out/`（`output: 'export'` 的 Next 静态导出）
 
-`react-migration` 分支期间不会触发线上部署，待迁移收尾时再统一切换工作流中的构建命令与产物目录（`.vitepress/dist` → 例如 `out/`）。
+`react-migration` 分支不会触发生产部署（Cloudflare 默认只对 production branch / preview branch 列表中的分支构建），但可以在 Cloudflare 控制台把它加为 preview branch 来出预览链接。
 
 如果后续更换域名，需要同步修改：
 

@@ -10,11 +10,21 @@
 1. **分支**：所有改动（无论代码、文档、配置）一律在 `react-migration` 分支提交。
    - 在执行任何写操作前先确认 `git branch --show-current` 为 `react-migration`，若不是，先 `git checkout react-migration`。
    - `main` 分支保留稳定 VitePress 版本，不应被迁移期间的改动污染。
-2. **技术栈**：迁移目标是 **Nextra（React）+ CSS Modules**。
+2. **技术栈**：迁移目标是 **Nextra v4（App Router）+ React + CSS Modules**。
    - 不再使用 Vue 3、Vue SFC、`<script setup>`、Less、内联 `<style scoped>`。
-   - 不使用全局内联样式或 styled-jsx；统一走 `*.module.css`，必要的 CSS 变量集中到一处。
-3. **不破坏现有内容**：`posts/` 下的 Markdown 内容是用户长期资产，迁移过程中不得擅自重写文章正文、frontmatter 字段或目录结构。
-4. **写之前先看**：本仓库 Vue 组件不少（~5800 行），先读再写，不要凭印象重写组件。
+   - 不使用全局内联样式或 styled-jsx；统一走 `*.module.css`，CSS 变量集中到 `styles/tokens.css`。
+   - 状态管理用**多个 React Context**（不引入 Zustand 等三方状态库）。
+   - 主题切换用 **next-themes**；亮/暗 token 仍走 `[data-theme=light/dark]` 选择器。
+   - 数学公式用 **rehype-katex**；代码高亮主题保留 `solarized-dark`。
+   - 部署形态：`output: 'export'` 静态导出。
+3. **用户明确要求：迁移只动框架与技术架构，不改其他任何行为**。
+   - 视觉、交互、动画时长、字体、文章内容、frontmatter、链接结构（`/posts/<slug>.html`）全部保留。
+   - 装饰类组件（Splash / Fireworks / Spine / BGM）**全量保留**。
+   - 旧 `.html` 链接通过 `public/_redirects` 兜底（Cloudflare Pages 原生支持）。
+4. **唯一例外**：评论系统从 Gitalk 切换到 **giscus**（已征得同意，因 Gitalk 不能直接复用其前端 `clientSecret`，且 giscus 是 React 原生体验更顺）。
+5. **不破坏现有内容**：`posts/` 下的 Markdown 内容是用户长期资产，迁移过程中不得擅自重写文章正文、frontmatter 字段或目录结构。
+6. **写之前先看**：本仓库 Vue 组件不少（~5800 行），先读再写，不要凭印象重写组件。
+7. **main 分支冻结**：迁移期间所有提交（包括文章 hotfix）都走 `react-migration`，迁移完成后 PR 回 `main` 触发首次 Nextra 部署。
 
 ---
 
@@ -57,10 +67,12 @@ quetzalsidera.github.io/
 ├─ index.md                    # 首页
 ├─ ignore/                     # 不入构建的草稿
 ├─ env.d.ts / tsconfig.json
-├─ package.json                # 现含 vitepress / vue / less / wrangler，将逐步替换为 next / nextra / react
-├─ .github/workflows/deploy.yml # Cloudflare Pages 部署工作流（main 分支触发）
+├─ package.json                # 现含 vitepress / vue / less / wrangler，将逐步替换为 next / nextra / react / giscus / next-themes / katex
 ├─ MIGRATION.md                # 迁移规划（请先读）
 └─ README.md
+
+# 注意：仓库内已无 .github/ 目录。部署由 Cloudflare Pages Git Integration 直接监听 main 分支，
+# 构建命令与产物目录都在 Cloudflare 控制台配置。不要再往仓库里加 GitHub Actions workflow。
 ```
 
 ---
@@ -141,9 +153,13 @@ quetzalsidera.github.io/
 ## 4.1 部署提醒
 
 - 线上是 **Cloudflare Pages**（不是 GitHub Pages），仓库名 `quetzalsidera.github.io` 是历史命名。
-- 触发方式：`push` 到 `main`，GitHub Actions 跑 `wrangler pages deploy <dist> --project-name=quetzalsidera-blog`。
-- Secrets：`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` 已在仓库设置中，本地无需配置。
-- `react-migration` 分支不会触发部署，可以放心构建实验。
+- 接入方式：**Cloudflare Pages Git Integration** —— Cloudflare 在自己后台监听本仓库 `main` 分支的推送并自动构建。
+- 仓库内 **没有** CI 配置文件（`.github/` 已删除）；不要再添加 GitHub Actions workflow。
+- 构建命令、Node 版本、产物目录、环境变量全部在 Cloudflare Pages **控制台**配置，本地仓库不可见。
+- 当前控制台配置（VitePress 阶段）：构建 `pnpm install && pnpm build`，产物 `.vitepress/dist`。
+- 迁移后需要在控制台手动改产物目录为 `out/`（Next 静态导出）。
+- `react-migration` 分支不会触发生产部署；若需要预览链接，请在 Cloudflare 控制台把它加为 preview branch。
+- `package.json` 里的 `wrangler` 依赖目前没用到（之前为 GitHub Actions 准备），暂时保留，迁移收尾时一起清。
 
 ---
 
