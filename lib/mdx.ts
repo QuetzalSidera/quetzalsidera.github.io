@@ -10,6 +10,7 @@ import path from 'node:path'
 
 const vueScriptSetupRE = /<script\s+setup(?:\s+[^>]*)?>[\s\S]*?<\/script>/gi
 const fenceStartRE = /^\s*(```|~~~)/
+const markdownFenceStartRE = /^ {0,3}(`{3,}|~{3,})(.*)$/
 const mathFenceRE = /^\s*(?:>\s*)?\$\$\s*$/
 const headingAnchorRE = /<a\s+id="[^"]+"\s*><\/a>/g
 const headingWithLegacyIdRE = /^(\s{0,3}#{1,6}\s+.*?)(?:\s*\{#([^}]+)\}|<a\s+id=["']?([^"'\s>]+)["']?\s*><\/a>)\s*$/
@@ -37,11 +38,76 @@ const pathImportRE = /import\s+\{\s*path\s+as\s+([A-Za-z_$][\w$]*)\s*\}\s+from\s
 const imageConstRE =
   /const\s+([A-Za-z_$][\w$]*)\s*=\s*\{([\s\S]*?)\}\s*as\s+const/g
 
-function loadLegacyPathMap(importPath: string): Record<string, string> {
-  if (importPath === '@Miscellaneous/path') {
-    return loadJsonPathMap('/Image/Miscellaneous/path.json')
+function isImageSetupFence(info: string): boolean {
+  return /(?:^|\s)image-setup(?:\s|$)/.test(info)
+}
+
+function isFenceClosingLine(line: string, fenceMarker: string): boolean {
+  const markerChar = fenceMarker[0]
+  const minLength = fenceMarker.length
+  const closeRE = new RegExp(`^ {0,3}\\${markerChar}{${minLength},}\\s*$`)
+  return closeRE.test(line)
+}
+
+function extractImageSetupFenceBlocks(markdown: string): string[] {
+  const lines = markdown.split('\n')
+  const blocks: string[] = []
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const startMatch = lines[index].match(markdownFenceStartRE)
+    if (!startMatch) continue
+
+    const [, marker, info] = startMatch
+    if (!isImageSetupFence(info.trim())) continue
+
+    const codeLines: string[] = []
+    index += 1
+
+    while (index < lines.length && !isFenceClosingLine(lines[index], marker)) {
+      codeLines.push(lines[index])
+      index += 1
+    }
+
+    blocks.push(codeLines.join('\n'))
   }
 
+  return blocks
+}
+
+function stripImageSetupFenceBlocks(markdown: string): string {
+  const lines = markdown.split('\n')
+  const stripped: string[] = []
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const startMatch = lines[index].match(markdownFenceStartRE)
+    if (!startMatch) {
+      stripped.push(lines[index])
+      continue
+    }
+
+    const [, marker, info] = startMatch
+    if (!isImageSetupFence(info.trim())) {
+      stripped.push(lines[index])
+      continue
+    }
+
+    stripped.push('')
+    index += 1
+
+    while (index < lines.length && !isFenceClosingLine(lines[index], marker)) {
+      stripped.push('')
+      index += 1
+    }
+
+    if (index < lines.length) {
+      stripped.push('')
+    }
+  }
+
+  return stripped.join('\n')
+}
+
+function loadLegacyPathMap(importPath: string): Record<string, string> {
   const publicImageMatch = importPath.match(/^@public\/Image\/(.+)\/path$/)
   if (publicImageMatch) {
     return loadJsonPathMap(`/Image/${publicImageMatch[1]}/path.json`)
@@ -88,7 +154,10 @@ function parseLegacyValue(rawValue: string, pathMaps: Record<string, Record<stri
 }
 
 function parseLegacyImages(markdown: string): Record<string, LegacyImageProps> {
-  const scripts = markdown.match(vueScriptSetupRE) ?? []
+  const scripts = [
+    ...(markdown.match(vueScriptSetupRE) ?? []),
+    ...extractImageSetupFenceBlocks(markdown),
+  ]
   const images: Record<string, LegacyImageProps> = {}
 
   for (const script of scripts) {
@@ -272,13 +341,19 @@ function legacyImageTagToHtml(
     .replace(/^<Image\s*/i, '')
     .replace(/\/>\s*$/, '')
     .replace(/src="\/Imgs\/operating-sys\/cover\.png"/g, 'src="/Image/Miscellaneous/operating-sys/cover.webp"')
-  const bindMatch = attributeText.match(/v-bind="([^"]+)"/)
+  const bindMatch =
+    attributeText.match(/\{\s*\.\.\.\s*([A-Za-z_$][\w$]*)\s*\}/)
 
   if (bindMatch) {
     const props = legacyImages[bindMatch[1]]
     return props
       ? serializeLegacyImageMarker(props)
-      : serializeLegacyImageMissing(`图片引用 v-bind="${bindMatch[1]}" 暂未迁移`)
+      : serializeLegacyImageMissing(`图片引用 "${bindMatch[1]}" 暂未迁移`)
+  }
+
+  const vueBindMatch = attributeText.match(/v-bind="([^"]+)"/)
+  if (vueBindMatch) {
+    return serializeLegacyImageMissing(`图片引用 "${vueBindMatch[1]}" 仍在使用 Vue v-bind 语法，请改为 React spread 语法`)
   }
 
   return serializeLegacyImageMarker(parseImageAttributes(attributeText))
@@ -445,7 +520,8 @@ function normalizeSingleLineDisplayMath(line: string): string[] | null {
 
 export function toMdxSource(markdown: string): string {
   const legacyImages = parseLegacyImages(markdown)
-  const withoutVueScripts = markdown.replace(vueScriptSetupRE, '')
+  const withoutImageSetupFences = stripImageSetupFenceBlocks(markdown)
+  const withoutVueScripts = withoutImageSetupFences.replace(vueScriptSetupRE, '')
   const lines = normalizeDisplayMathDelimiters(normalizeLegacyBlockquoteMath(withoutVueScripts.split('\n')))
   let inFence = false
   let fenceMarker: string | null = null

@@ -95,10 +95,6 @@ pnpm-global
 # rollup.js default build output
 dist/
 
-# vitepress build output
-.vitepress/dist
-.vitepress/cache
-
 # Next.js build output
 .next/
 out/

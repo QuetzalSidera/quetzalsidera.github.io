@@ -70,9 +70,8 @@ Gram-Schmidt 互易正交化）。
 
 ---
 
-<script setup lang="ts">
-import Image from '../.vitepress/theme/components/shared/Image.vue'
-import {path as miscellaneousImagePath} from '@Miscellaneous/path'
+```ts image-setup
+import {path as miscellaneousImagePath} from '@public/Image/Miscellaneous/path'
 
 const reciprocalScrews = {
   src: miscellaneousImagePath['Reciprocal Screws'],
@@ -94,7 +93,7 @@ const spinorSys = {
   caption: '不同的旋量系',
 } as const
 
-</script>
+```
 
 
 本章为全书后续各章提供数学基础——从三维向量与矩阵出发，经线几何过渡到旋量与旋量系。
@@ -447,7 +446,7 @@ $\boldsymbol{\$}_1 \circ \boldsymbol{\$}_2 = p_1p_2\big[(h_1+h_2)\cos\alpha_{12}
 > $$\displaystyle \frac{\sin\alpha_{12}}{\cos\alpha_{12}} = \frac{h_1 + h_2}{a_{12}}$$
 
 #### 旋量互易的几何意义
-<Image v-bind="reciprocalScrews" />
+<Image {...reciprocalScrews} />
 
 ## 3. 旋量系<a id=旋量系></a>
 
@@ -509,7 +508,7 @@ $$
 | **直线旋量系**  | 存在一组由 $n$ 条线性无关线矢量组成的基 | 
 | **线系**     | 所有元素均为线矢量（$h=0$）       | |
 
-<Image v-bind="spinorSys"/>
+<Image {...spinorSys} />
 
 **不变旋量系**（`invariant screw system`
 ）在位形变化时形式保持不变，所表征的运动具有连续性（不限于瞬时）。不变旋量系与位移子群一一对应（见[机构学的群论基础](./robot-kinematics-06-group.md)

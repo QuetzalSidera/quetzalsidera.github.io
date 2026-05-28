@@ -46,9 +46,8 @@ head:
 
 ---
 
-<script setup lang="ts">
-import Image from '../.vitepress/theme/components/shared/Image.vue'
-import {path as miscellaneousImagePath} from '@Miscellaneous/path'
+```ts image-setup
+import {path as miscellaneousImagePath} from '@public/Image/Miscellaneous/path'
 import {path as groupImagePath} from '@public/Image/GroupPhoto/path'
 
 const commitImage = {
@@ -69,7 +68,7 @@ const demoImage = {
   caption: '图像效果展示',
 } as const
 
-</script>
+```
 
 这次调整统一文章了中的图片组件写法、去掉硬编码路径、把若干旧资源切换到 `WebP`。
 
@@ -79,7 +78,7 @@ const demoImage = {
 
 > 统一博客里的图片组件、取消硬编码路径和不一致的资源格式。
 
-<Image v-bind="commitImage" />
+<Image {...commitImage} />
 
 调整范围包括：
 
@@ -143,7 +142,7 @@ const demoImage = {
 
 ### 1. 统一使用 `Image` 组件{#统一使用Image组件}
 
-文章中的图片统一改为使用主题中的 `Image.vue`，不再在正文里直接写原生 `<img>`。
+文章中的图片统一改为使用主题中的 `Image` 展示组件，不再在正文里直接写原生 `<img>`。
 
 `Image` 组件继续只接收展示字段：
 
@@ -233,11 +232,10 @@ export const path = {
 
 ```
 
-可以在代码中引用`path.ts`文件，在文章的 `<script setup lang="ts">` 中直接导入：
+可以在代码中引用`path.ts`文件，在文章的 ```` ```ts image-setup ```` 代码块中直接导入：
 
 ```ts
-import Image from '../.vitepress/theme/components/shared/Image.vue'
-import { path as miscellaneousImagePath } from '@Miscellaneous/path'
+import { path as miscellaneousImagePath } from '@public/Image/Miscellaneous/path'
 ```
 
 然后在脚本区定义配置对象
@@ -252,15 +250,15 @@ import { path as miscellaneousImagePath } from '@Miscellaneous/path'
 } as const
 ```
 
-再在正文中通过 `v-bind` 或` v-for` 使用自定义组件：
+再在正文中通过 React spread 语法使用自定义组件：
 
 ```ts
-  <Image v-bind="mangaResultImage" />
+  <Image {...mangaResultImage} />
 ```
 
 然后就可以看到右侧的图片啦～
 
-<Image v-bind="demoImage" />
+<Image {...demoImage} />
 
 这种写法使得
 1. 路径不再硬编码
@@ -270,12 +268,12 @@ import { path as miscellaneousImagePath } from '@Miscellaneous/path'
 
 ### 3. build期间静态检查 {#build期间静态检查}
 
-截止上文的步骤结束，正确方式使用的图像组件已经具有了IDE高亮，意味着空引用将会被IDE静态代码扫描发现。但此时pnpm build仍然能够通过。
+截止上文的步骤结束，正确方式使用的图像组件已经具有了 IDE 高亮，意味着空引用会在编辑器中被提示。但如果只把文章当作 Markdown 渲染，`pnpm build` 仍然不会天然检查这些 TypeScript 片段。
 
-通过配置`pnpm build`先`vue-tsc`，再让`tsconfig`把`.md`当成`VitePress`的`Vue`文件参与检查，使得悬空的错误引用能够在编译期被发现。
+迁移到 Next.js 后，检查方式改为 `pnpm check:post-images`：脚本会扫描 `posts/*.md`，提取 ```` ```ts image-setup ```` 代码块，生成临时 `.ts` 文件，再调用 `tsc --noEmit`。同时它会检查每个 `&lt;Image {...xxx} /&gt;` 都有对应图片对象，且图片对象包含 `src` 字段。`pnpm typecheck` 与 `pnpm build` 都会先执行这一步，因此悬空的图片 key 会在编译期被发现。
 
 ```text
-posts/blog-change-log-01-to-cloudflare.md:63:31 - error TS2339: Property 'error' does not exist on type '{ readonly 海报: "/Image/Miscellaneous/essay-openai-image-2/海报.webp"; readonly 漫画: "/Image/Miscellaneous/essay-openai-image-2/漫画.webp"; readonly 漫画_翻嵌: "/Image/Miscellaneous/essay-openai-image-2/漫画_翻嵌.webp"; ... 37 more ...; readonly dns: "/Image/Miscellaneous/project-blog-to-cloudflare/dns.webp"; }'.
+/tmp/post-image-check-xxxx/posts_blog_change_log_01_to_cloudflare_md.ts:63:31 - error TS2339: Property 'error' does not exist on type '{ readonly 海报: "/Image/Miscellaneous/essay-openai-image-2/海报.webp"; readonly 漫画: "/Image/Miscellaneous/essay-openai-image-2/漫画.webp"; readonly 漫画_翻嵌: "/Image/Miscellaneous/essay-openai-image-2/漫画_翻嵌.webp"; ... 37 more ...; readonly dns: "/Image/Miscellaneous/project-blog-to-cloudflare/dns.webp"; }'.
 
 63   src: miscellaneousImagePath.errorTest,
                                  ~~~~~
@@ -302,4 +300,3 @@ Found 1 error in posts/blog-change-log-01-to-cloudflare.md:63
 - `.vitepress/config.mts` (优化vite引用alias)
 - `collections/*` (修改文集封面)
 - `posts/*` (修改文章图像引用)
-

@@ -49,9 +49,8 @@ head:
 
 ---
 
-<script setup lang="ts">
-import {path as miscellaneousImagePath} from '@Miscellaneous/path' 
-import Image from '../.vitepress/theme/components/shared/Image.vue'
+```ts image-setup
+import {path as miscellaneousImagePath} from '@public/Image/Miscellaneous/path'
 
 const sarrus = {
   src: miscellaneousImagePath['Sarrus'],
@@ -71,7 +70,7 @@ const scottRussell = {
   caption: 'Scott-Russell机构',
 } as const
 
-</script>
+```
 
 本文将演示 Sarrus 机构与 Scott-Russell 机构的两个完整算例。
 
@@ -79,7 +78,7 @@ const scottRussell = {
 此机构可以视为一个含2个支链的并联机构
 
 ### a. 前置分析{#Sarrus-前置分析}
-<Image v-bind="sarrus" />
+<Image {...sarrus} />
 建系如图，可得运动旋量：
 
 $$\boldsymbol{\$_1}=(1,0,0;0,0,0)$$
@@ -299,7 +298,7 @@ $$
 ### a. 前置分析{#Scott-Russell-前置分析}
 Scott-Russell 机构存在 1 个冗余约束与3 个公共约束，下面用旋量法验证。
 
-<Image v-bind="scottRussell" />
+<Image {...scottRussell} />
 
 建立$\vec{OC}$为$X$轴，$\vec{OB}$为$Y$轴，垂直纸面向外为$Z$轴。$|\vec{OB}|=2b$，$|\vec{OC}|=2c$。
 

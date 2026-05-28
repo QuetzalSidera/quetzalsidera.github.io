@@ -18,7 +18,8 @@
       "@/*": ["./*"],
       "@/lib/*": ["./lib/*"],
       "@/components/*": ["./components/*"],
-      "@/styles/*": ["./styles/*"]
+      "@/styles/*": ["./styles/*"],
+      "@public/*": ["./public/*"]
     },
     "plugins": [
       {
@@ -40,7 +41,6 @@
   ],
   "exclude": [
     "node_modules",
-    ".vitepress",
     "out",
     ".next"
   ]

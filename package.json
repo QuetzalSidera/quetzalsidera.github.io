@@ -1,18 +1,16 @@
 {
   "name": "quetzalsidera-blog",
   "version": "0.0.1",
-  "description": "QuetzalSidera 的个人博客（迁移期间 VitePress 与 Next.js 并存）",
+  "description": "QuetzalSidera 的个人博客",
   "type": "module",
   "author": "QuetzalSidera",
   "license": "ISC",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm typecheck && next build",
+    "check:post-images": "node scripts/check-post-images.mjs",
     "preview": "npx serve out",
-    "typecheck": "tsc --noEmit",
-    "vp:dev": "vitepress dev",
-    "vp:build": "vue-tsc --noEmit -p tsconfig.vitepress.json && vitepress build",
-    "vp:preview": "vitepress preview"
+    "typecheck": "tsc --noEmit && pnpm check:post-images"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.2.8",
@@ -25,7 +23,6 @@
     "giscus": "^1.5.0",
     "gray-matter": "^4.0.3",
     "katex": "^0.16.11",
-    "md5": "^2.3.0",
     "minisearch": "^7.1.1",
     "next": "^15.0.0",
     "next-mdx-remote": "^5.0.0",
@@ -40,19 +37,10 @@
   },
   "devDependencies": {
     "@types/animejs": "^3.1.12",
-    "@types/md5": "^2.3.5",
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "install": "^0.13.0",
-    "less": "^4.2.2",
-    "markdown-it-custom-attrs": "^1.0.2",
-    "markdown-it-mathjax3": "^4.3.2",
     "sass": "^1.100.0",
-    "typescript": "^5.6.0",
-    "vitepress": "^1.6.3",
-    "vue": "^3.5.13",
-    "vue-tsc": "^3.3.1",
-    "wrangler": "^4.93.1"
+    "typescript": "^5.6.0"
   }
 }
