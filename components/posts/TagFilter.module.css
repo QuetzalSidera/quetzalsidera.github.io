@@ -1,0 +1,68 @@
+.active button {
+  background-color: var(--btn-hover) !important;
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+  padding: 16px;
+  background-color: var(--infobox-background-initial);
+  border-radius: 32px;
+  border: solid 2px var(--foreground-color);
+  backdrop-filter: var(--blur-val);
+  width: 700px;
+  height: fit-content;
+  min-height: 200px;
+  margin: 0 10px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.tags li {
+  margin: 4px;
+}
+
+.tags button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  padding: 3px 5px;
+  color: var(--font-color-gold);
+  background-color: var(--btn-background);
+  border-radius: 5px;
+  transition: background-color 0.5s;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.tags button:hover {
+  background-color: var(--btn-hover);
+}
+
+.tagIcon {
+  width: 1em;
+  height: 1em;
+  font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+  .tags {
+    width: 75vw;
+  }
+
+  .tags li {
+    margin: 4px;
+  }
+
+  .tags button {
+    font-size: 12px;
+  }
+
+  .tagIcon {
+    font-size: 0.9em;
+  }
+}

@@ -1,0 +1,56 @@
+.giscusContainer {
+  margin-top: 34px;
+  padding: 22px;
+  border: 1px solid var(--comments-border);
+  border-radius: 24px;
+  background: var(--comments-bg, rgba(255, 255, 255, 0.5));
+  box-shadow: var(--comments-shadow);
+  transition: background 0.5s, border-color 0.5s, box-shadow 0.5s;
+}
+
+.giscusInner {
+  min-height: 180px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--comments-frame-bg, rgba(255, 255, 255, 0.5));
+}
+
+:global(html[theme='dark']) .giscusContainer,
+:global(html[theme='dark']) .giscusInner {
+  background: var(--comments-frame-bg, #1f2937);
+}
+
+.giscusInner::before {
+  content: '评论加载中';
+  display: block;
+  padding: 24px 20px;
+  color: var(--comments-muted-text);
+  font-size: 14px;
+  letter-spacing: 0;
+  opacity: 0.78;
+}
+
+.giscusInner:has(:global(giscus-widget))::before {
+  display: none;
+}
+
+.giscusContainer :global(giscus-widget) {
+  display: block;
+  width: 100%;
+}
+
+.giscusContainer :global(giscus-widget)::part(iframe) {
+  color-scheme: var(--color-scheme);
+}
+
+@media (max-width: 768px) {
+  .giscusContainer {
+    margin: 28px -12px 0;
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .giscusInner {
+    border-radius: 14px;
+  }
+}

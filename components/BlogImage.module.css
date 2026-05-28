@@ -1,0 +1,104 @@
+.figure {
+  width: fit-content;
+  max-width: min(100%, 42rem);
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+.left {
+  margin-right: auto;
+}
+
+.right {
+  margin-left: auto;
+}
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wrap {
+  width: min(100%, clamp(14rem, 42%, 24rem));
+  max-width: min(100%, 42%);
+}
+
+.wrap.left {
+  float: left;
+  margin-right: 1.5rem;
+}
+
+.wrap.right {
+  float: right;
+  margin-left: 1.5rem;
+}
+
+.wrap.center {
+  float: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wrap ~ :global(h1),
+.wrap ~ :global(h2),
+.wrap ~ :global(h3),
+.wrap ~ :global(h4),
+.wrap ~ :global(h5),
+.wrap ~ :global(h6),
+.wrap ~ :global(hr),
+.wrap ~ :global(blockquote) {
+  clear: both;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  border-radius: 14px;
+  box-shadow: 0 10px 28px rgba(var(--blue-shadow-color), 0.16);
+  object-fit: contain;
+}
+
+.caption {
+  color: var(--font-color-grey);
+  cursor: default;
+  font-size: 0.92rem;
+  line-height: 1.15;
+  margin-top: 0.65rem;
+  opacity: 0.82;
+  text-align: center;
+}
+
+.caption a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.caption a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.legacy {
+  border: 1px dashed var(--blog-image-missing-border);
+  border-radius: 6px;
+  color: var(--font-color-grey);
+  display: block;
+  font-size: 0.875rem;
+  margin: 1.5rem 0;
+  padding: 0.75rem 1rem;
+}
+
+@media (max-width: 768px) {
+  .figure {
+    float: none !important;
+    width: min(100%, 100%) !important;
+    max-width: 100%;
+    margin: 1.25rem auto;
+  }
+
+  .image {
+    width: 100%;
+  }
+}

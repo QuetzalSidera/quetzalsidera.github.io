@@ -1,0 +1,45 @@
+.main {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 0 96px;
+  font-family: var(--font-body);
+}
+
+.header {
+  margin-bottom: 48px;
+}
+
+.title {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem;
+  color: var(--link-color);
+}
+
+.welcome {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.motto {
+  margin: 0.25rem 0;
+  color: var(--text-body);
+  line-height: 1.15;
+}
+
+.note {
+  margin: 1rem 0 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--link-color);
+  background: var(--link-subtle-bg);
+  border-radius: 0 6px 6px 0;
+  font-size: 0.9rem;
+  color: var(--text-body);
+}
+
+.section {
+  width: min(100%, var(--max-content-width));
+  max-width: var(--max-content-width);
+  margin: 48px auto 0;
+  padding: 0 24px;
+}

@@ -1,0 +1,513 @@
+.postSideList {
+  --sidelist-bottom: clamp(18px, 10dvh, 76px);
+  --sidelist-bottom-float: 0.1;
+  --sidelist-right: 20px;
+  --sidelist-button-width: 44px;
+  --sidelist-button-height: 44px;
+  --sidelist-button-border-radius: 10px;
+  --sidelist-button-border: none;
+  --sidelist-button-background: color-mix(in srgb, var(--foreground-color) 86%, transparent);
+  --sidelist-button-box-shadow: 0 0 8px rgb(var(--blue-shadow-color), 0.8);
+  --sidelist-button-backdrop-filter: var(--blur-val);
+  --sidelist-button-gap: 5px;
+  --sidelist-button-count: 3;
+  --sidelist-button-color: var(--font-color-grey);
+  --sidelist-button-font-size: 20px;
+  display: block;
+  position: fixed;
+  bottom: var(--sidelist-bottom);
+  right: var(--sidelist-right);
+  height: calc(
+    var(--sidelist-button-count) * var(--sidelist-button-height) +
+      (var(--sidelist-button-count) - 1) * var(--sidelist-button-gap)
+  );
+  width: var(--sidelist-button-width);
+  z-index: 120;
+}
+
+.outline {
+  --outline-duration-width: 0.42s;
+  --outline-duration-height: 0.58s;
+  --outline-reveal-delay: 0.42s;
+  --outline-collapsed-width: var(--sidelist-button-width);
+  --outline-collapsed-height: var(--sidelist-button-height);
+  --outline-expanded-width: 200px;
+  --outline-stack-offset: calc(var(--sidelist-button-gap) * 2 + var(--sidelist-button-height) * 2);
+  --outline-expanded-height: clamp(
+    240px,
+    calc(100dvh - var(--sidelist-bottom) - var(--outline-stack-offset) - 80px),
+    700px
+  );
+  --outline-expanded-radius: 24px;
+  --outline-collapsed-radius: var(--sidelist-button-border-radius);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  bottom: var(--outline-stack-offset);
+  overflow: hidden;
+  z-index: 10;
+  box-sizing: border-box;
+  border: var(--sidelist-button-border);
+  background: var(--sidelist-button-background);
+  box-shadow: var(--sidelist-button-box-shadow);
+  backdrop-filter: var(--sidelist-button-backdrop-filter);
+  -webkit-backdrop-filter: var(--sidelist-button-backdrop-filter);
+  border-radius: var(--outline-collapsed-radius);
+}
+
+.expanded,
+.expanding {
+  width: var(--outline-expanded-width);
+  height: var(--outline-expanded-height);
+  border-radius: var(--outline-expanded-radius);
+}
+
+.collapsed,
+.collapsing {
+  width: var(--outline-collapsed-width);
+  height: var(--outline-collapsed-height);
+  border-radius: var(--outline-collapsed-radius);
+}
+
+.expanding {
+  transition:
+    width var(--outline-duration-width) ease,
+    height var(--outline-duration-height) ease var(--outline-duration-width),
+    border-radius 0.25s ease;
+}
+
+.collapsing {
+  transition:
+    height var(--outline-duration-height) ease,
+    width var(--outline-duration-width) ease var(--outline-duration-height),
+    border-radius 0.25s ease calc(var(--outline-duration-height) + var(--outline-duration-width) - 0.12s);
+}
+
+.outlineTitle {
+  --outline-title-top-expanded: 10px;
+  --outline-title-top-collapsed: 0;
+  --outline-title-left-expanded: 10px;
+  --outline-title-left-collapsed: 0;
+  --outline-title-opacity-expanded: 1;
+  --outline-title-opacity-collapsed: 0;
+  position: absolute;
+  top: var(--outline-title-top-collapsed);
+  left: var(--outline-title-left-collapsed);
+  margin: 0;
+  height: var(--sidelist-button-height);
+  line-height: 2;
+  font-size: calc(var(--sidelist-button-height) / 2);
+  font-weight: 700;
+  color: var(--font-color-grey);
+  white-space: nowrap;
+  opacity: var(--outline-title-opacity-collapsed);
+}
+
+.expanded .outlineTitle {
+  top: var(--outline-title-top-expanded);
+  left: var(--outline-title-left-expanded);
+  opacity: var(--outline-title-opacity-expanded);
+}
+
+.expanding .outlineTitle {
+  animation: outline-title-expanding 1s forwards;
+}
+
+.collapsing .outlineTitle {
+  animation: outline-title-collapsing 1s forwards;
+}
+
+.collapsed .outlineTitle {
+  top: var(--outline-title-top-collapsed);
+  left: var(--outline-title-left-collapsed);
+  opacity: var(--outline-title-opacity-collapsed);
+}
+
+@keyframes outline-title-expanding {
+  0% {
+    opacity: var(--outline-title-opacity-collapsed);
+    top: var(--outline-title-top-collapsed);
+    left: var(--outline-title-left-collapsed);
+  }
+
+  50% {
+    opacity: var(--outline-title-opacity-expanded);
+    top: var(--outline-title-top-collapsed);
+    left: var(--outline-title-left-expanded);
+  }
+
+  100% {
+    opacity: var(--outline-title-opacity-expanded);
+    top: var(--outline-title-top-expanded);
+    left: var(--outline-title-left-expanded);
+  }
+}
+
+@keyframes outline-title-collapsing {
+  0% {
+    opacity: var(--outline-title-opacity-expanded);
+    top: var(--outline-title-top-expanded);
+    left: var(--outline-title-left-expanded);
+  }
+
+  50% {
+    opacity: var(--outline-title-opacity-expanded);
+    top: var(--outline-title-top-collapsed);
+    left: var(--outline-title-left-expanded);
+  }
+
+  100% {
+    opacity: var(--outline-title-opacity-collapsed);
+    top: var(--outline-title-top-collapsed);
+    left: var(--outline-title-left-collapsed);
+  }
+}
+
+.outlineButton {
+  --outline-button-top-expanded: 10px;
+  --outline-button-top-collapsed: 0;
+  --outline-button-right-expanded: 10px;
+  --outline-button-right-collapsed: 0;
+  --outline-button-rotate-expanded: 90deg;
+  --outline-button-rotate-collapsed: 0deg;
+  position: absolute;
+  top: var(--outline-button-top-collapsed);
+  right: var(--outline-button-right-collapsed);
+  width: var(--sidelist-button-width);
+  height: var(--sidelist-button-height);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--sidelist-button-color);
+  font-size: var(--sidelist-button-font-size);
+  line-height: 1;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  rotate: var(--outline-button-rotate-collapsed);
+  cursor: pointer;
+}
+
+.outlineButton:focus {
+  outline: none;
+}
+
+.expanded .outlineButton {
+  top: var(--outline-button-top-expanded);
+  right: var(--outline-button-right-expanded);
+  rotate: var(--outline-button-rotate-expanded);
+}
+
+.expanding .outlineButton {
+  animation: outline-button-expanding 1s forwards;
+}
+
+.collapsing .outlineButton {
+  animation: outline-button-collapsing 1s forwards;
+}
+
+.collapsed .outlineButton {
+  top: var(--outline-button-top-collapsed);
+  right: var(--outline-button-right-collapsed);
+  rotate: var(--outline-button-rotate-collapsed);
+}
+
+@keyframes outline-button-expanding {
+  0% {
+    top: var(--outline-button-top-collapsed);
+    right: var(--outline-button-right-collapsed);
+    rotate: var(--outline-button-rotate-collapsed);
+  }
+
+  50% {
+    top: var(--outline-button-top-collapsed);
+    right: var(--outline-button-right-expanded);
+    rotate: var(--outline-button-rotate-expanded);
+  }
+
+  100% {
+    top: var(--outline-button-top-expanded);
+    right: var(--outline-button-right-expanded);
+    rotate: var(--outline-button-rotate-expanded);
+  }
+}
+
+@keyframes outline-button-collapsing {
+  0% {
+    top: var(--outline-button-top-expanded);
+    right: var(--outline-button-right-expanded);
+    rotate: var(--outline-button-rotate-expanded);
+  }
+
+  50% {
+    top: var(--outline-button-top-collapsed);
+    right: var(--outline-button-right-expanded);
+    rotate: var(--outline-button-rotate-expanded);
+  }
+
+  100% {
+    top: var(--outline-button-top-collapsed);
+    right: var(--outline-button-right-collapsed);
+    rotate: var(--outline-button-rotate-collapsed);
+  }
+}
+
+.outlineButton > svg,
+.downloadPdfButtonIcon,
+.toTopButtonIcon {
+  width: 1em;
+  height: 1em;
+}
+
+.outlineCard {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 12px 20px 18px;
+  margin-top: 50px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition:
+    opacity 0.18s ease,
+    transform 0.26s ease;
+}
+
+.expanded .outlineCard,
+.expanding .outlineCard {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: var(--outline-reveal-delay);
+}
+
+.collapsed .outlineCard,
+.collapsing .outlineCard {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition-delay: 0s;
+}
+
+.outlineList {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 5px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.outlineItem {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.outlineItem a {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+  border-radius: 12px;
+  color: var(--font-color-grey);
+  line-height: 1.5;
+  overflow: hidden;
+  text-wrap: wrap;
+  word-break: break-all;
+  text-overflow: ellipsis;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.outlineItem a:hover {
+  background-color: var(--post-sidelist-item-hover-bg);
+}
+
+.outlineItem a.active {
+  color: var(--color-blue);
+}
+
+.level1 a {
+  padding-left: 12px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.level2 a {
+  padding-left: 24px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.downloadPdfButton,
+.toTopButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  width: var(--sidelist-button-width);
+  height: var(--sidelist-button-height);
+  color: var(--sidelist-button-color);
+  font-size: var(--sidelist-button-font-size);
+  border-radius: var(--sidelist-button-border-radius);
+  border: var(--sidelist-button-border);
+  background: var(--sidelist-button-background);
+  box-shadow: var(--sidelist-button-box-shadow);
+  backdrop-filter: var(--sidelist-button-backdrop-filter);
+  -webkit-backdrop-filter: var(--sidelist-button-backdrop-filter);
+  cursor: pointer;
+}
+
+.downloadPdfButton:disabled {
+  opacity: 0.65;
+  cursor: progress;
+}
+
+.downloadPdfButton {
+  bottom: calc(var(--sidelist-button-gap) + var(--sidelist-button-height));
+}
+
+.toTopButton {
+  bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(24px);
+}
+
+.toTopButtonProgress {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  rotate: -90deg;
+  pointer-events: none;
+}
+
+.toTopButtonProgress {
+  transform-origin: 50% 50%;
+}
+
+.toTopButtonProgressTrack,
+.toTopButtonProgressRing {
+  fill: none;
+  stroke-width: 2.5;
+}
+
+.toTopButtonProgressTrack {
+  stroke: var(--post-sidelist-progress-track);
+}
+
+.toTopButtonProgressRing {
+  stroke: var(--post-sidelist-progress-ring);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.12s linear;
+}
+
+.preparingPdfIcon {
+  animation: preparing-pdf-icon 0.9s linear infinite;
+}
+
+.toTopButtonEnter {
+  opacity: 1;
+  pointer-events: auto;
+  animation: to-top-button-enter 0.45s ease forwards;
+}
+
+.toTopButtonLeave {
+  opacity: 0;
+  pointer-events: none;
+  animation: to-top-button-leave 0.55s ease forwards;
+}
+
+.toTopButtonIcon {
+  position: relative;
+  z-index: 1;
+  transform: rotate(180deg);
+}
+
+.toTopButtonEnter .toTopButtonIcon {
+  animation: to-top-button-icon-enter 0.45s ease forwards;
+}
+
+.toTopButtonLeave .toTopButtonIcon {
+  animation: to-top-button-icon-leave 0.55s ease forwards;
+}
+
+@keyframes to-top-button-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  45% {
+    opacity: 1;
+    transform: translateY(24px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes to-top-button-leave {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  45% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+
+@keyframes to-top-button-icon-enter {
+  0% {
+    transform: rotate(180deg);
+  }
+
+  45%,
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes to-top-button-icon-leave {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  45%,
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes preparing-pdf-icon {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}

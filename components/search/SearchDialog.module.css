@@ -1,0 +1,215 @@
+.searchDialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  animation: fadein 0.2s forwards;
+}
+
+.dialogCover {
+  background: var(--search-dialog-overlay-bg);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: cover-fadein 0.2s forwards;
+}
+
+.dialogContent {
+  position: relative;
+  width: 90%;
+  max-width: 768px;
+  height: auto;
+  background-color: var(--search-dialog-bg);
+  border-radius: 16px;
+  padding: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: scale(0.9);
+  opacity: 0;
+  animation: pop-up 0.2s forwards;
+}
+
+.dialogContent::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  border-bottom: 3px solid var(--search-dialog-border);
+  background-color: var(--search-dialog-header-bg);
+  background-image: var(--deco2);
+  background-repeat: no-repeat;
+  background-position: left;
+  background-size: contain;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 25px;
+  padding: 5px 0;
+  border-bottom: 5px solid var(--font-color-gold);
+  z-index: 100;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 56px;
+  height: 56px;
+  font-size: 36px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  z-index: 101;
+  color: var(--font-color-grey);
+}
+
+.searchInput {
+  color: var(--font-color-grey);
+  width: 100%;
+  height: 48px;
+  margin: 10px;
+  padding: 0 16px;
+  background-color: var(--search-input-bg);
+  border: 3px solid var(--search-input-border);
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.searchInput:focus {
+  outline: 3px solid var(--search-input-border);
+}
+
+.searchList {
+  width: 100%;
+  min-height: 100px;
+  max-height: min(60vh, 520px);
+  box-sizing: border-box;
+  background-color: var(--search-list-bg);
+  border-radius: 8px;
+  padding: 10px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.status {
+  text-align: center;
+  color: var(--font-color-grey);
+}
+
+.searchItem {
+  background-color: var(--search-item-bg);
+  border-radius: 8px;
+  box-shadow: 3px 3px 3px var(--search-item-shadow);
+  min-height: 86px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(12px);
+  animation: search-item-in 0.36s ease forwards;
+}
+
+.searchLink {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  color: var(--font-color-grey);
+  text-decoration: none;
+}
+
+.resultTitle {
+  display: -webkit-box;
+  overflow: hidden;
+  font-weight: 700;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+}
+
+.resultExcerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--font-color-grey);
+  font-size: 14px;
+  line-height: 1.55;
+  opacity: 0.78;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.highlight {
+  padding: 0 2px;
+  border-radius: 3px;
+  color: var(--search-highlight-color);
+  background: transparent;
+}
+
+.hideDialog {
+  animation: fadeout 0.3s forwards;
+}
+
+@media (max-width: 768px) {
+  .dialogContent {
+    top: 5%;
+  }
+}
+
+@keyframes fadein {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cover-fadein {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes pop-up {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes search-item-in {
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+}

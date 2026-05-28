@@ -1,0 +1,167 @@
+.welcomeBox {
+  --welcome-rotate-x: 0deg;
+  --welcome-rotate-y: 0deg;
+  --welcome-gradient-angle: 0deg;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: perspective(1200px) rotateY(var(--welcome-rotate-y)) rotateX(var(--welcome-rotate-x));
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  will-change: transform;
+  transition: transform 0.18s ease-out, color 0.5s, text-shadow 0.5s;
+}
+
+.welcomeText {
+  font-size: 4.5vw;
+  margin: 0 10px 5vw;
+  font-weight: bold;
+  color: var(--welcome-text-color);
+  text-shadow: var(--welcome-text-shadow);
+  text-align: center;
+  user-select: none;
+  transform: translateZ(12px);
+}
+
+.infoBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 3.75vw 2vw 3vh;
+  width: 40vw;
+  border-radius: 3vw;
+  box-shadow: var(--info-box-shadow);
+  border: none;
+  backdrop-filter: var(--blur-val);
+  background: linear-gradient(
+    var(--welcome-gradient-angle),
+    var(--infobox-background-initial),
+    var(--infobox-background-final)
+  );
+  transform: translateZ(24px);
+  transform-style: preserve-3d;
+}
+
+.avatar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7.5vw;
+  height: 7.5vw;
+  border-radius: 50%;
+  border: solid 3px var(--infobox-border-color);
+  transition: transform 0.6s ease, box-shadow 0.4s ease, filter 0.5s;
+  box-shadow: var(--welcome-avatar-shadow);
+  cursor: pointer;
+  user-select: none;
+  filter: var(--img-brightness);
+}
+
+.avatar:hover {
+  box-shadow: var(--welcome-avatar-hover-shadow);
+}
+
+.name {
+  font-size: 1.5vw;
+  margin-top: 3vh;
+}
+
+.motto {
+  font-size: 1vw;
+  font-weight: bold;
+  animation: color-change 0.8s linear infinite;
+  margin-top: 3vh;
+  text-align: center;
+}
+
+.pointer {
+  display: inline-block;
+  margin: -0.5vh 0 0;
+  padding: 0;
+  vertical-align: middle;
+  width: 2px;
+  height: 1vw;
+  animation: color-change 0.8s linear infinite;
+  background-color: var(--pointerColor);
+}
+
+@keyframes color-change {
+  0%,
+  40% {
+    --pointerColor: var(--font-color-grey);
+  }
+
+  60%,
+  100% {
+    --pointerColor: transparent;
+  }
+}
+
+.infoBox ul {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 3.5vh;
+  width: 12vw;
+  padding: 0;
+}
+
+.social {
+  width: 1.5vw;
+  height: 1.5vw;
+  font-size: 1.5vw;
+  font-weight: 600;
+  transition: all 0.5s;
+  color: var(--font-color-grey);
+}
+
+.social:hover {
+  filter: drop-shadow(0 0 5px var(--font-color-grey));
+}
+
+@media (max-width: 1100px) {
+  .welcomeText {
+    font-size: 5vh;
+    margin-bottom: 10vh;
+  }
+
+  .infoBox {
+    padding: 5vh 6vw 5vh;
+    width: 75vw;
+    border-radius: 4vh;
+  }
+
+  .avatar {
+    width: 10vh;
+    height: 10vh;
+  }
+
+  .name {
+    font-size: 2.5vh;
+    margin-top: 1.8vh;
+  }
+
+  .motto {
+    font-size: 1.5vh;
+    margin-top: 1.5vh;
+  }
+
+  .pointer {
+    height: 1.5vh;
+  }
+
+  .infoBox ul {
+    margin-top: 1.8vh;
+    width: 32vw;
+  }
+
+  .social {
+    width: 2vh;
+    height: 2vh;
+    font-size: 2vh;
+  }
+}

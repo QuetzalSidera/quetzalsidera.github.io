@@ -1,0 +1,146 @@
+.playerContainer {
+  position: fixed;
+  bottom: 25px;
+  left: 0;
+  z-index: 100;
+  width: 12vw;
+  height: 24vw;
+  filter: var(--spine-player-shadow);
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transform-origin: left bottom;
+  transition:
+    opacity 0.2s ease,
+    transform 1s ease;
+  cursor: pointer;
+}
+
+.loading {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ready {
+  opacity: 1;
+}
+
+.shifted {
+  transform: translate3d(-50vw, 0, 0);
+}
+
+.playerContainer :global(.spine-player) {
+  box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: none;
+}
+
+.playerContainer :global(.spine-player *) {
+  box-sizing: border-box;
+  color: var(--spine-player-text-color);
+  -webkit-touch-callout: none;
+  user-select: none;
+}
+
+.playerContainer :global(.spine-player canvas) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: transparent !important;
+  border-radius: 4px;
+}
+
+.playerContainer :global(.spine-player-error) {
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  z-index: 10;
+  border-radius: 4px;
+  overflow: auto;
+}
+
+.playerContainer :global(.spine-player-hidden),
+.playerContainer :global(.spine-player-controls-hidden) {
+  display: none;
+}
+
+.chatdialogContainer {
+  position: fixed;
+  bottom: 10vw;
+  left: 2vw;
+  z-index: 101;
+  transform: translate3d(0, 0, 0);
+  transition: transform 1s ease;
+  pointer-events: none;
+  filter: var(--spine-dialog-shadow);
+  animation: spine-dialog-fade 0.3s ease;
+}
+
+.chatdialogTriangle {
+  position: absolute;
+  left: 2vw;
+  top: -10px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid var(--spine-dialog-bg);
+  z-index: 101;
+}
+
+.chatdialog {
+  background-color: var(--spine-dialog-bg);
+  border-radius: 25px;
+  padding: 12px 24px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  line-height: 1.4;
+  color: var(--spine-dialog-text);
+  font-size: 0.8vw;
+  user-select: none;
+  pointer-events: auto;
+}
+
+@keyframes spine-dialog-fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .chatdialogContainer {
+    left: 2vh;
+    bottom: 10vh;
+  }
+
+  .chatdialog {
+    min-width: auto;
+    padding: 12px 20px;
+    font-size: 1vh;
+    border-radius: 20px;
+  }
+
+  .chatdialogTriangle {
+    left: 35px;
+    border-width: 8px;
+    top: -8px;
+  }
+
+  .playerContainer {
+    width: 15vh;
+    height: 30vh;
+  }
+}

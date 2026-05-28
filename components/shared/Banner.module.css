@@ -1,0 +1,30 @@
+.sharedBanner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--post-InnerBanner-color);
+  text-shadow: var(--post-banner-text-shadow);
+  transition: color 0.5s;
+  margin: 0 10px;
+}
+
+.sharedBannerTitle {
+  font-size: clamp(5vw, 3rem, 4rem);
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+.sharedBannerSubtitle {
+  font-size: clamp(1.2vw, 1rem, 1.7rem);
+  font-weight: bold;
+  text-align: center;
+}
+
+.sharedBannerDescription {
+  max-width: 780px;
+  margin: 18px 0 0;
+  font-size: clamp(1vw, 0.8rem, 1.2rem);
+  line-height: 1.15;
+  text-align: center;
+}

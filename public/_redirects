@@ -1,0 +1,5 @@
+/index.html / 301
+/tags.html /tags/ 301
+/collections.html /collections/ 301
+/collections/:slug.html /collections/:slug/ 301
+/posts/:slug.html /posts/:slug/ 301

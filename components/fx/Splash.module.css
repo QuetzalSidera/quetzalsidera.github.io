@@ -1,0 +1,37 @@
+.splashContainer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--splash-bg);
+  z-index: 2000;
+  pointer-events: auto;
+  will-change: opacity;
+}
+
+.splashContainer :global(#breathingParts) {
+  opacity: var(--splash-breathing-opacity, 1);
+  will-change: opacity;
+}
+
+.splashContainer :global(.triangle-group path) {
+  fill: var(--splash-triangle-fill);
+  fill-opacity: 0.15;
+}
+
+.splashContainer :global(.circle-path) {
+  fill: var(--splash-circle-fill);
+  fill-opacity: 0.9;
+}
+
+.splashContainer :global(.led-path) {
+  fill: var(--splash-led-fill);
+  filter: url(#glow);
+}
+
+.splashContainer :global(.glow-color) {
+  flood-color: var(--splash-glow-color);
+}

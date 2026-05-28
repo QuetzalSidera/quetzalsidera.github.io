@@ -1,0 +1,178 @@
+.postsContent {
+  width: min(100%, var(--max-content-width));
+  max-width: var(--max-content-width);
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.postsList {
+  position: relative;
+  overflow-wrap: break-word;
+  overflow: visible;
+  will-change: opacity, filter, transform;
+}
+
+.listItem {
+  position: relative;
+  opacity: 1;
+}
+
+.postsToolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0 0 20px;
+}
+
+.sortControl {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: solid 2px var(--foreground-color);
+  background: color-mix(in srgb, var(--foreground-color) 88%, transparent);
+  box-shadow: 0 0 8px rgb(var(--blue-shadow-color), 0.25);
+  backdrop-filter: var(--blur-val);
+  line-height: 1.15;
+}
+
+.sortLabel {
+  color: var(--font-color-grey);
+  font-size: 14px;
+  font-weight: 600;
+  height: 18px;
+  line-height: 1.15;
+}
+
+.sortControl .sortSelect, .sortControl .sortSelect .sortOption {
+  color: var(--font-color-grey);
+  min-width: 132px;
+  line-height: 1.15;
+  font-size: 14px;
+  height: 18px;
+
+  outline: none;
+  border: none;
+  background: transparent;
+
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0;
+  padding: 0;
+}
+
+.pagination button {
+  background-color: transparent;
+  border-style: none;
+  cursor: pointer;
+}
+
+.hide {
+  opacity: 0;
+  cursor: auto;
+}
+
+.paginationIcon {
+  font-size: 36px;
+  color: var(--icon-color);
+}
+
+.pagination :global(#up) {
+  animation: arrow-pre 1s ease-in-out infinite alternate;
+}
+
+.pagination :global(#next) {
+  animation: arrow-next 1s ease-in-out infinite alternate;
+}
+
+.pageNumbers {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pageNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  border-radius: 6px;
+  color: var(--icon-color);
+  transition: all 0.3s;
+}
+
+.pageNumber:hover {
+  background-color: var(--btn-hover);
+  color: var(--font-color-gold);
+}
+
+.active {
+  background-color: var(--btn-hover);
+  color: var(--font-color-gold);
+  font-weight: bold;
+}
+
+.ellipsis {
+  margin: 0 4px;
+  color: var(--icon-color);
+}
+
+@keyframes arrow-pre {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes arrow-next {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-10px);
+  }
+}
+
+@media (max-width: 768px) {
+  .postsToolbar {
+    margin: 0 8px 16px;
+  }
+
+  .sortControl {
+    justify-content: space-between;
+    padding: 8px 12px;
+  }
+
+  .pagination {
+    margin-top: 32px;
+  }
+
+  .paginationIcon {
+    font-size: 32px;
+  }
+
+  .pageNumber {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .pageNumbers {
+    gap: 4px;
+  }
+}

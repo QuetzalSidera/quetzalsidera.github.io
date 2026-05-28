@@ -1,0 +1,109 @@
+.banner {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: min(700px, 80dvh);
+  mask: linear-gradient(to top, transparent, var(--general-background-color) 5%);
+  perspective: 1000px;
+  overflow: hidden;
+  -webkit-user-drag: none;
+  transition: height 0.3s;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 60;
+  opacity: 0;
+  filter: blur(8px);
+  transform: translateY(10px) scale(1.035);
+  transform-origin: center center;
+  will-change: opacity, filter, transform;
+}
+
+.contentReady {
+  animation: fade-hero-content-in 0.68s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes float-fade {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(10px);
+  }
+}
+
+@keyframes fade-blur-in {
+  from {
+    filter: var(--blur-val);
+    transform: scale(1.08);
+  }
+
+  to {
+    filter: none;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-hero-content-in {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(10px) scale(1.035);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+.bgImg {
+  z-index: 0;
+  background-image: url('/assets/banner/banner.webp');
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  filter: var(--img-brightness);
+  transition: filter 0.5s, background-image 0.5s;
+}
+
+.backgroundReady {
+  animation: fade-blur-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+:global(html[theme='dark']) .bgImg {
+  background-image: url('/assets/banner/banner_dark.webp'), url('/assets/banner/banner.webp');
+}
+
+.bgVideo {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  -webkit-user-drag: none;
+}
+
+.wave {
+  position: absolute;
+  bottom: 0;
+  z-index: 50;
+  max-width: 100%;
+}

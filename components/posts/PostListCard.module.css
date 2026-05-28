@@ -1,0 +1,279 @@
+.postListCard {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 50px 0;
+  padding-bottom: 16px;
+  background-color: var(--foreground-color);
+  border-radius: 32px;
+  border-left: solid 16px var(--pot-border-left);
+  background-image: var(--deco1);
+  background-size: contain;
+  background-position: right;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 8px rgb(var(--blue-shadow-color), 0.8);
+  transition: all 0.5s;
+  position: relative;
+}
+
+.pinned {
+  position: absolute;
+  width: 42px;
+  height: 42px;
+  top: -8px;
+  right: -8px;
+  border-radius: 50px;
+  background: var(--icon-pinned) no-repeat;
+  background-size: contain;
+  box-shadow: 0 0 6px rgba(var(--blue-shadow-color), 0.65);
+}
+
+.postHeader {
+  display: flex;
+  gap: 24px;
+  padding: 32px 40px 0;
+  position: relative;
+  align-items: stretch;
+}
+
+.coverContainer {
+  flex: 0 0 180px;
+  height: 140px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  margin-left: -8px;
+  margin-bottom: 15px;
+  align-self: center;
+}
+
+.coverImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.coverImage:hover {
+  transform: scale(1.05);
+}
+
+.headerContent {
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.titleWithDot {
+  margin-left: -16px;
+}
+
+.titleDot {
+  align-self: stretch;
+  width: 5px;
+  background: var(--pot-border-left);
+  border-radius: 4px;
+  transform: scaleY(0.6);
+  transform-origin: center;
+  transition: background 0.5s;
+}
+
+.name {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 0;
+  flex: 1;
+}
+
+.name a {
+  color: var(--font-color-grey);
+  transition: text-shadow 0.5s, color 0.5s;
+}
+
+.name a:hover {
+  text-shadow: 0 0 3px var(--font-color-grey);
+}
+
+.metaInfoBar {
+  display: flex;
+  margin-bottom: 7px;
+  opacity: 0.75;
+  flex-wrap: wrap;
+}
+
+.timeInfo {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+}
+
+.timeIcon {
+  font-size: 13px;
+  color: var(--font-color-grey);
+  margin-right: 4px;
+  font-weight: bold;
+}
+
+.wordcount,
+.collection {
+  color: var(--font-color-grey);
+}
+
+.collection {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+}
+
+.collectionIcon {
+  width: 1em;
+  height: 1em;
+  margin-right: 4px;
+}
+
+.tagIcon {
+  width: 1em;
+  height: 1em;
+  font-size: 0.9em;
+}
+
+.collection:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.seperator::before {
+  content: '';
+  display: inline-block;
+  border-radius: 50%;
+  height: 4px;
+  width: 4px;
+  vertical-align: middle;
+  background-color: var(--font-color-grey);
+  margin: 0 16px;
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0 0 6px;
+}
+
+.tags li {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+  margin-right: 16px;
+}
+
+.tags a,
+.tagLabel {
+  line-height: 1.2;
+  color: var(--font-color-gold);
+  background-color: var(--btn-background);
+  border-radius: 5px !important;
+  padding: 3px 5px;
+  transition: all 0.5s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tags a:hover {
+  background-color: var(--btn-hover);
+}
+
+.excerpt {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
+.excerpt p{
+  margin: 0;
+}
+@media (max-width: 768px) {
+  .postListCard {
+    margin: 0 8px 30px;
+    background-size: cover;
+    border-left: solid 1.5vh var(--pot-border-left);
+  }
+
+  .pinned {
+    width: 27px;
+    height: 27px;
+    top: -2px;
+    right: 12px;
+  }
+
+  .postHeader {
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 20px 0;
+  }
+
+  .coverContainer {
+    flex: none;
+    width: 100%;
+    height: 240px;
+    margin-left: 0;
+  }
+
+  .title {
+    margin-bottom: 6px;
+  }
+
+  .name {
+    font-size: 24px;
+  }
+
+  .metaInfoBar {
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+
+  .timeIcon {
+    font-size: 8px !important;
+    margin: 3px 2px 0 0 !important;
+  }
+
+  .seperator::before {
+    margin: 0 8px;
+  }
+
+  .tags li {
+    padding-top: 4px;
+    margin-right: 8px;
+  }
+
+  .tags a,
+  .tagLabel {
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+
+  .tagIcon {
+    font-size: 0.9em;
+  }
+
+  .excerpt {
+    padding: 0;
+    margin-bottom: 4px;
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,209 @@
+.headerContainer {
+  --navbar-height: 72px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  width: 100%;
+  height: var(--navbar-height);
+  max-width: none;
+  margin: 0;
+  line-height: 1.15;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  isolation: isolate;
+  transform: translateZ(0);
+}
+
+.postViewer {
+  width: 100%;
+}
+
+.headerContainer nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--max-content-width);
+  height: var(--navbar-height);
+  margin: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  padding: 0 16px;
+  border-radius: 0 0 32px 32px;
+  border-bottom: solid 2px var(--foreground-color);
+  border-left: solid 2px var(--foreground-color);
+  border-right: solid 2px var(--foreground-color);
+  background:
+    linear-gradient(0.25turn, transparent, var(--foreground-color) 25%),
+    var(--triangle-background);
+  backdrop-filter: var(--blur-val);
+  -webkit-backdrop-filter: var(--blur-val);
+  box-shadow: 0 0 8px rgb(var(--blue-shadow-color), 0.8);
+  pointer-events: auto;
+}
+
+.logo img {
+  height: 32px;
+  width: auto;
+  filter: var(--layout-logo-shadow);
+  display: block;
+}
+
+.menu {
+  max-width: 70%;
+  min-width: 50%;
+}
+
+.menu ul {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0;
+  margin: 0;
+}
+
+.menu a {
+  display: block;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--font-color-grey);
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  text-wrap: nowrap;
+}
+
+.menu a:hover {
+  color: var(--font-color-gold);
+  background-color: var(--btn-background);
+  transform: translateY(-2px);
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 32px;
+  padding: 0;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+}
+
+.line {
+  display: block;
+  width: 80%;
+  height: 4px;
+  border-radius: 4px;
+  background-color: var(--font-color-grey);
+  margin-bottom: 4px;
+  transition: all 0.3s ease-in-out;
+}
+
+.active .line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.active .line:nth-child(2) {
+  opacity: 0;
+}
+
+.active .line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+.dropdownMenu {
+  position: absolute;
+  z-index: 50;
+  top: 100%;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menuContent {
+  position: relative;
+  background-color: var(--foreground-color);
+  border-radius: 2vw;
+  padding: 1.2vw;
+  gap: 0.8vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.firstRow {
+  display: flex;
+  gap: 0.4vw;
+  padding: 0.3vw;
+  padding-bottom: 1vh;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--font-color-grey);
+}
+
+.dropdownMenu[data-showmenu='true'] {
+  opacity: 1;
+  transform: translateY(15px);
+  transition: opacity 0.1s ease-in-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.dropdownMenu[data-showmenu='true'] .menuContent {
+  box-shadow: 0 0 8px rgb(var(--blue-shadow-color), 0.8);
+  transition: box-shadow 0.3s;
+}
+
+.dropdownMenu[data-showmenu='false'] {
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.2s ease-in-out, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  pointer-events: none;
+}
+
+.dropdownMenu[data-showmenu='false'] .menuContent {
+  box-shadow: none;
+  transition: box-shadow 0.3s;
+}
+
+@media (max-width: 768px) {
+  .headerContainer {
+    --navbar-height: 64px;
+  }
+
+  .headerContainer nav {
+    width: 100%;
+    max-width: none;
+  }
+
+  .logo img {
+    height: 32px;
+  }
+
+  .menu a {
+    font-size: 16px;
+    padding: 10px 10px;
+  }
+
+  .hamburger {
+    width: 32px;
+  }
+
+  .menuContent {
+    border-radius: 24px;
+    padding: 2vh;
+    gap: 1vh;
+  }
+
+  .firstRow {
+    gap: 0.5vh;
+    padding: 0.3vh;
+    padding-bottom: 1vh;
+  }
+}

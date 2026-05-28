@@ -1,0 +1,456 @@
+@use './theme';
+
+/*
+ * Palette variables stay theme-agnostic. Component and semantic theme tokens
+ * are managed through mixins in _theme.scss.
+ */
+:root {
+  --blue-15: rgb(244, 248, 255);
+  --blue-25: rgb(234, 239, 245);
+  --blue-50: rgba(219, 235, 255, 0.71);
+  --blue-75: rgb(199, 228, 246);
+  --blue-85: rgb(198, 216, 231);
+  --blue-100: rgb(126, 174, 251);
+  --blue-150: rgb(137, 196, 255);
+  --blue-200: rgb(75, 162, 255);
+  --blue-200-alpha-160: rgba(108, 182, 255, 0.161);
+  --blue-200-alpha-810: rgba(108, 182, 255, 0.812);
+  --blue-300: rgb(69, 148, 214);
+  --blue-325: rgb(18, 138, 250);
+  --blue-325-alpha-60: rgba(18, 138, 250, 0.06);
+  --blue-325-alpha-350: rgba(18, 138, 250, 0.35);
+  --blue-350: rgb(50, 140, 250);
+  --blue-400: rgb(96, 165, 250);
+  --blue-425-rgb: 40, 135, 200;
+  --blue-500: rgba(0, 177, 225, 0.79);
+  --blue-550: rgb(106, 130, 214);
+  --blue-575: rgb(115, 148, 255);
+  --blue-600: rgb(1, 93, 156);
+  --blue-650: rgb(94, 135, 180);
+  --blue-700: rgb(37, 99, 235);
+  --blue-900: rgb(0, 53, 89);
+  --blue-950: rgb(26, 43, 81);
+  --blue-1000: rgb(44, 62, 80);
+  --blue-alpha-50: rgba(126, 174, 251, 0.5);
+  --blue-alpha-100: rgba(86, 226, 253, 0.7);
+  --blue-alpha-200: rgba(117, 232, 255, 0.8);
+
+  --cyan-alpha-100: rgba(190, 242, 255, 0.3);
+  --cyan-alpha-150: rgba(159, 219, 252, 0.15);
+  --cyan-alpha-200: rgba(108, 230, 255, 0.3);
+  --cyan-alpha-300: rgba(16, 179, 215, 0.3);
+  --cyan-25: rgb(224, 240, 250);
+  --cyan-50: rgb(241, 246, 250);
+  --cyan-75: rgb(231, 246, 250);
+  --cyan-90: rgb(224, 240, 242);
+  --cyan-300: rgb(92, 211, 255);
+  --cyan-300-alpha-145: rgba(92, 212, 255, 0.145);
+  --cyan-350: rgb(87, 182, 246);
+  --cyan-450: rgb(0, 94, 134);
+  --cyan-600: rgb(116, 216, 249);
+
+  --blue-grey-25: rgb(234, 239, 245);
+  --blue-grey-50: rgb(172, 196, 248);
+  --blue-grey-100: rgb(172, 191, 232);
+  --blue-grey-125: rgb(174, 193, 202);
+  --blue-grey-200: rgb(100, 112, 140);
+  --blue-grey-300: rgb(90, 102, 120);
+  --blue-grey-400: rgb(80, 90, 110);
+  --blue-grey-500: rgb(75, 85, 99);
+  --blue-grey-525: rgb(76, 88, 102);
+  --blue-grey-550: rgb(66, 92, 139);
+  --blue-grey-575: rgb(70, 99, 152);
+  --blue-grey-600: rgb(55, 65, 81);
+  --blue-grey-625: rgb(51, 73, 93);
+  --blue-grey-650: rgb(40, 60, 75);
+  --blue-grey-675: rgb(38, 55, 68);
+  --blue-grey-700: rgb(31, 41, 55);
+  --blue-grey-800: rgb(17, 24, 39);
+  --blue-grey-900: rgb(15, 23, 42);
+  --blue-grey-1000: rgb(11, 18, 32);
+  --blue-grey-alpha-25: rgba(234, 239, 245, 0.8);
+  --blue-grey-alpha-30: rgba(234, 239, 245, 0.5);
+  --blue-grey-alpha-35: rgba(234, 239, 245, 0.92);
+  --blue-grey-alpha-700: rgba(15, 23, 42, 0.4);
+  --blue-grey-alpha-750: rgba(15, 23, 42, 0.6);
+  --blue-grey-alpha-800: rgba(15, 23, 42, 0.85);
+
+  --purple-50: rgb(217, 221, 236);
+  --purple-50-alpha-940: rgba(217, 221, 236, 0.94);
+  --purple-75: rgb(220, 220, 226);
+  --purple-100: rgb(207, 198, 255);
+  --purple-150: rgb(200, 200, 220);
+  --purple-200: rgb(157, 124, 216);
+  --purple-200-alpha-80: rgba(157, 124, 216, 0.08);
+  --purple-200-alpha-100: rgba(157, 124, 216, 0.1);
+  --purple-200-alpha-150: rgba(157, 124, 216, 0.15);
+  --purple-200-alpha-168: rgba(158, 124, 216, 0.168);
+  --purple-200-alpha-180: rgba(158, 124, 216, 0.18);
+  --purple-200-alpha-300: rgba(157, 124, 216, 0.3);
+  --purple-250-rgb: 147, 113, 207;
+  --purple-300: rgb(121, 121, 149);
+  --purple-325: rgb(126, 126, 141);
+  --purple-350: rgb(112, 87, 129);
+  --purple-400: rgb(98, 67, 152);
+  --purple-450-alpha-680: rgba(158, 124, 216, 0.682);
+  --purple-500: rgb(92, 92, 118);
+  --purple-600: rgb(81, 74, 106);
+  --purple-650: rgb(64, 51, 92);
+  --purple-700: rgb(56, 56, 82);
+  --purple-725: rgb(44, 44, 57);
+  --purple-750: rgb(42, 42, 58);
+  --purple-800: rgb(31, 31, 44);
+  --purple-800-alpha-600: rgba(31, 31, 44, 0.6);
+  --purple-800-alpha-800: rgba(31, 31, 44, 0.8);
+  --purple-900: rgb(26, 26, 36);
+  --purple-950: rgb(15, 15, 22);
+  --purple-alpha-205: rgba(157, 124, 216, 0.08);
+  --purple-alpha-210: rgba(158, 124, 216, 0.15);
+  --purple-alpha-260: rgba(135, 112, 210, 0.687);
+  --purple-alpha-430: rgba(79, 45, 138, 0.4);
+  --purple-alpha-500: rgba(92, 92, 118, 0.75);
+  --purple-alpha-725: rgba(44, 44, 57, 0.71);
+  --purple-alpha-760: rgba(30, 30, 50, 0.604);
+  --purple-alpha-800: rgba(31, 31, 44, 0.5);
+  --purple-alpha-830: rgba(32, 29, 42, 0.9);
+  --purple-alpha-860: rgba(32, 27, 38, 0.6);
+  --purple-alpha-940: rgba(21, 21, 28, 0.384);
+  --purple-alpha-950: rgba(15, 15, 22, 0.92);
+
+  --red-300: rgb(252, 165, 165);
+  --red-100: rgb(255, 230, 230);
+  --red-350: rgb(255, 196, 192);
+  --red-400: rgba(255, 81, 81, 0.76);
+  --red-450: rgb(255, 155, 147);
+  --red-500: rgb(239, 68, 68);
+  --red-600: rgb(213, 141, 134);
+  --red-600-alpha-100: rgba(213, 141, 134, 0.1);
+  --red-900: rgb(77, 0, 0);
+
+  --green-300: rgba(82, 255, 85, 0.76);
+  --green-400: rgb(74, 222, 128);
+  --green-500: rgb(22, 163, 74);
+  --green-alpha-300: rgba(46, 255, 49, 0.76);
+  --green-alpha-400: rgba(74, 222, 128, 0.8);
+  --green-alpha-500: rgba(22, 163, 74, 0.8);
+
+  --yellow-100: rgb(237, 238, 131);
+  --yellow-200: rgb(255, 224, 71);
+  --yellow-300: rgb(248, 204, 0);
+  --yellow-350: rgb(255, 228, 1);
+  --yellow-400: rgb(255, 196, 0);
+  --yellow-450: rgb(231, 192, 0);
+  --yellow-450-alpha-100: rgba(231, 192, 0, 0.1);
+  --yellow-500: rgb(227, 184, 0);
+  --yellow-550: rgb(240, 216, 125);
+  --yellow-700: rgb(107, 89, 0);
+  --yellow-75: rgb(255, 247, 208);
+  --yellow-alpha-300: rgba(255, 223, 77, 0.76);
+
+  --pink-100: rgba(243, 145, 255, 0.9);
+  --pink-300: rgba(232, 79, 255, 0.76);
+  --pink-350: rgb(192, 92, 255);
+  --pink-400: rgb(244, 114, 182);
+  --pink-500: rgba(221, 14, 253, 0.85);
+
+  --grey-25: rgb(102, 102, 102);
+  --grey-50: rgb(243, 243, 243);
+  --grey-75: rgb(136, 136, 136);
+  --grey-90: rgb(239, 239, 239);
+  --grey-95: rgb(239, 242, 244);
+  --grey-100: rgb(237, 237, 237);
+  --grey-150: rgb(236, 236, 235);
+  --grey-200: rgb(229, 229, 229);
+  --grey-225: rgb(230, 234, 235);
+  --grey-235: rgb(243, 245, 247);
+  --grey-240: rgb(247, 247, 246);
+  --grey-250: rgb(206, 212, 218);
+  --grey-260: rgb(223, 226, 229);
+  --grey-270: rgb(202, 212, 213);
+  --grey-275: rgb(213, 217, 219);
+  --grey-280: rgb(209, 213, 218);
+  --grey-300: rgb(205, 205, 205);
+  --grey-350: rgb(193, 193, 193);
+  --grey-450: rgb(60, 62, 65);
+  --grey-400: rgb(188, 188, 188);
+  --grey-500: rgb(107, 114, 128);
+  --grey-550: rgb(116, 125, 135);
+  --grey-700: rgb(156, 163, 175);
+  --grey-800: rgb(180, 180, 180);
+  --grey-850: rgb(221, 221, 221);
+  --grey-900: rgb(229, 231, 235);
+  --grey-1000: rgb(243, 241, 241);
+  --grey-alpha-50: rgba(240, 240, 240, 0.9);
+  --grey-alpha-100: rgba(235, 235, 235, 0.85);
+  --grey-alpha-200: rgba(230, 230, 230, 0.7);
+  --grey-alpha-300: rgba(210, 210, 210, 0.68);
+  --grey-alpha-500: rgba(142, 142, 142, 1);
+  --grey-alpha-600: rgba(229, 231, 235, 0.6);
+  --grey-alpha-700: rgba(148, 163, 184, 0.5);
+  --grey-alpha-800: rgba(148, 163, 184, 0.3);
+  --grey-alpha-850: rgba(150, 149, 149, 0.2);
+  --grey-alpha-900: rgba(44, 62, 80, 0.6);
+  --grey-650-alpha-550: rgba(69, 73, 78, 0.548);
+
+  --white: #ffffff;
+  --white-50: rgb(251, 251, 251);
+  --white-100: rgb(248, 253, 255);
+  --white-alpha-50: rgba(255, 255, 255, 0.89);
+  --white-alpha-100: rgba(255, 255, 255, 0.6);
+  --white-alpha-125: rgba(255, 255, 255, 0.5);
+  --white-alpha-150: rgba(255, 255, 255, 0.4);
+  --white-alpha-200: rgba(255, 255, 255, 0.15);
+  --white-alpha-225: rgba(255, 255, 255, 0.1);
+  --white-alpha-250: rgba(255, 255, 255, 0.08);
+  --white-alpha-600: rgba(255, 255, 255, 0.597);
+  --white-alpha-900: rgba(255, 255, 255, 0.9);
+
+  --black: #000000;
+  --black-20: rgb(20, 20, 20);
+  --black-30: rgb(30, 30, 30);
+  --black-40: rgb(40, 40, 40);
+  --black-60: rgb(60, 60, 60);
+  --black-80: rgb(80, 80, 80);
+  --black-alpha-150: rgba(0, 0, 0, 0.15);
+  --black-alpha-60: rgba(0, 0, 0, 0.06);
+  --black-alpha-100: rgba(0, 0, 0, 0.1);
+  --black-alpha-600: rgba(0, 0, 0, 0.6);
+  --black-alpha-300: rgba(0, 0, 0, 0.3);
+  --black-alpha-200: rgba(0, 0, 0, 0.2);
+  --black-alpha-400: rgba(0, 0, 0, 0.4);
+  --black-alpha-500: rgba(0, 0, 0, 0.5);
+  --black-alpha-614: rgba(0, 0, 0, 0.614);
+  --black-alpha-800: rgba(0, 0, 0, 0.8);
+  --black-36-alpha-600: rgba(36, 36, 36, 0.6);
+  --black-80-alpha-300: rgba(82, 82, 82, 0.3);
+  --black-50-alpha-600: rgba(50, 50, 50, 0.6);
+  --black-40-alpha-890: rgba(40, 40, 40, 0.89);
+  --black-60-alpha-80: rgba(60, 60, 60, 0.08);
+  --blue-grey-alpha-420: rgba(40, 42, 44, 0.42);
+
+  --splash-light-start: rgb(185, 230, 246);
+  --splash-light-end: rgb(236, 229, 244);
+  --splash-dark-start: rgb(195, 189, 233);
+  --splash-dark-end: rgb(254, 228, 255);
+  --purple-25: rgb(239, 224, 253);
+}
+
+html,
+html[theme='light'] {
+  @include theme.arona;
+}
+
+html[theme='dark'] {
+  @include theme.plana;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  width: 100%;
+  max-width: 100%;
+  color-scheme: var(--color-scheme);
+}
+
+body {
+  background-image: var(--page-background-image);
+  background-color: var(--page-bg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--text-body);
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-regular);
+  line-height: 1.6;
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-color: var(--link-color) var(--scrollbar-track-color);
+  transition: background-color 0.5s, color 0.5s;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body > div {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100svh;
+  min-height: 100dvh;
+}
+
+body main {
+  flex: 1 0 auto;
+}
+
+.main {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.fade-route {
+  animation: fade-route-in 0.5s ease;
+}
+
+.section-route-enter {
+  animation: section-route-enter 0.58s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+body.page-settling main {
+  animation: page-settle-in 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+body.page-exiting main {
+  opacity: 0.78;
+  filter: blur(3px);
+  transform: translateY(-4px);
+  transition:
+    opacity 0.14s ease,
+    filter 0.14s ease,
+    transform 0.14s ease;
+  pointer-events: none;
+}
+
+@keyframes fade-route-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes page-settle-in {
+  from {
+    opacity: 0.9;
+    filter: blur(3px);
+    transform: translateY(3px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes section-route-enter {
+  from {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translate3d(0, 12px, 0) scale(0.995);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background: var(--scrollbar-track-color);
+}
+
+::-webkit-scrollbar-thumb {
+  width: 6px;
+  border-radius: 999px;
+  background: var(--link-color);
+  background-clip: padding-box;
+  cursor: pointer;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track-color);
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+.spin-once-forward {
+  animation: spin 0.5s forwards;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media print {
+  html,
+  body {
+    width: auto !important;
+    max-width: none !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    background: #ffffff !important;
+    color: #24303d !important;
+    color-scheme: light !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body {
+    display: block !important;
+    font-family: var(--font-body) !important;
+    line-height: 1.6 !important;
+  }
+
+  body > div,
+  body main,
+  .main {
+    display: block !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    transform: none !important;
+    animation: none !important;
+    filter: none !important;
+  }
+
+  header,
+  footer,
+  .post-side-list,
+  .gt-container,
+  .giscus,
+  giscus-widget,
+  script,
+  canvas {
+    display: none !important;
+  }
+}
