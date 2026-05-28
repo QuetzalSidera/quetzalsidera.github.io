@@ -14,6 +14,21 @@ type PostSideListProps = {
 
 type OutlineState = 'expanded' | 'expanding' | 'collapsing' | 'collapsed'
 
+const SCROLL_TO_TOP_MIN_DURATION = 720
+const SCROLL_TO_TOP_MAX_DURATION = 1450
+const SCROLL_TO_TOP_MS_PER_PX = 0.34
+
+function getScrollToTopDuration(distance: number) {
+  return Math.min(
+    SCROLL_TO_TOP_MAX_DURATION,
+    Math.max(SCROLL_TO_TOP_MIN_DURATION, distance * SCROLL_TO_TOP_MS_PER_PX),
+  )
+}
+
+function easeInOutCubic(progress: number) {
+  return progress < 0.5 ? 4 * progress ** 3 : 1 - (-2 * progress + 2) ** 3 / 2
+}
+
 export function PostSideList({ outline, title }: PostSideListProps) {
   const [outlineState, setOutlineState] = useState<OutlineState>('expanded')
   const [activeSlug, setActiveSlug] = useState('')
@@ -23,6 +38,7 @@ export function PostSideList({ outline, title }: PostSideListProps) {
   const [isPreparingPrint, setIsPreparingPrint] = useState(false)
   const outlineTimerRef = useRef<number | null>(null)
   const scrollRafRef = useRef<number | null>(null)
+  const toTopRafRef = useRef<number | null>(null)
 
   const outlineItems = useMemo(
     () =>
@@ -98,6 +114,9 @@ export function PostSideList({ outline, title }: PostSideListProps) {
       if (outlineTimerRef.current !== null) {
         window.clearTimeout(outlineTimerRef.current)
       }
+      if (toTopRafRef.current !== null) {
+        window.cancelAnimationFrame(toTopRafRef.current)
+      }
     }
   }, [])
 
@@ -138,6 +157,43 @@ export function PostSideList({ outline, title }: PostSideListProps) {
       waitForImages(root),
     ])
     await nextFrame()
+  }
+
+  function scrollToTop() {
+    const startY = window.scrollY
+
+    if (toTopRafRef.current !== null) {
+      window.cancelAnimationFrame(toTopRafRef.current)
+      toTopRafRef.current = null
+    }
+
+    if (startY <= 0) return
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      window.scrollTo({ top: 0 })
+      return
+    }
+
+    const startedAt = window.performance.now()
+    const duration = getScrollToTopDuration(startY)
+
+    function step(now: number) {
+      const elapsed = now - startedAt
+      const progress = Math.min(elapsed / duration, 1)
+      const nextY = Math.round(startY * (1 - easeInOutCubic(progress)))
+
+      window.scrollTo(0, nextY)
+
+      if (progress < 1 && window.scrollY > 0) {
+        toTopRafRef.current = window.requestAnimationFrame(step)
+        return
+      }
+
+      window.scrollTo(0, 0)
+      toTopRafRef.current = null
+    }
+
+    toTopRafRef.current = window.requestAnimationFrame(step)
   }
 
   function toggleOutline() {
@@ -244,7 +300,7 @@ export function PostSideList({ outline, title }: PostSideListProps) {
           isVisible ? styles.toTopButtonEnter : styles.toTopButtonLeave,
         ].join(' ')}
         type="button"
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onClick={scrollToTop}
         title="回到顶部"
       >
         <svg className={styles.toTopButtonProgress} viewBox="0 0 44 44" aria-hidden="true">

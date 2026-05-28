@@ -23,14 +23,13 @@
   position: relative;
   z-index: 60;
   opacity: 0;
-  filter: blur(8px);
-  transform: translateY(10px) scale(1.035);
+  filter: blur(1px);
   transform-origin: center center;
-  will-change: opacity, filter, transform;
+  will-change: opacity, filter;
 }
 
 .contentReady {
-  animation: fade-hero-content-in 0.68s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: fade-hero-content-in 0.48s ease both;
 }
 
 @keyframes float-fade {
@@ -46,27 +45,25 @@
 
 @keyframes fade-blur-in {
   from {
-    filter: var(--blur-val);
-    transform: scale(1.08);
+    opacity: 0;
+    filter: var(--img-brightness) blur(1.5px);
   }
 
   to {
-    filter: none;
-    transform: scale(1);
+    opacity: 1;
+    filter: var(--img-brightness);
   }
 }
 
 @keyframes fade-hero-content-in {
   from {
     opacity: 0;
-    filter: blur(8px);
-    transform: translateY(10px) scale(1.035);
+    filter: blur(1px);
   }
 
   to {
     opacity: 1;
     filter: blur(0);
-    transform: translateY(0) scale(1);
   }
 }
 
@@ -84,7 +81,7 @@
 }
 
 .backgroundReady {
-  animation: fade-blur-in 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  animation: fade-blur-in 0.5s ease both;
 }
 
 :global(html[theme='dark']) .bgImg {

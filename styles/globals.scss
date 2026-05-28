@@ -306,21 +306,19 @@ body main {
 }
 
 .section-route-enter {
-  animation: section-route-enter 0.58s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: section-route-enter 0.42s ease both;
 }
 
 body.page-settling main {
-  animation: page-settle-in 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: page-settle-in 0.32s ease both;
 }
 
 body.page-exiting main {
-  opacity: 0.78;
-  filter: blur(3px);
-  transform: translateY(-4px);
+  opacity: 0;
+  filter: blur(1px);
   transition:
     opacity 0.14s ease,
-    filter 0.14s ease,
-    transform 0.14s ease;
+    filter 0.14s ease;
   pointer-events: none;
 }
 
@@ -336,29 +334,25 @@ body.page-exiting main {
 
 @keyframes page-settle-in {
   from {
-    opacity: 0.9;
-    filter: blur(3px);
-    transform: translateY(3px);
+    opacity: 0;
+    filter: blur(1px);
   }
 
   to {
     opacity: 1;
     filter: blur(0);
-    transform: translateY(0) scale(1);
   }
 }
 
 @keyframes section-route-enter {
   from {
     opacity: 0;
-    filter: blur(5px);
-    transform: translate3d(0, 12px, 0) scale(0.995);
+    filter: blur(1px);
   }
 
   to {
     opacity: 1;
     filter: blur(0);
-    transform: translate3d(0, 0, 0) scale(1);
   }
 }
 

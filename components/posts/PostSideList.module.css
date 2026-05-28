@@ -413,7 +413,7 @@
 .toTopButtonProgressRing {
   stroke: var(--post-sidelist-progress-ring);
   stroke-linecap: round;
-  transition: stroke-dashoffset 0.12s linear;
+  transition: stroke-dashoffset 0.24s ease-out;
 }
 
 .preparingPdfIcon {
