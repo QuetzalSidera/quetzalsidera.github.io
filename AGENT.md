@@ -1,15 +1,15 @@
 # AGENT.md
 
 写给在本仓库工作的 AI 协作者（Claude Code、其他 Agent 等）。
-本仓库已从 **VitePress** 迁移到 **Next.js App Router**。当前分支仍是 `react-migration`，收尾后合并回 `main` 触发生产部署。
+本仓库已从 **VitePress** 迁移到 **Next.js App Router**。当前生产分支是 `main`，Cloudflare Pages 会在 `main` 推送后自动构建部署。
 
 ---
 
 ## 0. 高优先约束（必读）
 
-1. **分支**：迁移收尾阶段的所有改动（无论代码、文档、配置）一律在 `react-migration` 分支提交。
-   - 在执行任何写操作前先确认 `git branch --show-current` 为 `react-migration`，若不是，先 `git checkout react-migration`。
-   - 合并回 `main` 后由 Cloudflare Pages 触发生产部署。
+1. **分支**：常规维护改动直接基于 `main` 或从 `main` 拉短分支；不要再把 `react-migration` 当作默认工作分支。
+   - 在执行任何写操作前先确认当前分支与任务目标一致。
+   - 推送到 `main` 会触发 Cloudflare Pages 生产构建。
 2. **技术栈**：当前实现是 **Next.js App Router + React + CSS Modules**。
    - 不再使用 Vue 3、Vue SFC、`<script setup>`、Less、内联 `<style scoped>`。
    - 不使用全局内联样式或 styled-jsx；组件样式统一走 `*.module.css`，全局调色盘与主题变量在 `styles/globals.scss` / `styles/_theme.scss`。
@@ -24,7 +24,7 @@
 4. **唯一例外**：评论系统从 Gitalk 切换到 **giscus**（已征得同意，因 Gitalk 不能直接复用其前端 `clientSecret`，且 giscus 是 React 原生体验更顺）。
 5. **不破坏现有内容**：`posts/` 下的 Markdown 内容是用户长期资产，迁移过程中不得擅自重写文章正文、frontmatter 字段或目录结构。
 6. **写之前先看**：迁移后的 React 组件已有对应实现，先读再写，不要凭旧 Vue 结构臆测。
-7. **main 分支冻结**：收尾阶段所有提交（包括文章 hotfix）都走 `react-migration`，再 PR 回 `main`。
+7. **main 已承载 Next.js 版本**：不要再按旧 VitePress 主分支假设处理代码。
 
 ---
 
@@ -86,12 +86,10 @@ quetzalsidera.github.io/
 - 写代码 / 写文档前，先：
 
   ```bash
-  git branch --show-current   # 必须 react-migration
+  git branch --show-current
   ```
 
-  如果不是，`git checkout react-migration` 后再动手。
-
-- 与收尾无关的修复（如错别字、图片替换）也走 `react-migration`；待收尾完成统一 PR 回 `main`。
+  确认当前分支符合本次任务目标后再动手。
 
 ### 3.2 文件层面
 
@@ -118,14 +116,14 @@ quetzalsidera.github.io/
 
 ---
 
-## 4. 收尾顺序（参考）
+## 4. 维护检查（参考）
 
 详细记录见 [`MIGRATION.md`](./MIGRATION.md)，这里只给最小提醒：
 
 1. 每次改动前先确认工作树，不要覆盖用户未提交改动。
 2. 变更后至少跑 `pnpm typecheck`；涉及构建、路由、Markdown、图片或依赖时跑 `pnpm build`。
 3. 涉及文章兼容层时，检查导出产物里没有 `@@LEGACY_IMAGE`、`图片引用暂未迁移` 等占位。
-4. 收尾完成后 PR `react-migration` → `main`，由 Cloudflare 自动触发生产部署；合并后做线上冒烟测试。
+4. 推送到 `main` 后等待 Cloudflare 自动部署，并做线上冒烟测试。
 
 ## 4.1 部署提醒
 
@@ -134,7 +132,6 @@ quetzalsidera.github.io/
 - 仓库内 **没有** CI 配置文件（`.github/` 已删除）；不要再添加 GitHub Actions workflow。
 - 构建命令、Node 版本、产物目录、环境变量全部在 Cloudflare Pages **控制台**配置，本地仓库不可见。
 - 当前控制台配置：构建 `pnpm build`，产物目录 `out/`。
-- `react-migration` 分支不会触发生产部署；若需要预览链接，请在 Cloudflare 控制台把它加为 preview branch。
 
 ---
 

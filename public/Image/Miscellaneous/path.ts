@@ -9,6 +9,12 @@ export const path = {
   // /Image/Miscellaneous/blog-change-log/02-image-refine
   "02-commit": "/Image/Miscellaneous/blog-change-log/02-image-refine/02-commit.webp",
 
+  // /Image/Miscellaneous/blog-change-log/03-vitepress-to-nextra
+  "01-commit-第一次上线Preview": "/Image/Miscellaneous/blog-change-log/03-vitepress-to-nextra/01-commit-第一次上线Preview.webp",
+  "02-commit-迁移基本完成-测试结束": "/Image/Miscellaneous/blog-change-log/03-vitepress-to-nextra/02-commit-迁移基本完成-测试结束.webp",
+  "03-commit-删除-vitepress": "/Image/Miscellaneous/blog-change-log/03-vitepress-to-nextra/03-commit-删除-vitepress.webp",
+  "04-commit-合并分支": "/Image/Miscellaneous/blog-change-log/03-vitepress-to-nextra/04-commit-合并分支.webp",
+
   // /Image/Miscellaneous/essay-openai-image-2
   "海报": "/Image/Miscellaneous/essay-openai-image-2/海报.webp",
   "漫画": "/Image/Miscellaneous/essay-openai-image-2/漫画.webp",

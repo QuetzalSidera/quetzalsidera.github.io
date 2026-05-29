@@ -732,9 +732,43 @@ function addHeadingAnchors(parent: { children?: LegacyMdastNode[] }) {
   }
 }
 
+function normalizeLocalMarkdownLink(url: string): string {
+  const match = url.match(/^(\.{1,2}\/)?([^?#]+)\.md([?#].*)?$/i)
+  if (!match) return url
+
+  const [, prefix = '', pathname, suffix = ''] = match
+  const slug = pathname.split('/').filter(Boolean).pop()
+  if (!slug) return url
+
+  if (prefix === '../' && pathname.startsWith('collections/')) {
+    return `/collections/${slug}/${suffix}`
+  }
+
+  if (pathname.startsWith('collections/')) {
+    return `/collections/${slug}/${suffix}`
+  }
+
+  return `/posts/${slug}/${suffix}`
+}
+
+function normalizeLocalMarkdownLinks(parent: { children?: LegacyMdastNode[] }) {
+  if (!parent.children) return
+
+  for (const child of parent.children) {
+    if (child.type === 'link' && typeof child.url === 'string') {
+      child.url = normalizeLocalMarkdownLink(child.url)
+    }
+
+    if ('children' in child) {
+      normalizeLocalMarkdownLinks(child)
+    }
+  }
+}
+
 export function remarkLegacyImages() {
   return (tree: LegacyMdastRoot) => {
     replaceLegacyImageMarkers(tree)
+    normalizeLocalMarkdownLinks(tree)
     addHeadingAnchors(tree)
   }
 }

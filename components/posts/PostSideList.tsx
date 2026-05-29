@@ -15,7 +15,7 @@ type PostSideListProps = {
 type OutlineState = 'expanded' | 'expanding' | 'collapsing' | 'collapsed'
 
 const SCROLL_TO_TOP_MIN_DURATION = 720
-const SCROLL_TO_TOP_MAX_DURATION = 1450
+const SCROLL_TO_TOP_MAX_DURATION = 2000
 const SCROLL_TO_TOP_MS_PER_PX = 0.34
 
 function getScrollToTopDuration(distance: number) {
