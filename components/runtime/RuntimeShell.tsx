@@ -6,6 +6,7 @@ import { Fireworks } from '@/components/fx/Fireworks'
 import { Splash } from '@/components/fx/Splash'
 import { SpinePlayer } from '@/components/fx/SpinePlayer'
 import { SearchDialog } from '@/components/search/SearchDialog'
+import { DevContentRefresh } from './DevContentRefresh'
 import { useBlogRuntime } from './BlogRuntime'
 
 export function RuntimeShell() {
@@ -67,6 +68,7 @@ export function RuntimeShell() {
   return (
     <>
       <Splash />
+      <DevContentRefresh />
       {searchDialogOpen ? <SearchDialog onClose={closeSearchDialog} /> : null}
       {fireworksEnabled ? <Fireworks /> : null}
       <SpinePlayer />

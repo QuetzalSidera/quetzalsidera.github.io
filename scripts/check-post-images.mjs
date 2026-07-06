@@ -77,6 +77,42 @@ function stripMarkdownFenceBlocks(markdown) {
   return stripped.join('\n')
 }
 
+function stripInlineCodeSpans(markdown) {
+  return markdown
+    .split('\n')
+    .map((line) => {
+      let result = ''
+      let index = 0
+
+      while (index < line.length) {
+        if (line[index] !== '`') {
+          result += line[index]
+          index += 1
+          continue
+        }
+
+        let markerEnd = index
+        while (markerEnd < line.length && line[markerEnd] === '`') {
+          markerEnd += 1
+        }
+
+        const marker = line.slice(index, markerEnd)
+        const closeIndex = line.indexOf(marker, markerEnd)
+        if (closeIndex === -1) {
+          result += marker
+          index = markerEnd
+          continue
+        }
+
+        result += ' '.repeat(closeIndex + marker.length - index)
+        index = closeIndex + marker.length
+      }
+
+      return result
+    })
+    .join('\n')
+}
+
 function extractVueScriptSetupBlocks(markdown) {
   return [...markdown.matchAll(vueScriptSetupRE)].map((match) => ({
     code: match[1],
@@ -92,11 +128,15 @@ function extractSetupBlocks(markdown) {
 }
 
 function collectImageBindings(markdown) {
-  return [...stripMarkdownFenceBlocks(markdown).matchAll(imageBindRE)].map((match) => match[1])
+  return [...stripInlineCodeSpans(stripMarkdownFenceBlocks(markdown)).matchAll(imageBindRE)].map(
+    (match) => match[1],
+  )
 }
 
 function collectVueImageBindings(markdown) {
-  return [...stripMarkdownFenceBlocks(markdown).matchAll(vueImageBindRE)].map((match) => match[1])
+  return [
+    ...stripInlineCodeSpans(stripMarkdownFenceBlocks(markdown)).matchAll(vueImageBindRE),
+  ].map((match) => match[1])
 }
 
 function collectImageConstNames(code) {

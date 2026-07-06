@@ -252,7 +252,7 @@ import { path as miscellaneousImagePath } from '@public/Image/Miscellaneous/path
 
 再在正文中通过 React spread 语法使用自定义组件：
 
-```ts
+```tsx
   <Image {...mangaResultImage} />
 ```
 
@@ -270,13 +270,13 @@ import { path as miscellaneousImagePath } from '@public/Image/Miscellaneous/path
 
 截止上文的步骤结束，正确方式使用的图像组件已经具有了 IDE 高亮，意味着空引用会在编辑器中被提示。但如果只把文章当作 Markdown 渲染，`pnpm build` 仍然不会天然检查这些 TypeScript 片段。
 
-迁移到 Next.js 后，检查方式改为 `pnpm check:post-images`：脚本会扫描 `posts/*.md`，提取 ```` ```ts image-setup ```` 代码块，生成临时 `.ts` 文件，再调用 `tsc --noEmit`。同时它会检查每个 `&lt;Image {...xxx} /&gt;` 都有对应图片对象，且图片对象包含 `src` 字段。`pnpm typecheck` 与 `pnpm build` 都会先执行这一步，因此悬空的图片 key 会在编译期被发现。
+迁移到 Next.js 后，检查方式改为 `pnpm check:post-images`：脚本会扫描 `posts/*.md`，提取 ```` ```ts image-setup ```` 代码块，生成临时 `.ts` 文件，再调用 `tsc --noEmit`。同时它会检查每个 `<Image {...xxx} />` 都有对应图片对象，且图片对象包含 `src` 字段。`pnpm typecheck` 与 `pnpm build` 都会先执行这一步，因此悬空的图片 key 会在编译期被发现。
 
 ```text
-/tmp/post-image-check-xxxx/posts_blog_change_log_01_to_cloudflare_md.ts:63:31 - error TS2339: Property 'error' does not exist on type '{ readonly 海报: "/Image/Miscellaneous/essay-openai-image-2/海报.webp"; readonly 漫画: "/Image/Miscellaneous/essay-openai-image-2/漫画.webp"; readonly 漫画_翻嵌: "/Image/Miscellaneous/essay-openai-image-2/漫画_翻嵌.webp"; ... 37 more ...; readonly dns: "/Image/Miscellaneous/project-blog-to-cloudflare/dns.webp"; }'.
+/tmp/post-image-check-xxxx/posts_blog_change_log_01_to_cloudflare_md.ts:63:31 - error TS2339: Property 'errorTest' does not exist on type '{ readonly 海报: "/Image/Miscellaneous/essay-openai-image-2/海报.webp"; readonly 漫画: "/Image/Miscellaneous/essay-openai-image-2/漫画.webp"; readonly 漫画_翻嵌: "/Image/Miscellaneous/essay-openai-image-2/漫画_翻嵌.webp"; ... 37 more ...; readonly dns: "/Image/Miscellaneous/project-blog-to-cloudflare/dns.webp"; }'.
 
 63   src: miscellaneousImagePath.errorTest,
-                                 ~~~~~
+                                 ~~~~~~~~~
 
 
 Found 1 error in posts/blog-change-log-01-to-cloudflare.md:63

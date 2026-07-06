@@ -20,7 +20,8 @@ type HastRoot = {
 type HastNode = HastText | HastElement
 
 const defaultLanguage = 'text'
-const theme = 'solarized-dark'
+const lightTheme = 'github-light'
+const darkTheme = 'github-dark'
 
 function isElement(node: HastNode | HastRoot): node is HastElement {
   return node.type === 'element'
@@ -59,17 +60,27 @@ function getTextContent(node: HastElement): string {
   return node.children.map((child) => (isText(child) ? child.value : '')).join('')
 }
 
-function tokenStyle(token: { color?: string; fontStyle?: number }) {
+type HighlightToken = {
+  content: string
+  color?: string
+  fontStyle?: number
+}
+
+function tokenStyle(lightToken: HighlightToken, darkToken?: HighlightToken) {
   const styles: string[] = []
 
-  if (token.color) {
-    styles.push(`color:${token.color}`)
+  if (lightToken.color) {
+    styles.push(`--shiki-light:${lightToken.color}`)
   }
 
-  if (token.fontStyle) {
-    if (token.fontStyle & 1) styles.push('font-style:italic')
-    if (token.fontStyle & 2) styles.push('font-weight:700')
-    if (token.fontStyle & 4) styles.push('text-decoration:underline')
+  if (darkToken?.color) {
+    styles.push(`--shiki-dark:${darkToken.color}`)
+  }
+
+  if (lightToken.fontStyle) {
+    if (lightToken.fontStyle & 1) styles.push('font-style:italic')
+    if (lightToken.fontStyle & 2) styles.push('font-weight:700')
+    if (lightToken.fontStyle & 4) styles.push('text-decoration:underline')
   }
 
   return styles.join(';')
@@ -78,17 +89,21 @@ function tokenStyle(token: { color?: string; fontStyle?: number }) {
 async function highlightCode(codeNode: HastElement) {
   const code = getTextContent(codeNode).replace(/\n$/, '')
   const lang = getLanguage(codeNode)
-  const result = await codeToTokens(code, { lang, theme })
+  const [lightResult, darkResult] = await Promise.all([
+    codeToTokens(code, { lang, theme: lightTheme }),
+    codeToTokens(code, { lang, theme: darkTheme }),
+  ])
   const children: HastNode[] = []
 
-  result.tokens.forEach((line, lineIndex) => {
+  lightResult.tokens.forEach((line, lineIndex) => {
+    const darkLine = darkResult.tokens[lineIndex]
     const lineChildren: HastNode[] = line.length
-      ? line.map((token) => ({
+      ? line.map((token, tokenIndex) => ({
           type: 'element' as const,
           tagName: 'span',
           properties: {
             className: ['shiki-token'],
-            style: tokenStyle(token),
+            style: tokenStyle(token, darkLine?.[tokenIndex]),
           },
           children: [{ type: 'text' as const, value: token.content }],
         }))
@@ -100,13 +115,11 @@ async function highlightCode(codeNode: HastElement) {
       properties: { className: ['line'] },
       children: lineChildren,
     })
-
-    if (lineIndex < result.tokens.length - 1) {
-      children.push({ type: 'text', value: '\n' })
-    }
   })
 
   codeNode.children = children
+  codeNode.properties['data-line-count'] = String(lightResult.tokens.length)
+  codeNode.properties['data-raw-code'] = code
   setClassNames(codeNode, [...getClassNames(codeNode), 'shiki'])
 }
 

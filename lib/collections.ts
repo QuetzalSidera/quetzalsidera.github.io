@@ -12,6 +12,7 @@ export type { CollectionData, CollectionPageData } from '@/lib/types'
 
 const cwd = process.cwd()
 const COLLECTIONS_DIR = path.join(cwd, 'collections')
+const shouldCacheCollections = process.env.NODE_ENV !== 'development'
 
 function parseDate(value: unknown, fallback: number) {
   if (!value) {
@@ -48,17 +49,21 @@ function readCollectionFromFile(file: string): CollectionData {
 let cachedCollections: CollectionData[] | null = null
 
 export function getAllCollections(): CollectionData[] {
-  if (cachedCollections) {
+  if (shouldCacheCollections && cachedCollections) {
     return cachedCollections
   }
 
-  cachedCollections = fs
+  const collections = fs
     .readdirSync(COLLECTIONS_DIR)
     .filter((file) => file.endsWith('.md') && file !== 'index.md')
     .map(readCollectionFromFile)
     .sort((a, b) => b.create - a.create)
 
-  return cachedCollections
+  if (shouldCacheCollections) {
+    cachedCollections = collections
+  }
+
+  return collections
 }
 
 export function getCollectionBySlug(slug: string): CollectionData | undefined {

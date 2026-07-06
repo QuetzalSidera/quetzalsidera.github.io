@@ -160,40 +160,41 @@ export function PostSideList({ outline, title }: PostSideListProps) {
   }
 
   function scrollToTop() {
-    const startY = window.scrollY
+    window.scrollTo({ top: 0 })
+    // const startY = window.scrollY
 
-    if (toTopRafRef.current !== null) {
-      window.cancelAnimationFrame(toTopRafRef.current)
-      toTopRafRef.current = null
-    }
+    // if (toTopRafRef.current !== null) {
+    //   window.cancelAnimationFrame(toTopRafRef.current)
+    //   toTopRafRef.current = null
+    // }
 
-    if (startY <= 0) return
+    // if (startY <= 0) return
+    //
+    // if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    //   window.scrollTo({ top: 0 })
+    //   return
+    // }
+    //
+    // const startedAt = window.performance.now()
+    // const duration = getScrollToTopDuration(startY)
+    //
+    // function step(now: number) {
+    //   const elapsed = now - startedAt
+    //   const progress = Math.min(elapsed / duration, 1)
+    //   const nextY = Math.round(startY * (1 - easeInOutCubic(progress)))
+    //
+    //   window.scrollTo(0, nextY)
+    //
+    //   if (progress < 1 && window.scrollY > 0) {
+    //     toTopRafRef.current = window.requestAnimationFrame(step)
+    //     return
+    //   }
+    //
+    //   window.scrollTo(0, 0)
+    //   toTopRafRef.current = null
+    // }
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      window.scrollTo({ top: 0 })
-      return
-    }
-
-    const startedAt = window.performance.now()
-    const duration = getScrollToTopDuration(startY)
-
-    function step(now: number) {
-      const elapsed = now - startedAt
-      const progress = Math.min(elapsed / duration, 1)
-      const nextY = Math.round(startY * (1 - easeInOutCubic(progress)))
-
-      window.scrollTo(0, nextY)
-
-      if (progress < 1 && window.scrollY > 0) {
-        toTopRafRef.current = window.requestAnimationFrame(step)
-        return
-      }
-
-      window.scrollTo(0, 0)
-      toTopRafRef.current = null
-    }
-
-    toTopRafRef.current = window.requestAnimationFrame(step)
+    // toTopRafRef.current = window.requestAnimationFrame(step)
   }
 
   function toggleOutline() {

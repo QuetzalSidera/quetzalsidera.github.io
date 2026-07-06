@@ -17,6 +17,7 @@ export type { Post, PostOutline } from '@/lib/types'
 
 const cwd = process.cwd()
 const POSTS_DIR = path.join(cwd, 'posts')
+const shouldCachePosts = process.env.NODE_ENV !== 'development'
 
 function countWords(text: string): number {
   const replacedText = text.replace(/[a-zA-Z]+/g, 'A')
@@ -55,11 +56,11 @@ function readPostFromFile(file: string): Post {
 let cachedPosts: Post[] | null = null
 
 export function getAllPosts(): Post[] {
-  if (cachedPosts) {
+  if (shouldCachePosts && cachedPosts) {
     return cachedPosts
   }
 
-  cachedPosts = fs
+  const posts = fs
     .readdirSync(POSTS_DIR)
     .filter((file) => file.endsWith('.md') && file !== 'index.md')
     .map(readPostFromFile)
@@ -69,7 +70,11 @@ export function getAllPosts(): Post[] {
       return b.create - a.create
     })
 
-  return cachedPosts
+  if (shouldCachePosts) {
+    cachedPosts = posts
+  }
+
+  return posts
 }
 
 export function getPostBySlug(slug: string): Post | undefined {

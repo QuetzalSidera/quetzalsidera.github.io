@@ -16,7 +16,11 @@ import { faCheck, faCopy } from '@fortawesome/free-solid-svg-icons'
 import styles from './BlogCodeBlock.module.css'
 
 type BlogCodeBlockProps = ComponentProps<'pre'>
-type CodeElement = ReactElement<ComponentProps<'code'>, 'code'>
+type CodeElementProps = ComponentProps<'code'> & {
+  'data-line-count'?: string | number
+  'data-raw-code'?: string
+}
+type CodeElement = ReactElement<CodeElementProps, 'code'>
 
 function extractText(node: ReactNode): string {
   if (typeof node === 'string' || typeof node === 'number') {
@@ -34,9 +38,66 @@ function extractText(node: ReactNode): string {
   return ''
 }
 
+function hasClassName(value: unknown, target: string) {
+  if (Array.isArray(value)) {
+    return value.map(String).includes(target)
+  }
+
+  return typeof value === 'string' && value.split(/\s+/).includes(target)
+}
+
+function collectCodeLines(node: ReactNode, lines: string[] = []) {
+  if (Array.isArray(node)) {
+    node.forEach((child) => collectCodeLines(child, lines))
+    return lines
+  }
+
+  if (isValidElement<{ className?: unknown; children?: ReactNode }>(node)) {
+    if (hasClassName(node.props.className, 'line')) {
+      lines.push(extractText(node.props.children))
+      return lines
+    }
+
+    collectCodeLines(node.props.children, lines)
+  }
+
+  return lines
+}
+
+function extractCodeText(node: ReactNode): string {
+  const lines = collectCodeLines(node)
+  return lines.length ? lines.join('\n') : extractText(node)
+}
+
+function countCodeLineElements(node: ReactNode): number {
+  if (Array.isArray(node)) {
+    return node.reduce((count, child) => count + countCodeLineElements(child), 0)
+  }
+
+  if (isValidElement<{ className?: unknown; children?: ReactNode }>(node)) {
+    if (hasClassName(node.props.className, 'line')) {
+      return 1
+    }
+
+    return countCodeLineElements(node.props.children)
+  }
+
+  return 0
+}
+
+function countTextLines(text: string) {
+  const normalizedText = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n').replace(/\n$/, '')
+  return normalizedText.split('\n').length
+}
+
+function readLineCount(value: string | number | undefined) {
+  const count = Number(value)
+  return Number.isInteger(count) && count > 0 ? count : 0
+}
+
 function findCodeChild(children: ReactNode): CodeElement | null {
   for (const child of Children.toArray(children)) {
-    if (isValidElement<ComponentProps<'code'>>(child) && child.type === 'code') {
+    if (isValidElement<CodeElementProps>(child) && child.type === 'code') {
       return child as CodeElement
     }
   }
@@ -52,11 +113,18 @@ export function BlogCodeBlock({ children, className, ...preProps }: BlogCodeBloc
   const codeElement = findCodeChild(children)
   const codeProps = codeElement?.props
   const language = getLanguage(codeProps?.className)
-  const copyText = useMemo(
-    () => extractText(codeProps?.children ?? children).replace(/\n$/, ''),
-    [children, codeProps?.children],
+  const rawCode = codeProps?.['data-raw-code']
+  const codeText = useMemo(() => extractCodeText(codeProps?.children ?? children), [
+    children,
+    codeProps?.children,
+  ])
+  const copyText = useMemo(() => rawCode ?? codeText.replace(/\n$/, ''), [codeText, rawCode])
+  const lineCount = Math.max(
+    readLineCount(codeProps?.['data-line-count']) ||
+      countCodeLineElements(codeProps?.children) ||
+      countTextLines(codeText),
+    1,
   )
-  const lineCount = Math.max(copyText.split('\n').length, 1)
   const [copied, setCopied] = useState(false)
   const copiedTimerRef = useRef<number | null>(null)
 
