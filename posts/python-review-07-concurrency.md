@@ -463,6 +463,16 @@ Communication）必须通过内核对象或显式共享内存完成。参见 [PO
 | `multiprocessing.Queue`         | 消息传递   | 通常基于管道/套接字端点、锁、后台 feeder，把 Python 对象 pickle 成字节流 |
 | `multiprocessing.Value`、`Array` | 共享内存   | 创建可被多个相关进程访问的共享 ctypes 对象                        |
 
+讨论这些接口时可以固定看几个维度：
+
+| 维度   | Python 进程通信中的问题                                            |
+|------|------------------------------------------------------------|
+| 读写方法 | 调用是阻塞等待，还是能先检查就绪状态                                      |
+| 缓冲区  | 数据是否进入内核缓冲区或共享内存；满时写入等待还是失败；空时读取等待、失败还是返回空结果             |
+| 方向   | 单向、双向，或需要成对对象组合出双向通信                                    |
+| 编码   | 传 Python 对象时是否需要 pickle；传原始字节时是否绕过对象序列化                    |
+| 并发控制 | 接口内部是否带跨进程锁；多个进程同时访问同一端点或同一共享对象时，是否需要调用方另加同步            |
+
 #### 2.4.1 Pipe{#Pipe}
 
 `Pipe` 适合两个端点之间的直接消息传递：
@@ -490,6 +500,16 @@ if __name__ == '__main__':
 
 若设置`duplex=False`，前者只可读，后者只可写。
 
+`Pipe` 的行为可以按下表整理：
+
+| 维度   | `Pipe(duplex=True)`                              | `Pipe(duplex=False)`                |
+|------|--------------------------------------------------|-------------------------------------|
+| 读写方法 | `recv()` / `send()` 默认阻塞；`poll(timeout)` 可先检查是否有数据 | 读端 `recv()`，写端 `send()`；同样默认阻塞       |
+| 缓冲区  | 底层使用内核管道或 socket 缓冲区；空时读端等待，满时写端等待             | 同左                                  |
+| 方向   | 两端都可读写；Unix 实现通常用两条单向管道组合                     | 前一个端点只读，后一个端点只写                    |
+| 编码   | `send()` / `recv()` 使用 pickle 传 Python 对象；`send_bytes()` / `recv_bytes()` 传原始字节 | 同左                                  |
+| 并发控制 | 单个 `Connection` 端点不适合多个进程同时读写；共享同一端点时调用方需要加锁     | 读端和写端分离，多个进程共享同一端点时仍需要调用方加锁       |
+
 ```python
 import os
 from multiprocessing import Pipe, Process
@@ -511,6 +531,15 @@ if __name__ == '__main__':
 ```
 
 管道读写均是阻塞的，`recv()` 与 `send()` 在操作完成前均不会返回。
+
+阻塞返回条件如下：
+
+| 调用 | 返回或异常条件 |
+|---|---|
+| `conn.recv()` | 读到一条完整 pickle 消息后返回对象；连接另一端关闭且没有剩余消息时抛出 `EOFError` |
+| `conn.poll(timeout)` | 指定时间内有数据可读时返回 `True`；超时返回 `False` |
+| `conn.send(obj)` | 对象成功序列化并写入底层缓冲区后返回；缓冲区满时等待；另一端关闭时可能抛出 `BrokenPipeError` / `OSError` |
+| `conn.send_bytes(data)` | 原始字节写入底层缓冲区后返回；缓冲区满或另一端关闭时行为同 `send()` |
 
 ```python
 import os
@@ -558,6 +587,7 @@ if __name__ == '__main__':
 ```
 
 管道使用序列化传递对象，`send()` 会用 pickle 序列化对象，`recv()` 会反序列化得到新对象，因此，在传递对象的同时需要确保可序列化。
+`send_bytes()` / `recv_bytes()` 适合已经编码好的字节数据，调用方自己维护消息格式。
 
 ```python
 from multiprocessing import Pipe, Process
@@ -590,7 +620,8 @@ Traceback (most recent call last):
 _pickle.PicklingError: Can't pickle local object <function child.<locals>.<lambda> at 0x10336ceb0>
 ```
 
-此外，在Python地Unix实现中，`Pipe(duplex=True)` 实际上在底层使用了两个Unix管道，分别服务于父子进程的两个方向通信。
+在 Python 的 Unix 实现中，`Pipe(duplex=True)` 通常在底层使用两条 Unix 管道，分别服务两个方向的通信。两条底层管道各自有独立缓冲区，
+因此两个方向可以同时推进；同一个 `Connection` 端点被多个进程或线程同时读写时仍需要调用方控制并发。
 
 #### 2.4.2 Queue{#Queue}
 
