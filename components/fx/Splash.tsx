@@ -18,6 +18,8 @@ const SPLASH_FADE_MS = 500
 const SPLASH_BREATHING_MS = 500
 const SPLASH_BREATHING_DIM_OPACITY = 0.7
 const SPLASH_BREATHING_BRIGHT_OPACITY = 1
+const DEV_SKIP_SPLASH_STORAGE_KEY = 'blog-dev-skip-splash-once'
+const DEV_SKIP_SPLASH_STYLE_ID = 'blog-dev-skip-splash-style'
 const fadeSpring = { stiffness: 100, damping: 22, precision: 0.01 }
 const breathingSpring = { stiffness: 220, damping: 24, precision: 0.01 }
 
@@ -60,6 +62,28 @@ const svgContent = `<svg viewBox="0 0 1728 1117" preserveAspectRatio="xMinYMin s
 </defs>
 </svg>`
 
+function consumeDevSplashSkip() {
+  if (process.env.NODE_ENV !== 'development' || typeof window === 'undefined') {
+    return false
+  }
+
+  try {
+    const shouldSkip = window.sessionStorage.getItem(DEV_SKIP_SPLASH_STORAGE_KEY) === '1'
+    if (shouldSkip) {
+      window.sessionStorage.removeItem(DEV_SKIP_SPLASH_STORAGE_KEY)
+    }
+
+    return shouldSkip
+  } catch {
+    return false
+  }
+}
+
+function clearDevSplashSkipMask() {
+  document.documentElement.removeAttribute('data-skip-dev-splash')
+  document.getElementById(DEV_SKIP_SPLASH_STYLE_ID)?.remove()
+}
+
 export function Splash() {
   const [isVisible, setIsVisible] = useState(true)
   const [isFading, setIsFading] = useState(false)
@@ -68,6 +92,13 @@ export function Splash() {
   const { setSplashLoading } = useBlogRuntime()
 
   useEffect(() => {
+    if (consumeDevSplashSkip()) {
+      setSplashLoading(false)
+      setIsVisible(false)
+      const cleanupTimer = window.setTimeout(clearDevSplashSkipMask, 250)
+      return () => window.clearTimeout(cleanupTimer)
+    }
+
     if (!SPLASH_ANIMATION_ENABLED) {
       setSplashLoading(false)
       setIsVisible(false)

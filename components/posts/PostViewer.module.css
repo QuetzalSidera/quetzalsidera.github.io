@@ -7,6 +7,16 @@
   animation: fade-route-in 0.5s ease;
 }
 
+:global(html[data-skip-dev-page-motion='1']) .postViewer,
+:global(html[data-skip-dev-page-motion='1']) .viewBox,
+:global(html[data-skip-dev-page-motion='1']) .content {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
 .viewBox {
   max-width: 100%;
   box-sizing: border-box;

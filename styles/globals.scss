@@ -313,6 +313,14 @@ body.page-settling main {
   animation: page-settle-in 0.32s ease both;
 }
 
+html[data-skip-dev-page-motion='1'] body main {
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
 body.page-exiting main {
   opacity: 0;
   filter: blur(1px);

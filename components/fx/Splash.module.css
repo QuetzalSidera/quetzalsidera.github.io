@@ -12,6 +12,10 @@
   will-change: opacity;
 }
 
+:global(html[data-skip-dev-splash='1']) .splashContainer {
+  display: none;
+}
+
 .splashContainer :global(#breathingParts) {
   opacity: var(--splash-breathing-opacity, 1);
   will-change: opacity;

@@ -53,6 +53,13 @@ export function RuntimeShell() {
   useEffect(() => {
     removeBannerMessage('route-loading')
     document.body.classList.remove('page-exiting', 'page-settling')
+    if (
+      process.env.NODE_ENV === 'development' &&
+      document.documentElement.getAttribute('data-skip-dev-page-motion') === '1'
+    ) {
+      return undefined
+    }
+
     window.requestAnimationFrame(() => document.body.classList.add('page-settling'))
 
     const timer = window.setTimeout(() => {

@@ -4,7 +4,7 @@ import path from 'node:path'
 
 const contentDirs = ['posts', 'collections'].map((dir) => path.join(process.cwd(), dir))
 const pollIntervalMs = 350
-const stablePollCount = 2
+const stablePollCount = 4
 
 function collectMarkdownFiles(dir: string, files: string[] = []) {
   if (!fs.existsSync(dir)) {
