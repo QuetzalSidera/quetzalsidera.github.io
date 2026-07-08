@@ -1,6 +1,6 @@
 ---
 title: Python 函数进阶
-date: 2026-07-05T02:00:00
+date: 2026-07-04T02:00:00
 tags: [ Python ]
 pinned: false
 collection: 深入理解 Python

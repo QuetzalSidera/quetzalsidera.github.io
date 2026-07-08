@@ -1,6 +1,6 @@
 ---
 title: Python 迭代与生成器
-date: 2026-07-05T01:00:00
+date: 2026-07-03T01:00:00
 tags: [ Python ]
 pinned: false
 collection: 深入理解 Python
@@ -312,7 +312,7 @@ print(list(Enumerate(['A', 'B'])))  # [(0, 'A'), (1, 'B')]
 
 ### 3.1 map/filter{#映射与过滤}
 
-。`map(func, iterable)` 把函数应用到每个元素，返回惰性 iterator。
+`map(func, iterable)` 把函数应用到每个元素，返回惰性 iterator。
 
 ```python
 def square(x: int) -> int:

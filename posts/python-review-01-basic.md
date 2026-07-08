@@ -1,6 +1,6 @@
 ---
 title: Python 基础语法速览
-date: 2026-07-05T00:00:00
+date: 2026-07-02T00:00:00
 tags: [ Python ]
 pinned: false
 collection: 深入理解 Python
@@ -46,13 +46,30 @@ outline:
   - title: 4.3 类型注解
     slug: 类型注解
     level: 1
+  - title: 5. 错误处理
+    slug: 错误处理
+  - title: 5.1 异常对象
+    slug: 异常对象
+    level: 1
+  - title: 5.2 捕获异常
+    slug: 捕获异常
+    level: 1
+  - title: 5.3 抛出异常
+    slug: 抛出异常
+    level: 1
+  - title: 5.4 调试
+    slug: 调试
+    level: 1
+  - title: 5.5 测试
+    slug: 测试
+    level: 1
 head:
   - - meta
     - name: description
-      content: Python 复习系列第一篇，在已有编程基础的前提下快速回顾对象模型、基本数据类型、字符串与编码、list/tuple/dict/set、控制流、函数定义、参数模型与类型注解。
+      content: Python 复习系列第一篇，在已有编程基础的前提下快速回顾对象模型、基本数据类型、字符串与编码、list/tuple/dict/set、控制流、函数定义、参数模型、类型注解、错误处理、调试与测试。
   - - meta
     - name: keywords
-      content: Python, 基础, 数据类型, str, bytes, list, tuple, dict, set, 切片, match, 函数参数, 类型注解, type hints
+      content: Python, 基础, 数据类型, str, bytes, list, tuple, dict, set, 切片, match, 函数参数, 类型注解, type hints, 错误处理, 异常处理, unittest, doctest
 ---
 
 Python 基础速览，为后续迭代器、生成器、装饰器、模块、OOP、并发和网络编程提供共同起点。
@@ -535,4 +552,299 @@ def format_user(user: UserRecord) -> str:
     return f"{user['name']} {user['id']}"
 
 print(format_user({'name': 'Alice', 'id': 1}))  # Alice 1
+```
+
+## 5. 错误处理{#错误处理}
+
+异常处理（exception handling）用于表达函数无法按正常路径返回结果。调试用于定位错误发生的位置和状态。测试用于把已经确认的行为固定下来，避免后续修改破坏原有约定。
+
+### 5.1 异常对象{#异常对象}
+
+Python 中的异常是对象。内置异常类型都继承自 `BaseException`，业务代码通常捕获或继承 `Exception` 这一支。
+
+```python
+def divide(text: str) -> float:
+    return 10 / int(text)
+
+def describe_call(text: str) -> str:
+    try:
+        return f'result={divide(text):g}'
+    except Exception as exc:
+        return type(exc).__name__
+
+print(describe_call('2')) # result=5
+print(describe_call('0')) # ZeroDivisionError
+print(describe_call('x')) # ValueError
+```
+
+常见异常类型如下：
+
+| 异常类型                | 常见来源                        |
+|---------------------|-----------------------------|
+| `ValueError`        | 值的类型正确，但内容不合法，例如 `int('x')` |
+| `TypeError`         | 参数类型不符合接口要求                 |
+| `KeyError`          | 字典缺少指定 key                  |
+| `AttributeError`    | 对象缺少指定成员                    |
+| `IndexError`        | 序列下标越界                      |
+| `ZeroDivisionError` | 除数为 0                       |
+| `AssertionError`    | `assert` 条件失败               |
+
+异常没有被当前函数捕获时，会沿调用栈继续向上抛出。最终无人捕获时，解释器打印 traceback 并终止程序。
+
+```python
+import traceback
+
+def parse_number(text: str) -> int:
+    return int(text)
+
+def calculate(text: str) -> float:
+    return 10 / parse_number(text)
+
+try:
+    calculate('0')
+except Exception:
+    lines = traceback.format_exc().splitlines()
+    print(lines[-1])                       # ZeroDivisionError: division by zero
+    print('calculate' in ''.join(lines))   # True
+```
+
+### 5.2 捕获异常{#捕获异常}
+
+`try` 包住可能失败的代码，`except` 处理指定类型的异常。异常一旦发生，`try` 块中后续语句不会继续执行。
+
+```python
+def parse_ratio(text: str) -> list[str]:
+    events: list[str] = []
+
+    try:
+        events.append('try')
+        value = 10 / int(text)
+        events.append(f'result={value:g}')
+    except ValueError:
+        events.append('ValueError')
+    except ZeroDivisionError:
+        events.append('ZeroDivisionError')
+
+    return events
+
+print(parse_ratio('2')) # ['try', 'result=5']
+print(parse_ratio('x')) # ['try', 'ValueError']
+print(parse_ratio('0')) # ['try', 'ZeroDivisionError']
+```
+
+`else` 只在 `try` 块没有抛异常时执行。`finally` 无论是否抛异常都会执行，适合释放资源、恢复状态、关闭连接。
+
+```python
+def flow(text: str) -> list[str]:
+    events: list[str] = []
+
+    try:
+        events.append('try')
+        value = 10 / int(text)
+    except ValueError:
+        events.append('except')
+    else:
+        events.append(f'else={value:g}')
+    finally:
+        events.append('finally')
+
+    return events
+
+print(flow('2')) # ['try', 'else=5', 'finally']
+print(flow('x')) # ['try', 'except', 'finally']
+```
+
+多个 `except` 按顺序检查，父类异常放在前面会遮住子类异常。捕获顺序应从具体到宽泛。
+
+```python
+def catch_by_order(exc: Exception) -> str:
+    try:
+        raise exc
+    except ValueError:
+        return 'ValueError'
+    except UnicodeError:
+        return 'UnicodeError'
+
+def catch_precisely(exc: Exception) -> str:
+    try:
+        raise exc
+    except UnicodeError:
+        return 'UnicodeError'
+    except ValueError:
+        return 'ValueError'
+
+print(issubclass(UnicodeError, ValueError)) # True
+print(catch_by_order(UnicodeError()))       # ValueError
+print(catch_precisely(UnicodeError()))      # UnicodeError
+```
+
+业务代码中很少需要直接捕获 `BaseException`，因为它还包含 `KeyboardInterrupt`、`SystemExit` 等不应被普通业务逻辑吞掉的异常。
+
+### 5.3 抛出异常{#抛出异常}
+
+`raise` 用来主动抛出异常。函数发现参数违反契约时，应尽早抛出清晰的异常。
+
+```python
+def port_from(text: str) -> int:
+    port = int(text)
+    if port <= 0 or port > 65535:
+        raise ValueError(f'invalid port: {text}')
+    return port
+
+print(port_from('8080')) # 8080
+
+try:
+    port_from('0')
+except ValueError as exc:
+    print(str(exc))      # invalid port: 0
+```
+
+自定义异常通常继承自 `Exception` 或某个更具体的内置异常。异常类名一般以 `Error` 结尾。
+
+```python
+class ConfigError(ValueError):
+    pass
+
+def read_timeout(value: str) -> int:
+    timeout = int(value)
+    if timeout <= 0:
+        raise ConfigError(f'invalid timeout: {value}')
+    return timeout
+
+try:
+    read_timeout('-1')
+except ConfigError as exc:
+    print(type(exc).__name__) # ConfigError
+    print(str(exc))           # invalid timeout: -1
+```
+
+捕获异常后，如果当前层只负责记录，不负责恢复，可以用裸 `raise` 原样抛出当前异常。如果需要把底层异常转换成更贴近当前接口的异常，用
+`raise ... from exc` 保留原因链。
+
+```python
+class ConfigError(ValueError):
+    pass
+
+def load_port(text: str) -> int:
+    try:
+        return int(text)
+    except ValueError as exc:
+        raise ConfigError('port must be an integer') from exc
+
+try:
+    load_port('abc')
+except ConfigError as exc:
+    print(type(exc).__name__)           # ConfigError
+    print(type(exc.__cause__).__name__) # ValueError
+```
+
+### 5.4 调试{#调试}
+
+`logging.exception()` 在 `except` 块中记录异常信息和 traceback。它适合“记录后继续抛出”或“记录后进入降级路径”。
+
+```python
+import io
+import logging
+
+stream = io.StringIO()
+handler = logging.StreamHandler(stream)
+logger = logging.getLogger('demo-error')
+logger.handlers[:] = [handler]
+logger.propagate = False
+logger.setLevel(logging.ERROR)
+
+try:
+    10 / 0
+except ZeroDivisionError:
+    logger.exception('calculate failed')
+
+log_text = stream.getvalue()
+
+print('calculate failed' in log_text) # True
+print('ZeroDivisionError' in log_text) # True
+```
+
+`assert` 用来声明开发期不变量。条件为假时抛出 `AssertionError`。
+
+```python
+def inverse(n: int) -> float:
+    assert n != 0, 'n is zero'
+    return 1 / n
+
+print(inverse(2)) # 0.5
+
+try:
+    inverse(0)
+except AssertionError as exc:
+    print(str(exc)) # n is zero
+```
+
+`assert` 可以被 `python -O` 关闭，关闭后断言语句不会执行，因此不能替代运行期参数校验。
+
+### 5.5 测试{#测试}
+
+`unittest` 把测试组织成 `TestCase` 类。以 `test_` 开头的方法会被测试运行器识别，异常也是接口契约的一部分，可以用
+`assertRaises()` 断言。
+
+```python
+import unittest
+
+class Grade:
+    def __init__(self, score: int) -> None:
+        self.score = score
+
+    def value(self) -> str:
+        if self.score < 0 or self.score > 100:
+            raise ValueError('score out of range')
+        if self.score >= 80:
+            return 'A'
+        if self.score >= 60:
+            return 'B'
+        return 'C'
+
+class TestGrade(unittest.TestCase):
+    def test_grade(self) -> None:
+        self.assertEqual(Grade(80).value(), 'A')
+        self.assertEqual(Grade(60).value(), 'B')
+        self.assertEqual(Grade(59).value(), 'C')
+
+    def test_invalid_score(self) -> None:
+        with self.assertRaises(ValueError):
+            Grade(101).value()
+
+suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestGrade)
+result = unittest.TestResult()
+suite.run(result)
+
+print(result.testsRun)        # 2
+print(result.wasSuccessful()) # True
+```
+
+测试文件可以直接运行，也可以通过 `python -m unittest` 运行。后一种方式更适合批量执行和持续集成。
+
+```bash
+python mydict_test.py
+python -m unittest mydict_test
+python -m unittest mydict_test.TestDict.test_attr
+python -m unittest mydict_test -k attr -v
+```
+
+`doctest` 从**文档注释**中提取交互式示例并执行。一般用于短小稳定的调用示例。
+
+```python
+import doctest
+
+def absolute(n: int) -> int:
+    """
+    >>> absolute(1)
+    1
+    >>> absolute(-1)
+    1
+    """
+    return n if n >= 0 else -n
+
+result = doctest.testmod(verbose=False)
+
+print(result.failed)    # 0
+print(result.attempted) # 2
 ```

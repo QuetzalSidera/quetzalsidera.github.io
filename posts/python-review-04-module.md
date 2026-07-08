@@ -620,8 +620,9 @@ print(acme.config.debug)
 
 这是因为当我们执行`import package.module`时，实际上执行的是`importlib.import_module('package.module')`，而不是
 `package.import_module('module')`。
-`acme`在`import acme.config`中根本不是`import acme`得到的包对象，而是一个包名称。 因此，`import acme.config`将首先查找包
-`acme`，然后找到子模块`config`。
+`acme`在`import acme.config`中根本不是`import acme`得到的包对象，而是一个包名称。 因此，`import acme.config`将首先通过包名查找包
+`acme`，然后找到子模块`config`(而不是通过`acme`包对象导入`config`子模块)。
 
-这也说明了，`import package.module`将后面的 `package.module`作为简单的字符串标识符对待，和已定义的变量没有关系。
+这也说明了，`import package.module`将后面的 `package.module`作为简单的字符串标识符对待，与`print(package.module)`的
+`对象->成员`语义实际上并不相同。
 
