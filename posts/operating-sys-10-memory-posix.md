@@ -5,7 +5,7 @@ tags: [ Unix, C, POSIX, 操作系统 ]
 pinned: false
 collection: Unix操作系统
 outline:
-  - title: 内存API概述
+  - title: 内存 API 概述
     slug: 内存api概述
   - title: 1. 进程地址空间
     slug: 进程地址空间
@@ -19,6 +19,9 @@ outline:
   - title: 1. mmap
     slug: mmap
     level: 1
+  - title: MAP_SHARED、MAP_PRIVATE 与 MAP_ANONYMOUS
+    slug: MAP_SHARED-MAP_PRIVATE-与-MAP_ANONYMOUS
+    level: 2
   - title: 2. munmap
     slug: munmap
     level: 1
@@ -46,16 +49,18 @@ outline:
   - title: 2. calloc 与 realloc
     slug: calloc-与-realloc
     level: 1
-  - title: 3. 分配器如何管理块
+  - title: 3. 分配器块管理
     slug: 分配器如何管理块
     level: 1
-  - title: 4. 示例：动态扩容缓冲区
+  - title: 4. 动态缓冲区示例
     slug: 示例动态扩容缓冲区
     level: 1
 
-  - title: 相互关系
+  - title: 接口关系
     slug: 相互关系
-
+  - title: "1. `msync` flags"
+    slug: 附注-msync-flags
+    level: 1
 head:
   - - meta
     - name: description
@@ -76,9 +81,9 @@ head:
 
 前者直接改变进程地址空间，后者由 `libc` 分配器在用户态管理堆块。
 
-## 内存API概述<a id=内存api概述></a>
+## 内存 API 概述{#内存api概述}
 
-### 1. 进程地址空间<a id=进程地址空间></a>
+### 1. 进程地址空间{#进程地址空间}
 
 从高地址到低地址，进程地址空间常见的组成如下：
 
@@ -99,7 +104,7 @@ head:
 | `brk` / `sbrk`                           | 堆（`heap`） |
 | `malloc` / `calloc` / `realloc` / `free` | 堆 / 映射空间  |
 
-### 2. 系统调用与用户库函数<a id=系统调用与用户库函数></a>
+### 2. 系统调用与用户库函数{#系统调用与用户库函数}
 
 | 层级    | 代表接口                               | 操作对象      | 备注        |
 |-------|------------------------------------|-----------|-----------|
@@ -109,9 +114,9 @@ head:
 
 共享内存相关系统调用参见 [POSIX进程间通信](./operating-sys-08-ipc-posix.md)。
 
-## 系统调用<a id=系统调用></a>
+## 系统调用{#系统调用}
 
-### 1. mmap<a id=mmap></a>
+### 1. mmap{#mmap}
 
 `mmap` 用来在当前进程地址空间建立一段映射：
 
@@ -135,7 +140,7 @@ void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
 
 `mmap` 的核心语义是：在当前进程地址空间建立一段新的映射区，并把它绑定到文件、共享内存对象或匿名页。
 
-#### MAP_SHARED、MAP_PRIVATE 与 MAP_ANONYMOUS<a id=MAP_SHARED-MAP_PRIVATE-与-MAP_ANONYMOUS></a>
+#### MAP_SHARED、MAP_PRIVATE 与 MAP_ANONYMOUS{#MAP_SHARED-MAP_PRIVATE-与-MAP_ANONYMOUS}
 
 `mmap` 最关键的三个标志如下：
 
@@ -160,7 +165,7 @@ void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset)
 | `MAP_PRIVATE + 文件fd`           | 私有文件映射             |
 | `MAP_PRIVATE \| MAP_ANONYMOUS` | 私有匿名映射，是最常见的匿名映射写法 |
 
-### 2. munmap<a id=munmap></a>
+### 2. munmap{#munmap}
 
 `munmap` 用来撤销映射：
 
@@ -180,7 +185,7 @@ int munmap(void *addr, size_t length);
 
 `munmap` 与 `mmap` 都对应内核地址空间操作。调用成功后，这段内存映射会立刻从当前进程地址空间移除；继续访问该地址会再次陷入内核，并通常以访问异常结束。
 
-### 3. mprotect<a id=mprotect></a>
+### 3. mprotect{#mprotect}
 
 `mprotect` 用来修改一段已有映射的访问权限：
 
@@ -207,7 +212,7 @@ int mprotect(void *addr, size_t len, int prot);
 | 保护页    | 把某页设为 `PROT_NONE`，用于捕获越界 |
 | 分阶段初始化 | 先写入数据，再改成只读              |
 
-### 4. msync<a id=msync></a>
+### 4. msync{#msync}
 
 `msync` 只对文件后备的共享映射有意义，用来将映射区的数据写入到磁盘：
 
@@ -236,7 +241,7 @@ flags:
 
 若映射是`MAP_ANONYMOUS`或`MAP_PRIVATE`，那么`msync`是无意义的，前者无后备文件，后者不会写入后备文件。
 
-### 5. brk 与 sbrk<a id=brk-与-sbrk></a>
+### 5. brk 与 sbrk{#brk-与-sbrk}
 
 `brk` 和 `sbrk` 改变 program break 的位置。program break 是堆的末端（堆顶），因此这两个接口实际上改变持程序的堆内存大小。
 
@@ -254,7 +259,7 @@ void *sbrk(intptr_t increment);
 | `brk`  | 把 program break 设到指定位置 | `0`         | `-1`，并设置 `errno`         |
 | `sbrk` | 按增量移动 program break    | 旧的 break 地址 | `(void *)-1`，并设置 `errno` |
 
-### 6. 示例：匿名映射<a id=示例匿名映射></a>
+### 6. 示例：匿名映射{#示例匿名映射}
 
 以下示例介绍了匿名映射的基本使用方法：
 
@@ -289,7 +294,7 @@ int main(void) {
 
 这个例子里没有普通文件对象，`mmap` 只是向内核申请了一段匿名页，并把它映射到当前进程地址空间。
 
-### 7. 示例：文件映射<a id=示例文件映射></a>
+### 7. 示例：文件映射{#示例文件映射}
 
 以下示例介绍了文件映射的基本使用方法：
 
@@ -331,9 +336,9 @@ int main(void) {
 
 它和 `read` 的区别在于：程序不再显式把文件内容复制到用户缓冲区，而是直接把文件页纳入地址空间，再按普通内存读取。
 
-## 用户库函数<a id=用户库函数></a>
+## 用户库函数{#用户库函数}
 
-### 1. malloc 与 free<a id=malloc-与-free></a>
+### 1. malloc 与 free{#malloc-与-free}
 
 最常见的一组动态分配接口如下：
 
@@ -362,7 +367,7 @@ void free(void *ptr);
 
 这里需要明确一点：`free` 的目标是把块归还给分配器，而不是保证立刻归还给内核。
 
-### 2. calloc 与 realloc<a id=calloc-与-realloc></a>
+### 2. calloc 与 realloc{#calloc-与-realloc}
 
 另外两个常见接口是 `calloc` 和 `realloc`：
 
@@ -390,7 +395,7 @@ void *realloc(void *ptr, size_t size);
 | 成功返回   | 指向新内存块的指针，可能与原地址相同，也可能不同 |
 | 失败返回   | `NULL`；失败时旧指针仍然有效        |
 
-### 3. 分配器如何管理块<a id=分配器如何管理块></a>
+### 3. 分配器块管理{#分配器如何管理块}
 
 从程序员视角看，`malloc` 只是返回一个指针；从分配器视角看，它维护的是一组块（`chunk`）。
 
@@ -422,7 +427,7 @@ void *realloc(void *ptr, size_t size);
 
 因此，`malloc` / `free` 的主要工作是在用户态先维护一套更细粒度的块管理。
 
-### 4. 示例：动态扩容缓冲区<a id=示例动态扩容缓冲区></a>
+### 4. 动态缓冲区示例{#示例动态扩容缓冲区}
 
 以下示例展示了 `malloc + realloc` 的用法：
 
@@ -458,7 +463,7 @@ int main(void) {
 }
 ```
 
-## 相互关系<a id=相互关系></a>
+## 接口关系{#相互关系}
 
 当用户态分配器手里没有足够空闲块时，才需要向内核扩张可管理的地址空间。常见路径如下：
 
@@ -493,7 +498,7 @@ brk/sbrk 或 mmap
 
 # 附注
 
-### 1. `msync`的`flags` <a id=附注-msync-flags></a>
+### 1. `msync` flags{#附注-msync-flags}
 
 在man手册中，对`msync`及其`flags`描述如下：
 

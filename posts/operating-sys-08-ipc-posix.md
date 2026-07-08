@@ -7,7 +7,7 @@ collection: Unix操作系统
 outline:
   - title: IPC 概述
     slug: IPC概述
-  - title: 1. 基本模型
+  - title: 1. 基本方式
     slug: 基本模型
     level: 1
   - title: 2. 观察维度
@@ -112,7 +112,7 @@ head:
 
 ## IPC 概述{#IPC概述}
 
-### 1. 基本模型{#基本模型}
+### 1. 基本方式{#基本模型}
 
 进程间通信（`IPC`，`Inter-Process Communication`）有两种基本模型：
 
@@ -247,7 +247,7 @@ int munmap(void *addr, size_t length);
 | 成功返回     | 映射起始地址                             |
 | 失败返回     | `MAP_FAILED`，并设置 `errno`           |
 
-值得注意的是，当`flags`为`MAP_PRIVATE`时，内存是***写时复制***的， `MAP_SHARED`时内存才是真共享的。
+当 `flags` 为 `MAP_PRIVATE` 时，映射采用***写时复制***；只有 `MAP_SHARED` 映射才会把写入传播到共享对象。
 
 `munmap` 的参数与返回值如下：
 
@@ -289,7 +289,7 @@ int shm_unlink(const char *name);
 | 6  | `close`      | 文件描述符 fd          | 进程      | 是                | 关闭当前进程 fd                     |
 | 7  | `shm_unlink` | `shm object`名字    | 系统      | 创建者执行一次          | 删除名字入口，禁止新 shm_open           |
 
-值得注意的是，只有当`shm_unlink`已调用，所有进程 `munmap`、`close(fd)`后，系统才会释放`shm object`。
+只有当 `shm_unlink` 已调用，并且所有进程都完成 `munmap`、`close(fd)` 后，系统才会释放 `shm object`。
 
 ### 6. 同步{#同步}
 
@@ -503,7 +503,7 @@ int unlink(const char *pathname);
 | 成功返回       | `0`              |
 | 失败返回       | `-1`，并设置 `errno` |
 
-值得注意的是，`unlink` 只会删除文件系统中的“名字”（目录项），而不会立即销毁 FIFO 内核对象：
+`unlink` 只删除文件系统中的“名字”（目录项），不会立即销毁 FIFO 内核对象：
 
 只有当：所有 fd 都被 `close`，且命名管道已被 `unlink`时，才会被删除
 
@@ -627,7 +627,7 @@ int main(void)
 
 ### 6. 管道对比{#管道对比}
 
-这两者都属于管道，但适用边界不同：
+这两者都属于管道，但适用场景不同：
 
 | 维度   | 匿名管道              | 命名管道          |
 |------|-------------------|---------------|
@@ -642,7 +642,7 @@ int main(void)
 
 ### 1. 信号通知{#信号通知}
 
-信号（`signal`）也可以看作一种进程间通信机制，但它和共享内存、管道、socket 不在同一层次。
+信号（`signal`）属于进程间通知机制，和共享内存、管道、socket 不在同一层次。
 
 前面几类 IPC 的重点是“传输数据”；信号的重点则是“发送通知”。它通常只携带非常有限的信息，常见用途包括：
 
@@ -741,7 +741,7 @@ int main(void) {
 }
 ```
 
-这个例子也说明了信号的边界：它适合“通知子进程现在可以做某件事”这类场景，但不适合直接承载业务数据。
+这个例子也说明了信号的适用范围：它适合“通知子进程现在可以做某件事”这类场景，但不适合直接承载业务数据。
 
 ## socket{#socket}
 

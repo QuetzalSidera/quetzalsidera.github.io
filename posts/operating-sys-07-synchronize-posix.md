@@ -5,7 +5,7 @@ tags: [ Unix, C,POSIX, 操作系统 ]
 pinned: false
 collection: Unix操作系统
 outline:
-  - title: POSIX同步概述
+  - title: POSIX 同步概述
     slug: posix同步概述
   - title: 1. 同步对象概览
     slug: 同步对象概览
@@ -13,8 +13,8 @@ outline:
   - title: 2. 头文件与返回值约定
     slug: 头文件与返回值约定
     level: 1
-  - title: 3. 线程同步与进程同步的边界
-    slug: 线程同步与进程同步的边界
+  - title: 3. 同步作用范围
+    slug: 同步作用范围
     level: 1
 
   - title: 互斥锁
@@ -25,13 +25,13 @@ outline:
   - title: 2. lock、unlock 与 trylock
     slug: lock-unlock-与-trylock
     level: 1
-  - title: 3. 示例：用互斥锁保护 counter
+  - title: 3. 互斥锁示例
     slug: 示例用互斥锁保护-counter
     level: 1
 
   - title: 条件变量
     slug: 条件变量
-  - title: 1. 条件变量的作用
+  - title: 1. 条件等待
     slug: 条件变量的作用
     level: 1
   - title: 2. pthread_cond_wait、signal 与 broadcast
@@ -43,10 +43,10 @@ outline:
 
   - title: 信号量
     slug: 信号量
-  - title: 1. 无名信号量与命名信号量
+  - title: 1. 信号量类型
     slug: 无名信号量与命名信号量
     level: 1
-  - title: 2. 示例：限制同时进入的线程数
+  - title: 2. 信号量示例
     slug: 示例限制同时进入的线程数
     level: 1
 
@@ -55,11 +55,11 @@ outline:
   - title: 1. pthread_rwlock_t
     slug: pthread_rwlock_t
     level: 1
-  - title: 2. 示例：读多写少场景
+  - title: 2. 读写锁示例
     slug: 示例读多写少场景
     level: 1
 
-  - title: 死锁与加锁顺序
+  - title: 加锁顺序
     slug: 死锁与加锁顺序
   - title: 1. 典型场景
     slug: 典型场景
@@ -67,33 +67,39 @@ outline:
   - title: 2. 固定抢锁顺序
     slug: 固定抢锁顺序
     level: 1
-  - title: 2. 原子化抢锁
+  - title: 3. 原子化抢锁
     slug: 原子化抢锁
     level: 1
 
-  - title: 经典同步问题实现
+  - title: 同步问题示例
     slug: 经典同步问题实现
-  - title: 1. 有界缓冲区：信号量实现
+  - title: 1. 有界缓冲区：信号量
     slug: 有界缓冲区信号量实现
     level: 1
-  - title: 2. 有界缓冲区：管程实现
+  - title: 2. 有界缓冲区：管程
     slug: 有界缓冲区管程实现
     level: 1
-  - title: 3. 读者写者：信号量实现
+  - title: 3. 读者写者：信号量
     slug: 读者写者信号量实现
     level: 1
-  - title: 4. 读者写者：读写锁实现
+  - title: 4. 读者写者：读写锁
     slug: 读者写者读写锁实现
     level: 1
-  - title: 5. 哲学家就餐：限制最大并发实现
+  - title: 5. 哲学家就餐：限制并发
     slug: 哲学家就餐限制最大并发实现
     level: 1
-  - title: 6. 哲学家就餐：锁排序实现
+  - title: 6. 哲学家就餐：锁排序
     slug: 哲学家就餐锁排序实现
     level: 1
 
   - title: 小结
     slug: 小结
+  - title: 1. 信号量实现同步工具
+    slug: 信号量实现锁-条件变量-读写锁
+    level: 1
+  - title: 2. 锁与条件变量实现信号量
+    slug: 锁与条件变量实现信号量
+    level: 1
 head:
   - - meta
     - name: description
@@ -109,9 +115,9 @@ head:
 
 [进程（线程）同步](./operating-sys-06-synchronize.md) 中已介绍竞争条件、执行顺序约束、锁、信号量、条件变量和死锁的理论基础。本篇将这些概念落实到 Unix 用户态最常用的同步接口上，以 `C + POSIX` 为背景，重点在线程同步，同时指出哪些接口可扩展到进程间同步。
 
-## POSIX同步概述<a id=posix同步概述></a>
+## POSIX 同步概述{#posix同步概述}
 
-### 1. 同步对象概览<a id=同步对象概览></a>
+### 1. 同步对象概览{#同步对象概览}
 
 在 POSIX 用户态编程里，最常见的几类同步对象如下：
 
@@ -131,7 +137,7 @@ head:
 | 信号量       | `sem_t`                            |
 | 读者写者      | `pthread_rwlock_t` 或信号量组合          |
 
-### 2. 头文件与返回值约定<a id=头文件与返回值约定></a>
+### 2. 头文件与返回值约定{#头文件与返回值约定}
 
 这一篇会频繁用到下面两个头文件：
 
@@ -164,7 +170,7 @@ if (sem_wait(&sem) != 0) {
 }
 ```
 
-### 3. 线程同步与进程同步的边界<a id=线程同步与进程同步的边界></a>
+### 3. 同步作用范围{#同步作用范围}
 
 `pthread_mutex_t`、`pthread_cond_t` 和 `pthread_rwlock_t` 都是匿名同步对象。程序只有持有该对象所在内存地址时才能访问它，因此：
 
@@ -186,9 +192,9 @@ if (sem_wait(&sem) != 0) {
 命名信号量不要求多个进程共享同一块用户态内存，只要约定同一个名字即可访问同一个内核对象。因此，跨进程同步里信号量通常比
 `pthread_*` 对象更直接。
 
-## 互斥锁<a id=互斥锁></a>
+## 互斥锁{#互斥锁}
 
-### 1. pthread_mutex_t<a id=pthread_mutex_t></a>
+### 1. pthread_mutex_t{#pthread_mutex_t}
 
 `pthread_mutex_t` 是 Pthreads 里最基础的同步对象，用来保护临界区。
 
@@ -213,7 +219,7 @@ pthread_mutex_init(&mutex, NULL);
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 ```
 
-### 2. lock、unlock 与 trylock<a id=lock-unlock-与-trylock></a>
+### 2. lock、unlock 与 trylock{#lock-unlock-与-trylock}
 
 围绕互斥锁，最常用的三个操作如下：
 
@@ -233,7 +239,7 @@ int pthread_mutex_trylock(pthread_mutex_t *mutex);
 
 `trylock` 适合“不想阻塞太久”的场景，但它不是解决死锁的根本手段；如果多个锁的获取顺序不一致，问题仍然在。
 
-### 3. 示例：用互斥锁保护 counter<a id=示例用互斥锁保护-counter></a>
+### 3. 互斥锁示例{#示例用互斥锁保护-counter}
 
 下面是最小互斥示例：
 
@@ -258,16 +264,16 @@ void *worker(void *arg) {
 
 这段代码的重点不在 `counter++`，而在于把“读-改-写”整个过程包进同一个临界区里。
 
-## 条件变量<a id=条件变量></a>
+## 条件变量{#条件变量}
 
-### 1. 条件变量的作用<a id=条件变量的作用></a>
+### 1. 条件等待{#条件变量的作用}
 
 `mutex` 只能回答“谁能进去”，不能回答“什么时候才能继续做”。
 
-例如，消费者线程进入临界区后，即使互斥做对了，也可能发现队列为空。这时它不是要继续竞争锁，而是要等待“队列非空”这个条件成立。条件变量（
+例如，消费者线程进入临界区后，即使互斥做对了，也可能发现队列为空。这时它应停止竞争锁，等待“队列非空”这个条件成立。条件变量（
 `condition variable`）就是用来表达这种等待关系的。
 
-### 2. pthread_cond_wait、signal 与 broadcast<a id=pthread_cond_waitsignal-与-broadcast></a>
+### 2. pthread_cond_wait、signal 与 broadcast{#pthread_cond_waitsignal-与-broadcast}
 
 条件变量最常用的接口如下：
 
@@ -312,7 +318,7 @@ pthread_mutex_unlock(&mutex);
 - 线程被唤醒时，在未抢到锁前，不能确保条件一直成立。
 - 多个等待者被唤醒后，先拿到锁的人可能已经把条件改掉
 
-### 3. 示例：并发循环队列<a id=示例并发循环队列></a>
+### 3. 示例：并发循环队列{#示例并发循环队列}
 
 下面给出一个并发循环队列示例：
 
@@ -371,9 +377,9 @@ int queue_pop(queue_t* q)
 
 这就是典型的“管程式写法”：共享状态、互斥锁和条件变量一起封装。
 
-## 信号量<a id=信号量></a>
+## 信号量{#信号量}
 
-### 1. 无名信号量与命名信号量<a id=无名信号量与命名信号量></a>
+### 1. 信号量类型{#无名信号量与命名信号量}
 
 POSIX 信号量分成两类：
 
@@ -417,7 +423,7 @@ int sem_unlink(const char *name);
 | 2  | `sem_close`  | 信号量句柄        | 进程      | 每个进程执行       | 关闭当前进程引用   |
 | 3  | `sem_unlink` | 信号量名字        | 系统      | 一般只执行一次      | 删除名字入口     |
 
-值得注意的是，`sem_unlink` 只会删除信号量名字（引用），而不会立即销毁信号量对象：
+`sem_unlink` 只删除信号量名字（引用），不会立即销毁信号量对象：
 
 使用`sem_open`在创建命名信号量时可以给出初值
 
@@ -430,7 +436,7 @@ int sem_unlink(const char *name);
 
 对于使用`sem_open`打开的信号量，不需要再调用`sem_init`
 
-值得注意的是`sem_close`与`sem_unlink`的区别
+`sem_close` 与 `sem_unlink` 的区别如下：
 
 | 方法           | 含义                         |
 |--------------|----------------------------|
@@ -461,7 +467,7 @@ sem_unlink("/my_sem");
 
 实际上，信号量是一个强大的工具，互斥锁、条件变量、读写锁都可以用它实现，参见[附注](#信号量实现锁-条件变量-读写锁)。
 
-### 2. 示例：限制同时进入的线程数<a id=示例限制同时进入的线程数></a>
+### 2. 信号量示例{#示例限制同时进入的线程数}
 
 下面的例子用信号量限制“同时最多只有 3 个线程进入某段代码”：
 
@@ -491,9 +497,9 @@ int main(void) {
 
 这类问题如果用普通 `mutex` 就表达不出来，因为 `mutex` 只能表示“同一时刻只能进入一个线程”。
 
-## 读写锁<a id=读写锁></a>
+## 读写锁{#读写锁}
 
-### 1. pthread_rwlock_t<a id=pthread_rwlock_t></a>
+### 1. pthread_rwlock_t{#pthread_rwlock_t}
 
 读写锁直接对应理论篇里的读者写者问题。它允许：
 
@@ -511,7 +517,7 @@ int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock);
 int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);
 ```
 
-### 2. 示例：读多写少场景<a id=示例读多写少场景></a>
+### 2. 读写锁示例{#示例读多写少场景}
 
 如果共享数据“读远多于写”，读写锁通常比普通互斥锁更合适：
 
@@ -537,9 +543,9 @@ void write_value(int value) {
 
 这里多个读取线程可以并发执行，但写线程必须独占。
 
-## 死锁与加锁顺序<a id=死锁与加锁顺序></a>
+## 加锁顺序{#死锁与加锁顺序}
 
-### 1. 典型场景<a id=典型场景></a>
+### 1. 典型场景{#典型场景}
 
 如果两个线程对同一组锁采用不同的获取顺序，就可能出现最典型的互斥锁死锁：
 
@@ -572,7 +578,7 @@ void *thread_two(void *arg) {
 
 从死锁四个必要条件看，这个例子里真正容易动手破坏的，通常是“占有并等待”和“循环等待”。前者可以通过原子化获取多把锁来避免，后者可以通过统一加锁顺序来避免。
 
-### 2. 固定抢锁顺序<a id=固定抢锁顺序></a>
+### 2. 固定抢锁顺序{#固定抢锁顺序}
 
 固定顺序是一种做法：给所有锁建立统一顺序，任何线程都按相同顺序获取。
 
@@ -593,9 +599,9 @@ void unlock_both(pthread_mutex_t *a, pthread_mutex_t *b) {
 }
 ```
 
-这里的关键不是比较地址本身，而是“所有线程共享同一个全序规则”。
+这里的关键在于“所有线程共享同一个全序规则”，地址只是构造这个全序的稳定输入。
 
-### 3. 原子化抢锁<a id=原子化抢锁></a>
+### 3. 原子化抢锁{#原子化抢锁}
 
 如果要针对“占有并等待”下手，可以把“获取多把锁”变成一个原子化阶段。常见写法是再引入一把总控锁，把多锁申请过程串行化：
 
@@ -619,9 +625,9 @@ void unlock_both_atomically(pthread_mutex_t *a, pthread_mutex_t *b) {
 
 这种做法的前提是：相关锁的申请都必须经过同一把 `acquire_guard`。它牺牲了一部分并发性，但避免了两个线程各自持有一把锁、再去等待另一把锁的中间状态。
 
-## 经典同步问题实现<a id=经典同步问题实现></a>
+## 同步问题示例{#经典同步问题实现}
 
-进入代码之前，先说明一个边界：有界缓冲区、读者写者和哲学家就餐都不只是互斥问题，还包含条件同步或资源分配约束。因此，纯 `mutex`
+进入代码之前，先明确作用范围：有界缓冲区、读者写者和哲学家就餐都不只是互斥问题，还包含条件同步或资源分配约束。因此，纯 `mutex`
 往往不够，实际 POSIX 实现通常会用：
 
 | 问题    | 更自然的 POSIX 工具            |
@@ -630,7 +636,7 @@ void unlock_both_atomically(pthread_mutex_t *a, pthread_mutex_t *b) {
 | 读者写者  | 信号量，或 `pthread_rwlock_t` |
 | 哲学家就餐 | 信号量，或统一锁顺序               |
 
-### 1. 有界缓冲区：信号量实现<a id=有界缓冲区信号量实现></a>
+### 1. 有界缓冲区：信号量{#有界缓冲区信号量实现}
 
 这个实现中：`empty` 表示空槽数，`full` 表示满槽数，`mutex` 保护缓冲区本身。
 
@@ -671,7 +677,7 @@ int consume(void) {
 }
 ```
 
-### 2. 有界缓冲区：管程实现<a id=有界缓冲区管程实现></a>
+### 2. 有界缓冲区：管程{#有界缓冲区管程实现}
 
 POSIX 里没有一个直接叫“管程”的类型，但 `共享状态 + mutex + cond` 的封装写法本质上就是管程式实现。
 
@@ -754,7 +760,7 @@ int deinit(queue_t* queue)
 
 ```
 
-### 3. 读者写者：信号量实现<a id=读者写者信号量实现></a>
+### 3. 读者写者：信号量{#读者写者信号量实现}
 
 这是教材里的第一读者写者问题写法。`rw_mutex` 控制作者独占，`mutex` 保护 `read_count`。
 
@@ -792,7 +798,7 @@ void writer_exit(void) {
 }
 ```
 
-### 4. 读者写者：读写锁实现<a id=读者写者读写锁实现></a>
+### 4. 读者写者：读写锁{#读者写者读写锁实现}
 
 如果直接用 POSIX 提供的读写锁，实现会更自然：
 
@@ -814,7 +820,7 @@ void writer(void) {
 
 这也是为什么读写锁经常被看作“读者写者问题的 API 级抽象”。
 
-### 5. 哲学家就餐：限制最大并发实现<a id=哲学家就餐限制最大并发实现></a>
+### 5. 哲学家就餐：限制并发{#哲学家就餐限制最大并发实现}
 
 一个常见做法是增加一个“房间容量”信号量，保证同时尝试拿筷子的人最多只有 `n-1` 个：
 
@@ -842,7 +848,7 @@ void philosopher(int i) {
 
 它的核心思路是：主动破坏“每个人都先拿起一根筷子”的局面。
 
-### 6. 哲学家就餐：锁排序实现<a id=哲学家就餐锁排序实现></a>
+### 6. 哲学家就餐：锁排序{#哲学家就餐锁排序实现}
 
 另一种更通用的工程解法，是统一资源获取顺序。每位哲学家都先拿编号小的筷子，再拿编号大的筷子：
 
@@ -870,7 +876,7 @@ void philosopher(int i)
 
 这和前面“按固定顺序获取两把锁”是同一个思路：只要全局顺序一致，就不会形成循环等待。
 
-## 小结<a id=小结></a>
+## 小结{#小结}
 
 本章介绍了 POSIX 用户态最核心的同步工具：`mutex` 负责互斥，`cond` 负责等待条件，`semaphore` 负责资源计数，`rwlock` 负责读共享写独占。
 
@@ -881,7 +887,7 @@ void philosopher(int i)
 
 # 附注
 
-### 1. 使用信号量实现锁、条件变量、读写锁<a id=信号量实现锁-条件变量-读写锁></a>
+### 1. 信号量实现同步工具{#信号量实现锁-条件变量-读写锁}
 
 简单的互斥锁可以使用二值信号量实现
 
@@ -948,7 +954,7 @@ int sem_cond_destroy(sem_cond_t* sem_cond)
 
 ```
 
-值得注意的是，由于`sem_wait`时不支持像`pthread_cond_wait`那样休眠时同时释放锁的功能，因此，`sem_cond_broadcast`无法完美实现。
+由于 `sem_wait` 不支持像 `pthread_cond_wait` 那样在休眠时同时释放锁，`sem_cond_broadcast` 无法完整模拟条件变量的广播语义。
 如下代码展示了一个使用`waiters`实现的包含broadcast方法的条件变量，可能造成丢唤醒。
 
 ```c
@@ -1082,7 +1088,7 @@ int sem_rwlock_destroy(sem_rwlock_t* sem_rw_lock)
 
 ```
 
-### 2. 使用锁与条件变量实现信号量<a id=信号量实现锁-条件变量-读写锁></a>
+### 2. 锁与条件变量实现信号量{#锁与条件变量实现信号量}
 
 ```c
 #include <pthread.h>

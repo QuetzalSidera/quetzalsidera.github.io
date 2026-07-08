@@ -10,13 +10,13 @@ outline:
   - title: 1. 概述
     slug: vfs-概述
     level: 1
-  - title: 2. VFS 的四类对象
+  - title: 2. VFS 对象
     slug: vfs-的四类对象
     level: 1
   - title: 3. 打开文件表
     slug: 打开文件表
     level: 1
-  - title: 4. 数据与操作
+  - title: 4. 数据与操作表
     slug: 数据与操作
     level: 1
 
@@ -100,9 +100,9 @@ head:
 这篇文章先讨论操作系统对文件系统的抽象，即虚拟文件系统（`VFS`，`Virtual File System`）；
 再按数据类型和对象层级整理最常见的一组文件系统 POSIX API。
 
-## 虚拟文件系统<a id=虚拟文件系统></a>
+## 虚拟文件系统{#虚拟文件系统}
 
-### 1. 概述<a id=vfs-概述></a>
+### 1. 概述{#vfs-概述}
 
 现代操作系统往往同时支持多种文件系统：本地磁盘文件系统、可移动介质文件系统、网络文件系统，甚至内存文件系统。
 如果每种文件系统都直接暴露自己独立的接口，那么上层程序就必须为每种文件系统进行适配 —— 这显然不现实。
@@ -122,7 +122,7 @@ head:
 
 也就是说，应用程序访问的是"文件系统接口"，而不是某个具体文件系统的内部方法。
 
-### 2. VFS 的四类对象<a id=vfs-的四类对象></a>
+### 2. VFS 对象{#vfs-的四类对象}
 
 Linux 的 `VFS` 一般围绕四类对象组织：
 
@@ -145,7 +145,7 @@ Linux 的 `VFS` 一般围绕四类对象组织：
 
 除此之外，文件名只是目录中用于索引 inode 的可读名称，而并不是文件元数据或数据的一部分。
 
-### 3. 打开文件表<a id=打开文件表></a>
+### 3. 打开文件表{#打开文件表}
 
 用户进程只能够访问文件描述符表（`fd`表），但内核还维护内核文件打开表：
 
@@ -169,7 +169,7 @@ Linux 的 `VFS` 一般围绕四类对象组织：
 除此之外，操作系统还会维护缓存层。传统上，文件系统缓存和内存映射 I/O 可能分开管理；
 而现代 Unix 系统一般倾向于使用统一页面缓存（`unified page cache`），避免在内存中同时维护两份文件映像。
 
-### 4. 数据与操作<a id=数据与操作></a>
+### 4. 数据与操作表{#数据与操作}
 
 如果把 POSIX 文件系统接口按操作对象分类，可以得到下面这张表：
 
@@ -209,9 +209,9 @@ if (fd < 0) {
 }
 ```
 
-## 文件系统 API<a id=文件系统-api></a>
+## 文件系统 API{#文件系统-api}
 
-### 1. mount、umount<a id=mount-umount></a>
+### 1. mount、umount{#mount-umount}
 
 `mount`与`umount`分别用于挂载与取消挂载文件系统
 
@@ -260,7 +260,7 @@ int umount2(const char *target, int flags);
 `umount2` 额外支持 `flags` 参数，常用 `MNT_FORCE`（强制卸载）、`MNT_DETACH`（延迟卸载）。`umount` 要求目标没有进程正在使用，否则返回
 `EBUSY`。
 
-### 2. statfs、fstatfs<a id=statfs-fstatfs></a>
+### 2. statfs、fstatfs{#statfs-fstatfs}
 
 `statfs`与`fstatfs`用于获取文件系统属性
 
@@ -309,9 +309,9 @@ int main(void) {
 }
 ```
 
-## 目录 API<a id=目录-api></a>
+## 目录 API{#目录-api}
 
-### 1. mkdir、rmdir、rename<a id=mkdir-rmdir-rename></a>
+### 1. mkdir、rmdir、rename{#mkdir-rmdir-rename}
 
 `mkdir`与`rmdir`分别用于创建和删除目录，`rename`用于修改目录表项中文件名
 
@@ -357,7 +357,7 @@ int rename(const char *oldpath, const char *newpath);
 - 如果 `newpath` 已存在且是文件，`rename` 会原子地替换它（旧 `newpath` 被删除）。
 - `rmdir` 要求目录为空（只含 `.` 和 `..`），这与 `unlink` 不能删除目录形成对称。
 
-### 2. opendir、readdir、closedir<a id=opendir-readdir-closedir></a>
+### 2. opendir、readdir、closedir{#opendir-readdir-closedir}
 
 `opendir`、`readdir`与`closedir`用于操作目录
 
@@ -435,9 +435,9 @@ int main(void) {
 目录虽然在文件系统层面是一种特殊文件，但在 POSIX 用户态接口里通常通过 `DIR *` 这一层包装访问，而不是直接用 `read(fd, ...)`
 解析目录格式。
 
-## 文件元数据 API<a id=文件元数据-api></a>
+## 文件元数据 API{#文件元数据-api}
 
-### 1. stat、fstat、lstat<a id=stat-fstat-lstat></a>
+### 1. stat、fstat、lstat{#stat-fstat-lstat}
 
 `stat`、`fstat`与`lstat`用于读取文件元数据
 
@@ -513,7 +513,7 @@ int main(void) {
 }
 ```
 
-### 2. chmod、fchmod、umask<a id=chmod-fchmod-umask></a>
+### 2. chmod、fchmod、umask{#chmod-fchmod-umask}
 
 `chmod`与`fchmod`用于修改文件权限位，`umask`用于修改进程的屏蔽位
 
@@ -550,13 +550,13 @@ mode_t umask(mode_t cmask);
 | `cmask` | 要设置的权限屏蔽位，如 `022`                    |
 | 返回值     | 调用前的旧 `umask` 值（无论成功与否，`umask` 不会失败） |
 
-值得注意的是，umask作用域是进程，一个进程只有一个 umask，与此同时：
+`umask` 的作用域是进程，一个进程只有一个 `umask`：
 
 - 同一进程中的所有线程共享 umask
 - 子进程会继承父进程的 umask
 - exec 不会重置 umask
 
-文件创建时的最终权限不是 `open(..., mode)` 直接给出的值，而是：
+文件创建时的最终权限由 `open(..., mode)` 与 `umask` 共同决定：
 
 ```c
 final_mode = requested_mode & ~umask
@@ -587,7 +587,7 @@ int main(void) {
 }
 ```
 
-### 3. truncate、ftruncate<a id=truncate-ftruncate></a>
+### 3. truncate、ftruncate{#truncate-ftruncate}
 
 `truncate`与`ftruncate`用于修改文件大小
 
@@ -610,9 +610,9 @@ int ftruncate(int fd, off_t length);
 `ftruncate` 不改变当前文件偏移。此外，`ftruncate` 也用于为 POSIX 共享内存对象设定大小——`shm_open` 返回的 `fd` 传给
 `ftruncate` 即可。
 
-## 文件数据 API<a id=文件数据-api></a>
+## 文件数据 API{#文件数据-api}
 
-### 1. open、creat、close<a id=open-creat-close></a>
+### 1. open、creat、close{#open-creat-close}
 
 `open`用于打开/创建文件，`creat`用于创建文件，`close`用于关闭文件
 
@@ -692,7 +692,7 @@ int main(void) {
 }
 ```
 
-### 2. read、write、pread、pwrite<a id=read-write-pread-pwrite></a>
+### 2. read、write、pread、pwrite{#read-write-pread-pwrite}
 
 `read`、`write`、`pread`与`pwrite`用于文件的读写
 
@@ -742,7 +742,7 @@ ssize_t pwrite(int fd, const void *buf, size_t count, off_t offset);
 `pread` / `pwrite` 的意义不只是"多一个参数"：它把"读取哪个位置"从打开实例状态中剥离出来，同时保证"定位 + I/O"
 是原子的，适合多线程并发读写同一 `fd` 的场景。
 
-这里有两个容易踩的边界：
+这里有两个容易踩的点：
 
 - **短读取 / 短写入**：`read` 和 `write` 不保证一次调用就读满或写满 `count`
   字节。读到多少取决于内核缓冲区状态；写入多少取决于剩余空间。循环读写直到达到目标字节数是常见做法。
@@ -780,7 +780,7 @@ int main(void) {
 }
 ```
 
-### 3. lseek、fsync、fdatasync<a id=lseek-fsync-fdatasync></a>
+### 3. lseek、fsync、fdatasync{#lseek-fsync-fdatasync}
 
 `lseek`用于修改文件当前偏移，`fsync`与`fdatasync`用于将修改冲洗到存储设备
 
@@ -835,9 +835,9 @@ fsync(fd);   // 确保数据落盘后再做后续操作
 close(fd);
 ```
 
-## 链接 API<a id=链接-api></a>
+## 链接 API{#链接-api}
 
-### 1. link、unlink<a id=link-unlink></a>
+### 1. link、unlink{#link-unlink}
 
 `link`与`unlink`用于在目录中添加/删除inode的引用（也称创建/删除硬链接）
 
@@ -870,7 +870,7 @@ root 外）。
 | 成功返回   | `0`              |
 | 失败返回   | `-1`，并设置 `errno` |
 
-`unlink` 删除的不是"文件内容"，而是名字到文件对象之间的一条链接。只有当 inode 的链接计数降到 0，且没有进程再持有打开引用时，文件对象才真正可回收。
+`unlink` 删除的是名字到文件对象之间的一条链接。只有当 inode 的链接计数降到 0，且没有进程再持有打开引用时，文件对象才真正可回收。
 
 这也是"删除一个正在被进程打开的文件仍然可以继续读写"的原因：`unlink` 只移除目录项，数据块仍在。
 
@@ -903,7 +903,7 @@ int main(void) {
 }
 ```
 
-### 2. symlink、readlink<a id=symlink-readlink></a>
+### 2. symlink、readlink{#symlink-readlink}
 
 `symlink`与`readlink`用于创建/读取软链接；软链接本身是文件，其删除可以使用`unlink`。
 
@@ -971,9 +971,9 @@ int main(void) {
 }
 ```
 
-## 描述符控制 API<a id=描述符控制-api></a>
+## 描述符控制 API{#描述符控制-api}
 
-### 1. dup、dup2、dup3<a id=dup-dup2-dup3></a>
+### 1. dup、dup2、dup3{#dup-dup2-dup3}
 
 `dup`、`dup2`与`dup3`用于在同一个进程中拷贝fd表项
 
@@ -1045,7 +1045,7 @@ close(fd);
 printf("this goes to file\n");
 ```
 
-### 2. fcntl、ioctl<a id=fcntl-ioctl></a>
+### 2. fcntl、ioctl{#fcntl-ioctl}
 
 `fcntl`是用于控制“文件描述符行为”的通用接口，`ioctl`是I/O设备控制的通用接口
 
@@ -1118,7 +1118,7 @@ int main(void) {
 }
 ```
 
-## 小结<a id=小结></a>
+## 小结{#小结}
 
 本篇围绕文件系统的数据结构及其相应操作介绍了POSIX API：
 
