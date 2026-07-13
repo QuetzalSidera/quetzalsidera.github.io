@@ -13,6 +13,7 @@ type SortMode = 'newest' | 'oldest'
 type PostListProps = {
   items: PostListItem[]
   onSelectTag?: (tag: string) => void
+  sortMode: SortMode
 }
 
 const pageSize = 5
@@ -53,8 +54,8 @@ function getPageFromUrl(totalPage: number) {
   return 1
 }
 
-export function PostList({ items, onSelectTag }: PostListProps) {
-  const [sortMode, setSortMode] = useState<SortMode>('newest')
+export function PostList({ items, onSelectTag, sortMode:initialSortMode }: PostListProps) {
+  const [sortMode, setSortMode] = useState<SortMode>(initialSortMode)
   const [currPage, setCurrPage] = useState(1)
   const sortedItems = useMemo(() => sortItems(items, sortMode), [items, sortMode])
   const totalPage = Math.ceil(sortedItems.length / pageSize) || 1
@@ -174,11 +175,11 @@ export function PostList({ items, onSelectTag }: PostListProps) {
         <label className={styles.sortControl}>
           <span className={styles.sortLabel}>排序</span>
           <select className={styles.sortSelect}
-            value={sortMode}
-            onChange={(event) => handleSortChange(event.target.value as SortMode)}
+                  value={sortMode}
+                  onChange={(event) => handleSortChange(event.target.value as SortMode)}
           >
             <option className={styles.sortOption} value="newest">最近发布</option>
-            <option  className={styles.sortOption}  value="oldest">最早发布</option>
+            <option className={styles.sortOption} value="oldest">最早发布</option>
           </select>
         </label>
       </div>

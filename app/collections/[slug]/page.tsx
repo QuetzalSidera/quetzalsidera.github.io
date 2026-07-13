@@ -2,11 +2,7 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import { CollectionBanner } from '@/components/collections/CollectionBanner'
 import { BannerHero } from '@/components/home/BannerHero'
 import { PostList } from '@/components/posts/PostList'
-import {
-  getAllCollectionSlugs,
-  getAllCollections,
-  getCollectionPageData,
-} from '@/lib/collections'
+import { getAllCollections, getAllCollectionSlugs, getCollectionPageData } from '@/lib/collections'
 import { mapPostsToListItems } from '@/lib/post-list'
 import { createCollectionJsonLd, createCollectionMetadata } from '@/lib/seo'
 import styles from './page.module.css'
@@ -59,7 +55,7 @@ export default async function CollectionPage({ params }: PageProps) {
         <CollectionBanner collection={collection} />
       </BannerHero>
       <section className={[styles.section, 'section-route-enter'].join(' ')}>
-        <PostList items={listItems} />
+        <PostList items={listItems} sortMode={'oldest'} />
       </section>
     </main>
   )

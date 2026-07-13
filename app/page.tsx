@@ -26,7 +26,7 @@ export default function HomePage() {
       </BannerHero>
 
       <section className={[styles.section, 'section-route-enter'].join(' ')}>
-        <PostList items={listItems} />
+        <PostList items={listItems} sortMode={'newest'} />
       </section>
     </main>
   )
