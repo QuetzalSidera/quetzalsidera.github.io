@@ -111,13 +111,11 @@ head:
       content: JavaScript, 对象属性, 计算属性名, 属性描述符, enumerable, Object.keys, Reflect.ownKeys, for...in, Object.assign, Symbol
 ---
 
-本篇先说明 JavaScript 对象属性由什么组成，以及如何定义和访问属性，再整理所有权、可枚举性及相关枚举接口。
+本文先说明属性键以及属性数据与元数据，再讨论属性的枚举行为。
 
 ---
 
-[JavaScript 原型与类型](./ts-review-01-prototype.md) 介绍了属性查找与原型链。本文先说明属性键以及属性数据与元数据，再讨论属性的枚举行为。
-
-每个对象属性都由属性键和属性描述符组成：
+[JavaScript 原型与类型](./ts-review-01-prototype.md) 介绍了属性查找与原型链。 在 JavaScript 中，每个对象属性都由属性键和属性描述符组成：
 
 - 属性键是属性的名称，用来在对象中定位属性。
 - 属性描述符记录属性的数据和元数据。数据属性的值保存在描述符的 `value` 字段中；访问器属性使用 `get`、`set`
