@@ -3,7 +3,7 @@ title: OpenAI-Image-2 浅尝
 date: 2026-04-22
 tags: [ AI, OpenAI ]
 pinned: false
-collection: 随笔
+collection: 技术随笔
 head:
   - - meta
     - name: description
