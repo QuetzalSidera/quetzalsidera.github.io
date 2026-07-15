@@ -19,6 +19,7 @@ outline:
   - title: 1.4 属性的定义与访问
     slug: 属性的定义与访问
     level: 1
+    
   - title: 2. 属性描述符
     slug: 属性描述符
   - title: 2.1 描述符的两种类型
@@ -208,8 +209,7 @@ console.log(scopedId === globalId) // false
 ```
 
 > `Symbol()` 不访问全局 `Symbol` 注册表，每次调用都返回不同的值。`Symbol.for(key)` 会先在全局注册表中查找字符串 `key`
-> ：找到时返回已有的
-> `Symbol`，找不到时创建并登记一个新的 `Symbol`。因此，重复调用 `Symbol.for('shared.id')` 会得到同一个值，但
+> ：找到时返回已有的 `Symbol`，找不到时创建并登记一个新的 `Symbol`。因此，重复调用 `Symbol.for('shared.id')` 会得到同一个值，但
 > `Symbol('shared.id')` 与它并不相等。
 
 ### 1.4 属性的定义与访问{#属性的定义与访问}
