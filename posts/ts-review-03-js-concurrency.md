@@ -46,12 +46,6 @@ outline:
   - title: 3.3 错误处理
     slug: async错误处理
     level: 1
-  - title: 3.4 异步栈
-    slug: 异步栈
-    level: 1
-  - title: 3.5 顶层 await
-    slug: 顶层await
-    level: 1
 
 head:
   - - meta
@@ -649,26 +643,3 @@ passThrough().catch((error) => console.log(error.message)) // failed
 `passThrough()` 在 `fail()` 后续拒绝前已经离开 `try` 块，因此本地 `catch` 不参与处理。需要让当前函数的 `catch` 或
 `finally`
 观察拒绝时，应在它们覆盖的作用域内执行 `await`。
-
-### 3.4 异步栈{#异步栈}
-
-`return await` 也通常能让当前 async 函数出现在引擎生成的异步错误栈中，但错误栈的格式与异步栈拼接属于实现能力，不是
-ECMAScript
-统一规定的可移植文本。拒绝原因还可以是任意值；非 `Error` 原因可能根本没有可用栈。
-
-选择 `return` 还是 `return await` 应依据本地错误处理、`finally` 时机和栈可读性。
-
-### 3.5 顶层 await{#顶层await}
-
-顶层 `await` 只允许出现在 ECMAScript 模块中，不能直接用于传统 script 或 CommonJS 文件。模块执行到顶层 `await`
-时会挂起自身求值，静态依赖它的导入者也要等待，但整个事件循环和无关模块分支仍可继续推进。
-
-```js
-// config.mjs
-export const config = await Promise.resolve({
-  mode: 'production',
-})
-```
-
-静态依赖该模块的导入者会等待 `config` 完成初始化。缓慢或永不敲定的顶层等待会拖延整条静态依赖链，与循环依赖组合时也更难推断。
-非必要 I/O 不应放入模块初始化；需要由调用方管理加载过程时，可以使用返回 Promise 的动态 `import()`。
