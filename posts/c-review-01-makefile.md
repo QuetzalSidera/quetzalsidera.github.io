@@ -1,322 +1,226 @@
 ---
 title: Makefile 笔记
 date: 2026-04-08
-tags: [ Makefile, C ,C++ ]
+tags: [ Makefile, C, C++ ]
 pinned: false
 collection: C/C++复习
 outline:
-  - title: C/C++ 编译过程
-    slug: compile-flow
-  - title: 1. 预处理 编译 汇编 链接
-    slug: preprocessing-compiling-assembling-linking
+  - title: 1. C/C++ 编译过程
+    slug: C-C++编译过程
+  - title: 1.1 预处理、编译、汇编与链接
+    slug: 预处理编译汇编与链接
     level: 1
-  - title: 1.1 预处理（Preprocessing）
-    slug: 1-预处理preprocessing
+  - title: 1.1.1 预处理
+    slug: 预处理
     level: 2
-  - title: 1.2 编译（Compiling）
-    slug: 2-编译compiling
+  - title: 1.1.2 编译
+    slug: 编译
     level: 2
-  - title: 1.3 汇编（Assembling）
-    slug: 3-汇编assembling
+  - title: 1.1.3 汇编
+    slug: 汇编
     level: 2
-  - title: 1.4 链接（Linking）
-    slug: 4-链接linking
+  - title: 1.1.4 链接
+    slug: 链接
     level: 2
-  - title: 2. 一步到位
-    slug: 一步到位
+  - title: 1.2 编译器驱动的一步构建
+    slug: 编译器驱动的一步构建
     level: 1
-  - title: 3. 常见 GCC Flag
-    slug: gcc-flags
+  - title: 1.3 常用 GCC 选项
+    slug: 常用GCC选项
     level: 1
-  - title: Makefile
-    slug: makefile-intro
-  - title: 1. 规则（Rule）
-    slug: rules
+
+  - title: 2. Makefile
+    slug: Makefile
+  - title: 2.1 规则
+    slug: 规则
     level: 1
-  - title: 1.1 隐式规则
-    slug: implicit-rules
+  - title: 2.1.1 隐式规则
+    slug: 隐式规则
     level: 2
-  - title: 1.2 模式规则
-    slug: pattern-rules
+  - title: 2.1.2 模式规则
+    slug: 模式规则
     level: 2
-  - title: 2. 变量与条件
-    slug: variables
+  - title: 2.2 变量、条件与函数
+    slug: 变量条件与函数
     level: 1
-  - title: 2.1 Makefile 内置函数
-    slug: make-functions
+  - title: 2.2.1 变量赋值
+    slug: 变量赋值
     level: 2
-  - title: 2.2 变量赋值方式
-    slug: variable-assignments
+  - title: 2.2.2 条件判断
+    slug: 条件判断
     level: 2
-  - title: 2.3 条件判断
-    slug: conditionals
+  - title: 2.2.3 内置函数
+    slug: 内置函数
     level: 2
-  - title: 3. 隐藏命令输出
-    slug: 隐藏命令输出
+  - title: 2.3 命令回显与错误处理
+    slug: 命令回显与错误处理
     level: 1
-  - title: 4. 伪目标
-    slug: phony-targets
+  - title: 2.4 伪目标
+    slug: 伪目标
     level: 1
-  - title: 5. 依赖识别
-    slug: dependency-tracking
+  - title: 2.5 依赖识别
+    slug: 依赖识别
     level: 1
-  - title: 5.1 Make 如何判断要不要重建
-    slug: make-如何判断要不要重建
+  - title: 2.5.1 时间戳与目标重建
+    slug: 时间戳与目标重建
     level: 2
-  - title: '5.2 只写 `.c` 依赖的问题'
-    slug: 只写-c-依赖的问题
+  - title: '2.5.2 头文件依赖与 `.d` 文件'
+    slug: 头文件依赖与-d-文件
     level: 2
-  - title: '5.3 解决办法：让编译器顺手生成依赖文件 `.d`'
-    slug: 解决办法让编译器顺手生成依赖文件-d
+  - title: 2.5.3 自动依赖的接入方式
+    slug: 自动依赖的接入方式
     level: 2
-  - title: 5.4 常见写法
-    slug: 常见写法
+  - title: '2.5.4 传统 `%.d: %.c` 规则'
+    slug: 传统-d-c-规则
     level: 2
-  - title: '5.5 传统 `%.d: %.c` 写法与原理'
-    slug: 传统-d-c-写法与原理
+  - title: 2.5.5 被包含 makefile 的重建
+    slug: 被包含makefile的重建
     level: 2
-  - title: '5.6 为什么本次重新生成的 `.d` 仍然会影响结果'
-    slug: 为什么本次重新生成的-d-仍然会影响结果
+  - title: 2.5.6 两种依赖生成流程
+    slug: 两种依赖生成流程
     level: 2
-  - title: 5.7 整个流程串起来看
-    slug: 整个流程串起来看
+  - title: 2.5.7 完整示例
+    slug: 完整示例
     level: 2
-  - title: 5.8 一个更接近实战的小模板
-    slug: 一个更接近实战的小模板
-    level: 2
+
   - title: 小结
-    slug: summary
+    slug: 小结
 head:
   - - meta
     - name: description
-      content: 一篇面向初学者的 Makefile 学习笔记，整理了 C/C++ 编译流程、Makefile 基本规则、变量、条件、内置函数、GCC 常用 Flag 与依赖识别。
+      content: 从 C/C++ 编译产物出发，整理 GNU Make 的规则、变量、条件、隐式规则、模式规则、增量构建与头文件依赖生成。
   - - meta
     - name: keywords
-      content: Makefile, GCC, C语言, C++, 构建系统, 增量编译, 依赖管理, 学习笔记
+      content: Makefile, GNU Make, GCC, C语言, C++, 构建系统, 增量编译, 依赖管理
 ---
 
-一篇从 C/C++ 编译流程入手，系统整理 Makefile 规则、变量、条件判断、内置函数、GCC Flag 与头文件依赖处理的学习笔记。
-
----
-
-# Makefile 学习笔记
-
-Makefile 在初学阶段经常给人一种“不太直观”的感觉：语法很简短，但背后牵涉到编译流程、依赖关系和增量构建等概念。
-
-如果先把这些概念拆开来看，再回头理解 Makefile，整体会清晰很多。
-
-可以先把它理解成一份“构建说明书”：
-
-- `main.c`、`print.c` 是源文件
-- `.o` 文件是编译后的目标文件
-- 最终的可执行文件 `main` 是链接后的结果
-- `make` 负责根据依赖关系决定哪些内容需要重新构建
-
-这篇笔记按“编译过程 -> Makefile 基本写法 -> 依赖识别”的顺序整理。
+本篇从 C/C++ 编译产物出发，整理 GNU Make 如何用规则描述构建图，以及它如何依据时间戳和头文件依赖完成增量构建。
 
 ---
 
-## 一、C/C++ 编译过程 <a id="compile-flow"></a>
+文中的命令均可以在 Unix shell、GNU Make 和 GCC 兼容编译器上运行。
 
-### 1. 预处理 编译 汇编 链接 <a id=preprocessing-compiling-assembling-linking></a>
+## 1. C/C++ 编译过程{#C-C++编译过程}
 
-先准备一个最简单的 `main.c`：
+C/C++ 构建中，每个翻译单元（.c/.cpp等）先生成目标文件（.o），链接器再把目标文件和库组合成最终产物（可执行文件或库文件）。Makefile
+描述的正是这些产物之间的依赖关系。
+
+### 1.1 预处理、编译、汇编与链接{#预处理编译汇编与链接}
+
+以最小的 `main.c` 为例：
 
 ```c
 #include <stdio.h>
 
-int main() {
-    printf("Hello, Ubuntu C!\n");
+int main(void)
+{
+    printf("Hello, C!\n");
     return 0;
 }
 ```
 
-一个 C/C++ 源文件变成可执行文件，通常会经历 4 个阶段：
+从源码到可执行文件通常经过四个阶段：
 
-1. 预处理
-2. 编译
-3. 汇编
-4. 链接
+| 阶段  | 主要输入          | 主要输出                | GCC 选项  |
+|-----|---------------|---------------------|---------|
+| 预处理 | `.c` / `.cpp` | 展开后的源码 `.i` / `.ii` | `-E`    |
+| 编译  | 预处理结果         | 汇编代码 `.s`           | `-S`    |
+| 汇编  | 汇编代码          | 目标文件 `.o`           | `-c`    |
+| 链接  | 目标文件与库        | 可执行文件或库             | 不指定停止选项 |
 
-可以先简单理解为：
+GCC 命令既能调用具体编译阶段，也能作为驱动程序把多个阶段串起来。
 
-- 预处理：展开头文件和宏
-- 编译：把源码转换成汇编代码
-- 汇编：把汇编代码转换成目标文件
-- 链接：把多个目标文件和库组合成可执行文件
+#### 1.1.1 预处理{#预处理}
 
-### 1.1 预处理（Preprocessing）<a id=1-预处理preprocessing></a>
-
-```bash
-gcc -E main.c -o main_c.i
-g++ -E main.cpp -o main_cpp.i
-```
-
-`-E` 的意思是：只做预处理，先别往下走。
-
-预处理主要做这些事：
-
-- 展开 `#include`
-- 替换 `#define`
-- 处理 `#if`、`#ifdef` 之类的条件编译
-- 删除注释
-
-生成的文件一般是 `.i`，可以把它理解成“展开后的源码”。
-
-比如：
-
-```c
-#include <stdio.h>
-#define PI 3.14
-
-int main() {
-    printf("PI = %f\n", PI);
-    return 0;
-}
-```
-
-执行：
+预处理器处理 `#include`、`#define` 和条件编译指令，并移除注释。
 
 ```bash
-gcc -E test.c -o test.i
+gcc -E main.c -o main.i
 ```
 
-执行后可以看到 `PI` 已经被替换成 `3.14`，头文件内容也会被展开。
+`#include` 引入的头文件内容会进入当前翻译单元，宏会在这一阶段展开，注释与被条件编译排除的区域会在这一阶段被移除。
 
-常见搭配：
+#### 1.1.2 编译{#编译}
+
+编译阶段将预处理后的 C/C++ 代码编译为为汇编代码。
 
 ```bash
-gcc -E file.c | less
-gcc -E -P file.c -o file.i
-gcc -E -dM file.c
+gcc -S main.i -o main.s
 ```
 
-- 第一条：看看预处理结果
-- 第二条：去掉那些 `#` 开头的行号信息
-- 第三条：查看当前所有宏定义
+编译器在这一阶段完成语法与语义检查、优化和指令选择，并输出面向目标架构的汇编代码。
 
-### 1.2 编译（Compiling）<a id=2-编译compiling></a>
+#### 1.1.3 汇编{#汇编}
+
+汇编器把汇编代码转换为目标文件。目标文件已经包含机器指令、符号表和重定位信息，但其中的外部符号尚未解析，因此通常不能直接运行。
 
 ```bash
-gcc -S main_c.i -o main_c.s
-g++ -S main_cpp.i -o main_cpp.s
+gcc -c main.s -o main.o
 ```
 
-`-S` 表示：把代码编译成汇编代码，然后停下。
-
-生成的 `.s` 文件就是汇编代码，它比 C 语言更接近底层机器指令。
-
-常见写法：
-
-```bash
-gcc -S hello.c
-gcc -S hello.c -o my_asm.s
-gcc -S -O2 hello.c
-gcc -S -march=armv7-a hello.c
-```
-
-- `-O2`：开启优化
-- `-march=...`：指定目标架构
-
-这个阶段常用于学习编译结果、分析优化效果，或者观察不同平台下生成的汇编代码。
-
-### 1.3 汇编（Assembling）<a id=3-汇编assembling></a>
-
-```bash
-gcc -c main_c.s -o main_c.o
-g++ -c main_cpp.s -o main_cpp.o
-```
-
-`-c` 表示：编译到目标文件为止，不要链接。
-
-生成的 `.o` 文件是目标文件，它已经完成单个源文件的编译，但还没有和其他目标文件链接在一起。
-
-更常见的写法其实是直接从 `.c` 到 `.o`：
+`-c` 选项可以接受源文件输入，一并执行预处理、编译和汇编，在生成 `main.o` 后停止。
 
 ```bash
 gcc -c main.c -o main.o
-gcc -c print.c -o print.o
 ```
 
-虽然中间仍然会经过“预处理 -> 编译 -> 汇编”，但 GCC 会自动把这些步骤串起来完成。
+#### 1.1.4 链接{#链接}
 
-多文件项目里，这一步特别重要，因为只改了一个 `.c` 文件时，不需要把整个项目从头做一遍。
-
-### 1.4 链接（Linking）<a id=4-链接linking></a>
+链接器合并目标文件和库，解析符号引用并处理重定位，最终生成可执行文件。多文件程序的链接命令会同时接收多个目标文件：
 
 ```bash
-gcc main_c.o -o main_c
-g++ main_cpp.o -o main_cpp
+gcc main.o print.o -o main
 ```
 
-链接阶段会把多个 `.o` 文件以及依赖的库文件组合起来，形成最终可运行的程序。
-
-### 2.一步到位 <a id=一步到位></a>
-
-平时我们最常见的是直接这么写：
+C++ 程序通常用 `g++` 完成最终链接，因为它会自动加入 C++ 运行时和标准库：
 
 ```bash
-gcc main.c -o main_c
-g++ main.cpp -o main_cpp
+g++ main.o print.o -o main
 ```
 
-这相当于让 GCC 把前面的 4 个阶段都自动跑完。
-
-### 3.常见 GCC Flag <a id="gcc-flags"></a>
-
-在实际开发中，`gcc` 很少只写最基础的 `-c` 或 `-o`，通常还会搭配一组常用选项控制警告、优化、调试信息和头文件搜索路径。
-
-下面是一些最常见的选项：
+### 1.2 编译器驱动的一步构建{#编译器驱动的一步构建}
 
 ```bash
-gcc -Wall -Wextra -O2 -g main.c -o main
+gcc main.c print.c -o main
+g++ main.cpp print.cpp -o main
 ```
 
-这条命令里常见选项的含义如下：
+没有停止选项时，编译器驱动会依次调用预处理器、编译器、汇编器和链接器。不同停止选项将生成不同产物：
 
-- `-Wall`：开启一组常见警告
-- `-Wextra`：开启更多额外警告
-- `-Werror`：把警告当成错误处理
-- `-O0`：不优化，便于调试
-- `-O1`、`-O2`、`-O3`：逐步增强优化
-- `-Og`：兼顾调试体验和一定优化
-- `-g`：生成调试信息，便于 `gdb` 等工具使用
-- `-I<dir>`：添加头文件搜索目录
-- `-L<dir>`：添加库文件搜索目录
-- `-l<name>`：链接某个库，例如 `-lm`
-- `-DNAME=value`：定义一个宏
-- `-std=c11`、`-std=c17`：指定 C 语言标准
-- `-std=c++17`、`-std=c++20`：指定 C++ 标准
-- `-fPIC`：生成位置无关代码，常用于构建动态库
-- `-shared`：生成动态库
-- `-MMD -MP`：生成头文件依赖信息，后面 Makefile 会用到
+| 选项    | 执行到    | 是否链接 |
+|-------|--------|------|
+| `-E`  | 预处理结果  | 否    |
+| `-S`  | 汇编代码   | 否    |
+| `-c`  | 目标文件   | 否    |
+| 无停止选项 | 最终链接产物 | 是    |
 
-几个典型例子：
+多文件项目保留独立 `.o` 文件后，未修改的翻译单元可以跳过预处理、编译与汇编阶段，只参与最后链接，这也是增量构建的基础。
 
-```bash
-gcc -Wall -Wextra -g main.c -o main
-gcc -O2 main.c -o main
-gcc -Iinclude -c src/main.c -o main.o
-gcc main.o print.o -L./lib -lmylib -o main
-gcc -DDEBUG=1 main.c -o main
-```
+### 1.3 常用 GCC 选项{#常用GCC选项}
 
-如果按用途分类，可以简单记成下面几组：
+编译选项应按生效阶段区分。`-I`、`-D` 影响预处理，`-Wall`、`-O2` 主要影响编译，`-g` 生成的信息会保留到目标文件和链接产物中，
+`-L`、`-l` 则用于链接。
 
-- 调试相关：`-g`、`-O0`、`-Og`
-- 警告相关：`-Wall`、`-Wextra`、`-Werror`
-- 优化相关：`-O1`、`-O2`、`-O3`
-- 头文件和库相关：`-I`、`-L`、`-l`
-- 依赖生成相关：`-MMD`、`-MP`
+| 类别 | 常用选项 | 作用 | 影响阶段 |
+|------|---------|-----|---------|
+| 语言模式 | `-std=c17`、`-std=c++20` | 选择语言标准，并改变部分预定义宏 | 预处理、编译 |
+| 警告 | `-Wall`、`-Wextra`、`-Werror` | 启用警告，或把警告提升为错误 | 编译 |
+| 优化 | `-O0`、`-Og`、`-O2`、`-O3` | 控制优化级别 | 编译 |
+| 调试信息 | `-g` | 生成并保留供调试器使用的信息 | 编译、汇编；链接产物保留 |
+| 头文件与宏 | `-I<dir>`、`-DNAME=value` | 添加头文件目录或定义宏 | 预处理 |
+| 目标架构 | `-march=<arch>` | 选择可用指令集和目标特性 | 编译 |
+| 库搜索 | `-L<dir>`、`-l<name>` | 添加库目录并链接 `lib<name>` | 链接 |
+| 位置无关代码 | `-fPIC` | 生成适合共享库使用的位置无关代码 | 编译 |
+| 共享库 | `-shared` | 生成共享库而非普通可执行文件 | 链接 |
+| 依赖生成 | `-MMD`、`-MP`、`-MF <file>` | 输出 Makefile 可读取的头文件依赖 | 预处理 |
 
----
+## 2. Makefile{#Makefile}
 
-# 二、Makefile <a id="makefile-intro"></a>
-
-现在看一个稍微像样一点的小项目：
+下面的小项目包含两个翻译单元：
 
 ```text
 .
+├── Makefile
 ├── main.c
 ├── print.c
 └── print.h
@@ -325,17 +229,11 @@ gcc -DDEBUG=1 main.c -o main
 `main.c`：
 
 ```c
-#include <stdio.h>
 #include "print.h"
 
-int main()
+int main(void)
 {
-    printf("Start\n");
-    for (int i = 1; i <= 5; i++)
-    {
-        print(i);
-    }
-    printf("End\n");
+    print_number(1);
     return 0;
 }
 ```
@@ -344,656 +242,409 @@ int main()
 
 ```c
 #include "print.h"
+
 #include <stdio.h>
 
-void print(const int a)
+void print_number(int value)
 {
-    printf("%d\n", a);
+    printf("%d\n", value);
 }
 ```
 
 `print.h`：
 
 ```c
-#ifndef MAKEFILELEARN_PRINT_H
-#define MAKEFILELEARN_PRINT_H
+#ifndef PRINT_H
+#define PRINT_H
 
-void print(const int a);
+void print_number(int value);
 
 #endif
 ```
 
-这个项目的编译过程可以理解成：
+构建产物的关系是：
 
-1. `main.c + print.h -> main.o`
-2. `print.c + print.h -> print.o`
-3. `main.o + print.o -> main`
-
-对应的命令大概是：
-
-```bash
-gcc -c main.c -o main.o
-gcc -c print.c -o print.o
-gcc main.o print.o -o main
+```text
+main.c  ─┐
+print.h ─┴─> main.o   ─┐
+                       ├─> main
+print.c ─┐             │
+print.h ─┴─> print.o ──┘
 ```
 
-当项目文件变多后，手动维护这些命令会变得低效且容易出错，这也是 Makefile 出现的原因。
+Makefile 用规则表达这张有向依赖图，`make` 负责按图选择并执行必要的命令。
 
-Makefile 本质上就是在告诉 `make`：
+### 2.1 规则{#规则}
 
-- 我要生成什么
-- 它依赖谁
-- 真要生成时，该执行什么命令
-
-### 1.规则（Rule） <a id="rules"></a>
-
-Makefile 的核心就是规则，基本格式如下：
+规则由目标、依赖和构建命令组成：
 
 ```makefile
 target: prerequisites
-	command1
-	command2
+	command
 ```
 
-注意这里的命令前面通常要用 **Tab** 缩进，而不是空格。这是 Makefile 中最容易出错的细节之一。
+| 部分              | 含义                 |
+|-----------------|--------------------|
+| `target`        | 要生成或更新的文件，也可以是动作名称 |
+| `prerequisites` | 生成目标所需的文件或其他目标     |
+| `command`       | 目标过期时执行的 `recipe`  |
 
-对应到上面的项目，可以写成：
+`recipe` 默认以 Tab 开头。普通空格不会被当作 `recipe` 前缀，这是 Makefile 中常见的语法错误来源。
+
+显式写出示例项目的规则：
 
 ```makefile
 main: main.o print.o
 	cc main.o print.o -o main
 
-main.o: main.c
+main.o: main.c print.h
 	cc -c main.c -o main.o
 
-print.o: print.c
+print.o: print.c print.h
 	cc -c print.c -o print.o
 ```
 
-执行 `make`：
-
-```bash
-cc -c main.c -o main.o
-cc -c print.c -o print.o
-cc main.o print.o -o main
-```
-
-如果不显式指定目标，`make` 默认会执行第一个目标，也就是这里的 `main`。
-
-你也可以只构建某个局部目标：
+不指定目标时，`make` 默认构建第一个普通目标；这里是 `main`。也可以直接请求局部目标：
 
 ```bash
 make main.o
 ```
 
-### 1.1 隐式规则 <a id="implicit-rules"></a>
+每条 recipe 行通常由独立的 shell 进程执行。需要共享 shell 状态的命令应写在同一 recipe 行，或使用反斜杠续行。
 
-有时候会发现：即使没有显式写出 `main.o` 和 `print.o` 的规则，`make` 仍然可以完成编译。
-
-比如下面这个 Makefile：
-
-```makefile
-main: print.o main.o
-	cc print.o main.o -o main
-```
-
-为什么它还能工作？
-
-这是因为 `make` 内置了一些默认规则，这些规则称为 **隐式规则**（Implicit Rule）。
-
-比如它大致知道：
-
-```makefile
-xyz.o: xyz.c
-	cc -c -o xyz.o xyz.c
-```
-
-也就是说，当 `make` 发现需要 `main.o`，但没有找到显式规则时，它会尝试查找是否存在 `main.c`，再根据隐式规则完成编译。
-
-### 1.2 模式规则 <a id="pattern-rules"></a>
-
-如果你不想完全依赖隐式规则，也不想一个 `.o` 写一条规则，就可以用模式规则。
-
-```makefile
-%.o: %.c
-	cc -c $< -o $@
-```
-
-这里有几个常见自动变量：
-
-- `$@`：当前目标
-- `$<`：第一个依赖
-- `$^`：所有依赖
-
-比如对于 `main.o: main.c` 这条规则：
-
-- `$@` 就是 `main.o`
-- `$<` 就是 `main.c`
-
-于是可以把 Makefile 写得更简洁：
-
-```makefile
-TARGET = main
-SRCS = main.c print.c
-OBJS = $(SRCS:.c=.o)
-
-$(TARGET): $(OBJS)
-	cc $^ -o $@
-
-%.o: %.c
-	cc -c $< -o $@
-```
-
-这里链接那一行用 `$^` 很合适，因为它确实需要“所有依赖的 `.o` 文件”。
-
-而编译 `.c -> .o` 时，用 `$<` 更准确，因为这里只需要第一个依赖，也就是对应的那个 `.c` 文件。
-
-### 2.变量与条件 <a id="variables"></a>
-
-当文件越来越多时，直接把文件名写死在 Makefile 中会比较繁琐，这时可以通过变量减少重复。
-
-定义变量：
-
-```makefile
-VARIABLE_NAME = value
-```
-
-使用变量：
-
-```makefile
-$(VARIABLE_NAME)
-```
-
-例如：
-
-```makefile
-TARGET = main
-SRCS = main.c print.c
-OBJS = $(SRCS:.c=.o)
-
-$(TARGET): $(OBJS)
-	$(CC) $(OBJS) -o $(TARGET)
-```
-
-这里最值得注意的是：
-
-```makefile
-OBJS = $(SRCS:.c=.o)
-```
-
-它的意思是：把 `SRCS` 里每个文件名的 `.c` 后缀替换成 `.o`。
-
-所以：
-
-```makefile
-main.c print.c
-```
-
-会变成：
-
-```makefile
-main.o print.o
-```
-
-这是一种很常见的后缀替换写法。
-
-### 2.1 Makefile 内置函数<a id="make-functions"></a>
-
-除了简单的后缀替换，Makefile 还内置了不少字符串和列表处理函数。文件一多时，这些函数会非常实用。
-
-基本形式如下：
-
-```makefile
-$(function arguments)
-```
-
-下面列几个最常用的例子。
-
-#### `addprefix`
-
-给列表中的每一项添加统一前缀：
-
-```makefile
-FILES = main.c print.c
-SRCS = $(addprefix src/,$(FILES))
-```
-
-结果是：
-
-```makefile
-src/main.c src/print.c
-```
-
-如果源文件都放在 `src/` 目录下，这个函数会比手动逐个拼接更方便。
-
-#### `addsuffix`
-
-给列表中的每一项添加统一后缀：
-
-```makefile
-NAMES = main print
-OBJS = $(addsuffix .o,$(NAMES))
-```
-
-结果是：
-
-```makefile
-main.o print.o
-```
-
-#### `subst`
-
-做简单字符串替换：
-
-```makefile
-SRCS = src/main.c src/print.c
-OBJS = $(subst .c,.o,$(SRCS))
-```
-
-结果是：
-
-```makefile
-src/main.o src/print.o
-```
-
-#### `patsubst`
-
-按模式做替换，比 `subst` 更灵活：
-
-```makefile
-SRCS = src/main.c src/print.c
-OBJS = $(patsubst %.c,%.o,$(SRCS))
-```
-
-结果是：
-
-```makefile
-src/main.o src/print.o
-```
-
-#### `wildcard`
-
-按通配符查找文件：
-
-```makefile
-SRCS = $(wildcard src/*.c)
-```
-
-如果 `src/` 下有多个 `.c` 文件，这个写法可以自动收集它们。
-
-#### `dir` 和 `notdir`
-
-用于拆分路径：
-
-```makefile
-SRCS = src/main.c src/print.c
-DIRS = $(dir $(SRCS))
-FILES = $(notdir $(SRCS))
-```
-
-结果分别类似于：
-
-```makefile
-src/ src/
-main.c print.c
-```
-
-#### `basename` 和 `suffix`
-
-用于获取文件名主体或后缀：
-
-```makefile
-FILES = main.c print.h
-BASES = $(basename $(FILES))
-SUFS = $(suffix $(FILES))
-```
-
-结果分别是：
-
-```makefile
-main print
-.c .h
-```
-
-#### `filter` 和 `filter-out`
-
-用于筛选列表：
-
-```makefile
-FILES = main.c print.c print.h
-CSRCS = $(filter %.c,$(FILES))
-HEADERS = $(filter %.h,$(FILES))
-NON_C = $(filter-out %.c,$(FILES))
-```
-
-#### `sort`
-
-排序并去重：
-
-```makefile
-FILES = print.c main.c print.c
-SORTED = $(sort $(FILES))
-```
-
-结果是：
-
-```makefile
-main.c print.c
-```
-
-#### `foreach`
-
-按列表逐项展开：
-
-```makefile
-DIRS = src include lib
-FLAGS = $(foreach d,$(DIRS),-I$(d))
-```
-
-结果是：
-
-```makefile
--Isrc -Iinclude -Ilib
-```
-
-#### `shell`
-
-执行一条 shell 命令，并获取结果：
-
-```makefile
-CURRENT_DIR = $(shell pwd)
-```
-
-这个函数很方便，但不建议滥用。因为它会让 Makefile 依赖外部命令执行结果，复杂度也会随之增加。
-
-一个更接近实战的例子：
-
-```makefile
-SRC_DIR = src
-SRCS = $(wildcard $(SRC_DIR)/*.c)
-OBJS = $(patsubst %.c,%.o,$(SRCS))
-DEPS = $(patsubst %.c,%.d,$(SRCS))
-INCLUDES = $(addprefix -I,include third_party/include)
-```
-
-这里分别使用了：
-
-- `wildcard` 收集源文件
-- `patsubst` 生成 `.o` 和 `.d`
-- `addprefix` 生成一组 `-I` 头文件参数
-
-### 2.2 变量赋值方式 <a id="variable-assignments"></a>
-
-Makefile 中常见的赋值方式不止 `=` 一种，不同写法的行为略有区别。
-
-#### `=`
-
-递归展开赋值。变量在真正使用时才展开右侧内容。
+后续规则会用到两类替换语法。普通变量先定义再通过 `$(变量名)` 引用：
 
 ```makefile
 CC = gcc
-CFLAGS = $(COMMON_FLAGS) -O2
-COMMON_FLAGS = -Wall -Wextra
+
+main: main.o print.o
+	$(CC) main.o print.o -o main
 ```
 
-最终 `CFLAGS` 会展开成：
+自动变量由 `make` 根据当前规则提供，只在 recipe 执行时有值：
+
+| 自动变量 | 含义 |
+|---------|-----|
+| `$@` | 当前目标 |
+| `$<` | 第一个依赖 |
+| `$^` | 去重后的全部依赖 |
+| `$?` | 比目标新的依赖 |
+| `$*` | 模式规则匹配到的主干 |
+
+例如在 `main.o: main.c` 的 recipe 中，`$@` 是 `main.o`，`$<` 是 `main.c`。变量的展开时机与赋值方式在 2.2 节继续说明。
+
+#### 2.1.1 隐式规则{#隐式规则}
+
+GNU Make 内置了一组隐式规则。即使 Makefile 只写链接规则，`make` 也可能根据同名的 `.c` 文件生成缺失的 `.o`：
 
 ```makefile
--Wall -Wextra -O2
+main: main.o print.o
+	$(CC) $^ -o $@
 ```
 
-#### `:=`
+内置的 C 编译规则会读取 `CC`、`CPPFLAGS` 和 `CFLAGS` 等变量。简单项目可以借此省略 `.c` 到 `.o` 的 recipe；需要明确控制命令时则应写出模式规则。
 
-立即展开赋值。变量在定义时就完成右侧展开。
+#### 2.1.2 模式规则{#模式规则}
+
+模式规则用 `%` 表示可变化的文件主干：
+
+```makefile
+%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+```
+
+`main.o: main.c` 与 `print.o: print.c` 都能匹配这条规则。在这条模式规则中：
+
+- `$<` 展开为匹配到的 `.c` 文件；
+- `$@` 展开为当前要生成的 `.o` 文件。
+
+链接规则与模式规则可以组合为：
+
+```makefile
+CC = gcc
+CPPFLAGS =
+CFLAGS = -Wall -Wextra -O2
+LDFLAGS =
+LDLIBS =
+
+TARGET = main
+OBJS = main.o print.o
+
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+```
+
+链接命令把 `LDFLAGS` 放在目标文件之前，把 `LDLIBS` 放在目标文件之后。这样的顺序同时表达了链接器选项与库依赖的不同角色。
+
+### 2.2 变量、条件与函数{#变量条件与函数}
+
+前面只使用了变量最基本的定义和引用。本节继续整理变量的展开时机、解析期条件，以及建立文件列表时常用的内置函数。Make 变量保存文本；文件列表看起来像数组，但本质上仍是由空白分隔的字符串，因此包含空格的文件名不适合直接放入常规文件列表。
+
+定义和引用变量：
+
+```makefile
+TARGET = main
+SRCS = main.c print.c
+OBJS = $(SRCS:.c=.o)
+```
+
+`$(SRCS:.c=.o)` 是替换引用，把每个单词末尾的 `.c` 换成 `.o`，因此 `OBJS` 的值为 `main.o print.o`。
+
+编译工具链常用变量有明确分工：
+
+| 变量         | 典型内容                  | 使用阶段        |
+|------------|-----------------------|-------------|
+| `CC`       | `gcc`、`clang`         | C 编译和链接驱动   |
+| `CXX`      | `g++`、`clang++`       | C++ 编译和链接驱动 |
+| `CPPFLAGS` | `-Iinclude -DDEBUG=1` | 预处理         |
+| `CFLAGS`   | `-Wall -Wextra -O2`   | C 编译        |
+| `CXXFLAGS` | `-Wall -Wextra -O2`   | C++ 编译      |
+| `LDFLAGS`  | `-Llib -Wl,...`       | 链接器选项       |
+| `LDLIBS`   | `-lm -lpthread`       | 链接库         |
+
+#### 2.2.1 变量赋值{#变量赋值}
+
+| 运算符  | 展开时机        | 主要用途           |
+|------|-------------|----------------|
+| `=`  | 引用变量时展开右侧   | 右侧需要读取后续定义或动态值 |
+| `:=` | 定义变量时立即展开右侧 | 固定一次计算结果       |
+| `?=` | 变量从未定义时才赋值  | 为自定义变量提供默认值    |
+| `+=` | 向现有值追加文本    | 累积选项或文件列表      |
+
+递归展开与立即展开的差异：
 
 ```makefile
 COMMON_FLAGS = -Wall
-CFLAGS := $(COMMON_FLAGS) -O2
+
+RECURSIVE = $(COMMON_FLAGS)
+IMMEDIATE := $(COMMON_FLAGS)
+
 COMMON_FLAGS = -Wall -Wextra
 ```
 
-此时 `CFLAGS` 仍然是：
+最终 `RECURSIVE` 是 `-Wall -Wextra`，`IMMEDIATE` 仍是 `-Wall`。
 
-```makefile
--Wall -O2
-```
-
-因为它在赋值那一刻就已经确定了。
-
-#### `?=`
-
-条件赋值。只有变量此前没有定义时，才会进行赋值。
+`?=` 只检查变量是否已经定义，不检查值是否为空。GNU Make 的内置变量也算已定义，因此下面的写法通常不会把 `CC` 改成 `gcc`：
 
 ```makefile
 CC ?= gcc
-CFLAGS ?= -O2
 ```
 
-这个写法在写可复用 Makefile 时很常见，因为它允许用户从命令行覆盖变量：
+GNU Make 默认已经定义 `CC = cc`。需要选择默认编译器时直接写普通赋值即可：
+
+```makefile
+CC = gcc
+BUILD ?= release
+```
+
+命令行变量的优先级高于普通 Makefile 赋值，所以调用方仍然可以覆盖它：
 
 ```bash
-make CC=clang CFLAGS="-O0 -g"
+make CC=clang BUILD=debug
 ```
 
-如果命令行已经传入 `CC` 或 `CFLAGS`，那么 `?=` 这一行就不会再覆盖它。
+#### 2.2.2 条件判断{#条件判断}
 
-#### `+=`
-
-追加赋值：
-
-```makefile
-CFLAGS = -Wall
-CFLAGS += -Wextra
-CFLAGS += -O2
-```
-
-结果会变成：
-
-```makefile
--Wall -Wextra -O2
-```
-
-一个常见组合如下：
-
-```makefile
-CC ?= gcc
-CFLAGS ?= -O2
-CFLAGS += -Wall -Wextra
-```
-
-这种写法比较适合做默认配置：既给出推荐值，又保留用户覆盖空间。
-
-### 2.3 条件判断 <a id="conditionals"></a>
-
-Makefile 也支持简单条件判断，常见写法有 `ifeq`、`ifneq`、`ifdef`、`ifndef`。
-
-#### `ifeq`
-
-判断两个值是否相等：
-
-```makefile
-CC ?= gcc
-
-ifeq ($(CC),gcc)
-    CFLAGS += -Wall
-endif
-```
-
-如果 `CC` 是 `gcc`，就追加 `-Wall`。
-
-也常用于区分构建模式：
+`ifeq`、`ifneq`、`ifdef` 和 `ifndef` 是 Makefile 的解析期条件，而非 recipe 命令。条件指令不能以 recipe 的 Tab 开头。
 
 ```makefile
 BUILD ?= release
 
 ifeq ($(BUILD),debug)
-    CFLAGS += -O0 -g
-else
-    CFLAGS += -O2
-endif
-```
-
-#### `ifneq`
-
-判断两个值是否不相等：
-
-```makefile
-ifneq ($(wildcard config.mk),)
-    include config.mk
-endif
-```
-
-这里的意思是：如果 `config.mk` 存在，就把它包含进来。
-
-#### `ifdef`
-
-判断变量是否已定义：
-
-```makefile
-ifdef DEBUG
-    CFLAGS += -O0 -g
-endif
-```
-
-命令行这样执行：
-
-```bash
-make DEBUG=1
-```
-
-就会启用调试选项。
-
-#### `ifndef`
-
-判断变量是否未定义：
-
-```makefile
-ifndef CC
-    CC = gcc
-endif
-```
-
-这个写法和 `CC ?= gcc` 的用途很接近，不过 `?=` 通常更简洁。
-
-一个综合例子如下：
-
-```makefile
-CC ?= gcc
-BUILD ?= release
-
-CFLAGS += -Wall -Wextra
-
-ifeq ($(BUILD),debug)
-    CFLAGS += -O0 -g
+CFLAGS += -O0 -g
 else ifeq ($(BUILD),release)
-    CFLAGS += -O2
+CFLAGS += -O2
+else
+$(error unsupported BUILD mode: $(BUILD))
 endif
 
 ifdef SANITIZE
-    CFLAGS += -fsanitize=address
+CFLAGS += -fsanitize=address
+LDFLAGS += -fsanitize=address
 endif
 ```
 
-执行时可以这样传参：
+调用方式：
 
 ```bash
 make BUILD=debug
 make BUILD=debug SANITIZE=1
 ```
 
-这种写法在需要区分调试版、发布版和附加构建选项时很常见。
+`ifdef SANITIZE` 判断的是变量值是否非空，因此 `SANITIZE=0` 也会进入该分支。需要判断具体值时应使用 `ifeq ($(SANITIZE),1)`。
 
-### 3. 隐藏命令输出<a id=隐藏命令输出></a>
+可选配置文件也可以在解析期判断：
 
-默认情况下，`make` 会把每条执行的命令先打印一遍。
+```makefile
+ifneq ($(wildcard config.mk),)
+include config.mk
+endif
+```
 
-如果不希望命令在执行前被打印出来，可以在命令前加 `@`：
+#### 2.2.3 内置函数{#内置函数}
+
+GNU Make 函数使用 `$(函数名 参数)` 形式。参数通常是由空白分隔的单词列表，多个参数之间用逗号分隔。下面以文件列表为主线说明常用函数。
+
+`addprefix` 和 `addsuffix` 分别为列表中的每个单词添加前缀或后缀：
+
+```makefile
+FILES := main.c print.c
+SRCS := $(addprefix src/,$(FILES))
+OBJS := $(addsuffix .o,main print)
+```
+
+`SRCS` 得到 `src/main.c src/print.c`，`OBJS` 得到 `main.o print.o`。这两个函数适合为结构一致的文件名批量补齐目录或扩展名。
+
+`subst` 直接替换文本中所有匹配片段，`patsubst` 则按单词匹配模式，其中 `%` 表示可复用的主干：
+
+```makefile
+FILES := main.c print.c
+OBJS_BY_TEXT := $(subst .c,.o,$(FILES))
+OBJS_BY_PATTERN := $(patsubst %.c,%.o,$(FILES))
+```
+
+两者在这个例子中都得到 `main.o print.o`。处理文件后缀时，`patsubst` 明确要求单词匹配 `%.c`，不会误改文件名中间出现的 `.c` 文本。
+
+`wildcard` 按文件系统中的实际路径展开通配符；`dir`、`notdir`、`basename` 和 `suffix` 负责拆分路径：
+
+```makefile
+SRCS := $(wildcard src/*.c)
+DIRS := $(dir $(SRCS))
+NAMES := $(notdir $(SRCS))
+BASES := $(basename $(NAMES))
+SUFFIXES := $(suffix $(NAMES))
+```
+
+若 `SRCS` 是 `src/main.c src/print.c`，则 `DIRS` 是 `src/ src/`，`NAMES` 是 `main.c print.c`，`BASES` 是 `main print`，
+`SUFFIXES` 是 `.c .c`。`wildcard` 只返回展开时已经存在的路径；没有匹配项时返回空文本。
+
+`filter` 和 `filter-out` 按模式保留或排除单词，`sort` 排序的同时去重：
+
+```makefile
+FILES := main.c print.c print.h print.c
+C_SRCS := $(filter %.c,$(FILES))
+HEADERS := $(filter %.h,$(FILES))
+NON_C := $(filter-out %.c,$(FILES))
+UNIQUE := $(sort $(FILES))
+```
+
+这里 `C_SRCS` 保留 C 源文件，`HEADERS` 只保留头文件，`NON_C` 排除 C 源文件；`UNIQUE` 的结果按字典序排列且不含重复项。
+
+`foreach` 对列表逐项展开一段文本，适合根据目录列表生成参数：
+
+```makefile
+INCLUDE_DIRS := include third_party/include
+CPPFLAGS := $(foreach dir,$(INCLUDE_DIRS),-I$(dir))
+```
+
+每次迭代中，临时变量 `dir` 依次取两个目录，因此 `CPPFLAGS` 得到 `-Iinclude -Ithird_party/include`。
+
+`shell` 执行外部命令，并把标准输出转换为 Make 变量中的文本：
+
+```makefile
+CURRENT_DIR := $(shell pwd)
+```
+
+`shell` 会引入外部进程和环境依赖，并把输出中的换行转换为空格。若把它放在递归展开变量中，每次引用都可能再次执行命令；只需计算一次时应配合 `:=`。
+
+组合这些函数后，可以从源码目录生成目标文件、依赖文件和头文件参数：
+
+```makefile
+SRC_DIR := src
+SRCS := $(wildcard $(SRC_DIR)/*.c)
+OBJS := $(patsubst %.c,%.o,$(SRCS))
+DEPS := $(patsubst %.o,%.d,$(OBJS))
+CPPFLAGS := $(addprefix -I,include third_party/include)
+```
+
+### 2.3 命令回显与错误处理{#命令回显与错误处理}
+
+`make` 默认先打印 recipe，再执行命令。在 recipe 前加 `@` 只关闭这条命令的回显，不会吞掉命令自身的标准输出或错误：
 
 ```makefile
 main: main.o print.o
-	@cc main.o print.o -o main
+	@$(CC) $^ -o $@
 ```
 
-### 4. 伪目标 <a id="phony-targets"></a>
+`make -s` 或 `make --silent` 会关闭整个构建的命令回显。构建失败时，`@` 和 `-s` 都不会忽略退出状态。
 
-有些目标并不是为了生成同名文件，而是为了执行一个动作，例如：
-
-- `clean`
-- `all`
-- `test`
-
-这类目标通常叫 **伪目标**（Phony Target）。
-
-例如：
+`make` 会检查每条 recipe 的退出状态。命令返回非零值时，当前目标构建失败，默认不再执行该目标后续的 recipe：
 
 ```makefile
-.PHONY: clean
+.PHONY: has_error
 
+has_error:
+	rm zzz.txt
+	echo 'ok'
+```
+
+当 `zzz.txt` 不存在时，执行结果类似：
+
+```text
+$ make has_error
+rm zzz.txt
+rm: zzz.txt: No such file or directory
+make: *** [has_error] Error 1
+```
+
+`rm` 返回非零值后，`echo 'ok'` 不会执行。若某条命令允许失败，可以在 recipe 前加 `-`：
+
+```makefile
+.PHONY: ignore_error
+
+ignore_error:
+	-rm zzz.txt
+	echo 'ok'
+```
+
+此时 `make` 仍会报告该命令出错，但会把错误标记为已忽略并继续执行 `echo`。对于“文件不存在也算清理成功”这类预期情况，优先使用命令自身的容错选项：
+
+```makefile
 clean:
-	rm -f $(OBJS)
+	rm -f zzz.txt
 ```
 
-为什么要写 `.PHONY`？
+`-rm` 表示由 `make` 忽略任意非零退出状态；`rm -f` 则由 `rm` 把文件不存在视为成功。后者表达的错误边界更具体。
 
-因为如果目录里刚好存在一个名为 `clean` 的真实文件，`make` 可能会认为该目标已经满足，不再执行对应命令。加上 `.PHONY` 是为了明确告诉
-`make`：这是一个命令标签，而不是文件。
+### 2.4 伪目标{#伪目标}
 
-一个更完整一点的版本：
+`all`、`clean`、`test` 这类目标表示动作，不对应同名构建产物。应使用 `.PHONY` 声明：
 
 ```makefile
-TARGET = main
-SRCS = main.c print.c
-OBJS = $(SRCS:.c=.o)
-
 .PHONY: all clean
 
-all: $(TARGET)
+all: main
 
 clean:
-	rm -f $(OBJS) $(TARGET)
-
-$(TARGET): $(OBJS)
-	cc $^ -o $@
-
-%.o: %.c
-	cc -c $< -o $@
+	rm -f main main.o print.o
 ```
 
-运行：
+伪目标始终被视为需要执行。如果没有 `.PHONY`，目录中一旦出现名为 `clean` 的真实文件，`make clean` 就可能判断目标已经满足而跳过
+recipe。
 
-```bash
-make clean
-make all
-```
+### 2.5 依赖识别{#依赖识别}
 
-### 5.依赖识别<a id="dependency-tracking"></a>
+增量构建依赖两部分信息：Makefile 中的依赖图，以及文件系统记录的修改时间。依赖图缺失时，即使时间戳准确，`make` 也无法发现受影响的目标。
 
-Makefile 最重要的能力之一，是它可以只重新编译真正受影响的部分。
+#### 2.5.1 时间戳与目标重建{#时间戳与目标重建}
 
-原因在于：**依赖关系**。
-
-`make` 在执行时会先判断：
-
-- 这个目标依赖谁？
-- 依赖有没有更新？
-- 如果依赖比目标“更新”，那就说明目标过期了，要重做
-
-### 5.1 Make 如何判断要不要重建 <a id=make-如何判断要不要重建></a>
-
-还是这个例子：
+`make` 会递归检查目标的依赖。当目标不存在，或任一普通依赖比目标新时，对应 recipe 才会执行。
 
 ```makefile
 main: main.o print.o
-	cc main.o print.o -o main
+	$(CC) $^ -o $@
 
 main.o: main.c
-	cc -c main.c -o main.o
+	$(CC) -c $< -o $@
 
 print.o: print.c
-	cc -c print.c -o print.o
+	$(CC) -c $< -o $@
 ```
 
-`make` 大致会建立这样一棵依赖关系树：
+依赖图如下：
 
 ```text
 main
@@ -1003,299 +654,153 @@ main
     └── print.c
 ```
 
-执行 `make` 时，它会从目标开始一路往下看时间戳：
+修改 `main.c` 后，`main.o` 比依赖旧，因此先重新编译；新的 `main.o` 又比 `main` 新，因此随后重新链接。`print.c` 没有变化时，
+`print.o`
+会被复用。
 
-1. 先看 `main` 依赖 `main.o`、`print.o`
-2. 再看 `main.o` 依赖 `main.c`
-3. 再看 `print.o` 依赖 `print.c`
-4. 如果依赖文件比目标文件新，就重新执行对应命令
+Make 比较的是修改时间，不比较文件内容。复制文件、版本控制切换和时钟异常都可能改变时间戳，从而触发额外构建或产生错误判断。
 
-比如：
+#### 2.5.2 头文件依赖与 `.d` 文件{#头文件依赖与-d-文件}
 
-- 如果你改了 `main.c`
-- 那么 `main.c` 的时间戳会比 `main.o` 新
-- `make` 就会重新生成 `main.o`
-- 接着发现 `main.o` 比 `main` 新
-- 于是再重新链接出新的 `main`
-
-但 `print.c` 没动，所以 `print.o` 不需要重编。
-
-这就是增量编译。
-
-它的核心思想是：只重建已经过期的目标，不重复处理未发生变化的部分。
-
-### 5.2 只写 `.c` 依赖的问题 <a id=只写-c-依赖的问题></a>
-
-上面的规则看起来已经不错了，但还藏着一个经典坑：
-
-```makefile
-main.o: main.c
-print.o: print.c
-```
-
-这里 `.o` 只依赖对应的 `.c` 文件，却没有把头文件 `.h` 算进去。
-
-问题在于：
-
-假设你修改了 `print.h`，比如把函数声明改了：
-
-```c
-void print(int a, int b);
-```
-
-这时候：
-
-- `main.c` 实际上受到了影响，因为它 `#include "print.h"`
-- `print.c` 也受到了影响
-- 但 Makefile 并不知道这件事
-
-因为在它眼里：
-
-- `main.o` 只看 `main.c`
-- `print.o` 只看 `print.c`
-
-于是当头文件发生变化时，`make` 可能不会重新编译对应的 `.o` 文件，最终得到一个并不完整的构建结果。
-
-### 5.3 解决办法：让编译器顺手生成依赖文件 `.d` <a id=解决办法让编译器顺手生成依赖文件-d></a>
-
-为了让 `make` 知道：
-
-- `main.o` 不只依赖 `main.c`
-- 还依赖它包含的头文件，比如 `print.h`
-
-我们通常会让编译器在编译 `.c` 的同时，额外生成一个 `.d` 文件。
-
-`.d` 文件可以理解成“依赖清单”，专门记录某个 `.o` 文件依赖了哪些头文件。
-
-比如编译器可能会生成这样的内容：
+只写 `main.o: main.c` 会遗漏预处理阶段读入的头文件。示例项目的真实关系是：
 
 ```makefile
 main.o: main.c print.h
 print.o: print.c print.h
 ```
 
-这就对了。以后只要 `print.h` 一改，`make` 就知道应该把相关的 `.o` 重新编译。
+如果 Makefile 没有记录 `print.h`，修改函数声明后，`make` 可能继续复用旧目标文件。手工列出头文件在小项目中可行，但源码增多后很容易漏掉间接包含关系。
 
-### 5.4 常见写法 <a id=常见写法></a>
+##### 编译器生成依赖文件{#编译器生成依赖文件}
 
-一个很常见的做法是使用 `-MMD -MP`：
+编译器已经掌握每个翻译单元实际包含的头文件，可以在生成 `.o` 的同时输出 Makefile 语法的 `.d` 文件：
 
 ```makefile
-CC = gcc
-TARGET = main
-SRCS = main.c print.c
-OBJS = $(SRCS:.c=.o)
-DEPS = $(SRCS:.c=.d)
+%.o: %.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
+```
 
-.PHONY: all clean
+| 选项             | 作用                          |
+|----------------|-----------------------------|
+| `-MMD`         | 生成用户头文件依赖，不记录系统头文件          |
+| `-MP`          | 为头文件附加空规则，删除旧头文件后仍可继续解析依赖文件 |
+| `-MF <file>`   | 显式指定依赖文件路径                  |
+| `-MT <target>` | 显式指定依赖规则中的目标名称              |
 
-all: $(TARGET)
+编译 `main.c` 后，`main.d` 的内容类似：
 
-clean:
-	rm -f $(OBJS) $(DEPS) $(TARGET)
+```makefile
+main.o: main.c print.h
 
-$(TARGET): $(OBJS)
-	$(CC) $^ -o $@
+print.h:
+```
+
+第一条规则补全 `main.o` 的依赖；第二条空规则来自 `-MP`。它只避免“没有规则可创建旧头文件”的解析错误，不会重新创建已经删除的头文件。
+
+#### 2.5.3 自动依赖的接入方式{#自动依赖的接入方式}
+
+接入自动依赖需要四个部分：
+
+```makefile
+SRCS := main.c print.c
+OBJS := $(SRCS:.c=.o)
+DEPS := $(OBJS:.o=.d)
 
 %.o: %.c
-	$(CC) -MMD -MP -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 -include $(DEPS)
 ```
 
-这个版本可以作为一个比较实用的入门模板。
+`-include` 把 `.d` 文件作为 Makefile 的补充规则读取。前缀 `-` 允许依赖文件在首次构建前不存在；生成后，后续调用会读取其中的头文件依赖。
 
-各部分的作用
-
-```makefile
-DEPS = $(SRCS:.c=.d)
-```
-
-把 `main.c print.c` 变成 `main.d print.d`。
+清理规则也应删除这些派生产物：
 
 ```makefile
-$(CC) -MMD -MP -c $< -o $@
+clean:
+	rm -f $(TARGET) $(OBJS) $(DEPS)
 ```
 
-这条命令在编译 `.o` 的同时，也生成对应的 `.d` 文件。
+#### 2.5.4 传统 `%.d: %.c` 规则{#传统-d-c-规则}
 
-其中：
-
-- `-MMD`：生成用户头文件的依赖信息
-- `-MP`：为头文件生成伪目标，避免头文件被删除时 `make` 直接炸掉
-
-```makefile
--include $(DEPS)
-```
-
-这一行的意思是：把这些 `.d` 文件也读进来，当成 Makefile 的补充规则。
-
-前面的 `-` 很关键，它表示：如果这些 `.d` 文件暂时还不存在，也不要因此报错。
-
-为什么一开始会不存在？
-
-因为第一次编译前，这些 `.d` 文件通常还不存在。
-
-### 5.5 传统 `%.d: %.c` 写法与原理 <a id=传统-d-c-写法与原理></a>
-
-除了 `-MMD -MP` 这种直接在编译 `.o` 时顺手生成 `.d` 的做法，还有一种更传统的写法，是把 `.d` 文件的生成单独写成规则：
+旧项目中还会把 `.d` 作为独立目标生成：
 
 ```makefile
 %.d: %.c
-	rm -f $@; \
-	$(CC) -MM $< > $@.tmp; \
-	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.tmp > $@; \
-	rm -f $@.tmp
+	@set -e; rm -f $@; \
+	$(CC) $(CPPFLAGS) -MM $< > $@.$$$$; \
+	sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
+	rm -f $@.$$$$
 ```
 
-这段规则看起来比较绕，但它其实只做了三件事。
+这段规则假设 `.c`、`.o` 和 `.d` 使用相同主干。以 `main.d` 为例：
 
-#### a. 先让编译器输出原始依赖
+1. `$(CC) -MM main.c` 输出 `main.o: main.c print.h`。
+2. `$*` 是主干 `main`，`$@` 是目标 `main.d`。
+3. `sed` 把规则改写为 `main.o main.d: main.c print.h`。
+4. recipe 先把编译器输出写入带进程号的临时文件，编译器成功后再由 `sed` 生成最终的 `main.d`。
 
-```makefile
-$(CC) -MM $< > $@.tmp
-```
+改写后的双目标规则同时说明：
 
-这里的 `-MM` 会让编译器分析当前 `.c` 文件依赖了哪些用户头文件，并输出类似下面的内容：
+- `main.o` 在源码或头文件变化时过期；
+- `main.d` 也在这些依赖变化时过期。
 
-```makefile
-main.o: main.c print.h
-```
+这里 Makefile 中的 `$$` 会传给 shell 一个 `$`，因此 `$$$$` 最终变成 shell 的进程号 `$$`。新项目通常直接采用 `-MMD -MP`
+随编译生成依赖，独立 `%.d` 规则主要用于理解和维护旧构建脚本。
 
-这里输出的是 `main.o` 的依赖关系，但还没有把 `main.d` 自己写进去。
+#### 2.5.5 被包含 makefile 的重建{#被包含makefile的重建}
 
-#### b. 再把输出结果改写成同时描述 `.o` 和 `.d`
+`include` 进来的 `.d` 文件属于 makefile 集合。GNU Make 读取完所有 makefile 后，会尝试按现有规则更新它们；只要其中一个被成功重建，GNU
+Make 就重新读取整套规则，再开始构建用户请求的目标。
 
-```makefile
-sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.tmp > $@
-```
+传统 `%.d: %.c` 规则因此按以下顺序工作：
 
-这一步是整段规则的关键。
+1. 读取主 Makefile 和已有 `.d` 文件。
+2. 检查作为 makefile 的 `.d` 是否缺失或过期。
+3. 先执行 `%.d: %.c` 更新依赖文件。
+4. 重新读取主 Makefile 和新的 `.d`。
+5. 按更新后的依赖图构建最终目标。
 
-假设当前目标是 `main.d`，那么：
+不要把被包含的 `.d` 文件声明为伪目标；否则它们会在每次检查时都被视为过期，可能导致反复重新读取。
 
-- `$*` 表示模式匹配中的主干部分，也就是 `main`
-- `$@` 表示当前目标，也就是 `main.d`
+#### 2.5.6 两种依赖生成流程{#两种依赖生成流程}
 
-原始内容：
+随编译生成和独立生成 `.d` 的时机不同：
 
-```makefile
-main.o: main.c print.h
-```
+| 场景      | `-MMD -MP` 随 `.o` 生成          | 独立 `%.d: %.c`             |
+|---------|-------------------------------|---------------------------|
+| 首次构建    | 编译 `.o` 时顺带生成 `.d`            | 构建目标前先生成 `.d`，然后重新读取      |
+| 已有头文件变化 | 旧 `.d` 使对应 `.o` 过期；编译时刷新 `.d` | `.d` 先过期并重建；重新读取后再判断 `.o` |
+| 新依赖生效   | 本次编译已经重建 `.o`，新 `.d` 供后续调用读取  | 重启解析后在本次调用中生效             |
+| 复杂度     | 规则短，通常优先采用                    | 需要维护单独规则和临时文件             |
 
-经过 `sed` 改写后会变成：
+两种方式都依赖 `include` 把头文件关系并入构建图。差别只在于 `.d` 是编译 `.o` 的副产物，还是可以被 `make` 单独更新的目标。
 
-```makefile
-main.o main.d: main.c print.h
-```
+#### 2.5.7 完整示例{#完整示例}
 
-这样处理的意义在于：
-
-- `main.o` 依赖 `main.c` 和 `print.h`
-- `main.d` 自己也依赖 `main.c` 和 `print.h`
-
-于是当头文件变化时，不仅 `main.o` 会过期，`main.d` 也会过期，Make 就知道应该重新生成这份依赖文件。
-
-#### c. 用临时文件避免写到一半的中间状态
-
-```makefile
-rm -f $@.tmp
-```
-
-中间先写到 `$@.tmp`，再生成最终的 `$@`，是为了避免依赖文件写了一半时被 `make` 读到不完整内容。
-
-#### ?. 为什么要写成这种形式
-
-传统写法的核心目的，是让 `.d` 文件本身也有正确的依赖关系。
-
-如果只生成：
-
-```makefile
-main.o: main.c print.h
-```
-
-那么 `make` 只知道 `main.o` 依赖头文件，却不知道 `main.d` 也应该在头文件变化时更新。
-
-改写成：
-
-```makefile
-main.o main.d: main.c print.h
-```
-
-之后，`.d` 文件和 `.o` 文件就会一起随着头文件变化而重新生成。
-
-这也是这类 `sed` 写法长期存在的原因。它看起来不够直观，但目的非常明确。
-
-### 5.6 为什么本次重新生成的 `.d` 仍然会影响结果 <a id=为什么本次重新生成的-d-仍然会影响结果></a>
-
-很多人第一次看到 `include $(DEPS)` 时会有一个疑问：
-
-- `make` 一开始不是已经把 `.d` 文件读进来了吗？
-- 如果本次执行过程中 `.d` 文件又被重新生成，那这些新内容怎么还能影响本次构建结果？
-
-关键点在于：**被 `include` 进来的文件，对 `make` 来说也是 makefile 的一部分。**
-
-也就是说，`make` 不只是“读取它们一次就结束”，而是会把这些被包含的文件也当作需要维护的目标来看待。
-
-更准确地说，执行过程通常是这样的：
-
-1. `make` 先读取主 Makefile 和被 `include` 的 `.d` 文件
-2. 如果发现某个被包含的 `.d` 文件不存在，或者已经过期，就先尝试把它更新
-3. 只要这些被包含的 makefile 文件发生了变化，`make` 会重新启动一次读取过程
-4. 第二次读取时，新生成的 `.d` 内容就已经生效了
-
-这也是为什么 `.d` 虽然是通过 `include` 引入的，但它在本次执行中重新生成后，依然能够立刻反映到后续构建结果中。
-
-可以把它理解成：
-
-- 第一次读取：先拿到旧版规则
-- 发现依赖说明书过期了，于是先更新说明书
-- 说明书更新后，重新读一遍
-- 再按照最新版说明书决定接下来要编译什么
-
-因此，`.d` 文件并不是“只在下一次 `make` 才生效”，而是只要它在当前执行中被成功重建，`make` 就会重新读取它。
-
-### 5.7 整个流程串起来看 <a id=整个流程串起来看></a>
-
-现在 `make` 的工作方式就更完整了：
-
-1. 先读取主 Makefile
-2. 再尝试读取 `include` 进来的 `.d` 依赖文件
-3. 如果某个 `.d` 文件缺失或过期，就先更新它
-4. 如果被包含的 makefile 文件发生变化，`make` 会重新读取一次规则
-5. 再根据最新依赖关系比较目标和依赖的时间戳
-6. 最后只重新编译真正受影响的部分
-
-比如你只改了 `print.h`：
-
-- `make` 通过 `main.d` 知道 `main.o` 依赖 `print.h`
-- 通过 `print.d` 知道 `print.o` 也依赖 `print.h`
-- 所以会重新编译 `main.o` 和 `print.o`
-- 然后重新链接 `main`
-
-这时 Make 才能正确追踪头文件变化带来的影响。
-
-### 5.8 一个更接近实战的小模板 <a id=一个更接近实战的小模板></a>
-
-最后放一个更常见、也更适合抄回去直接改的版本：
+下面的模板适用于源码和目标文件位于同一目录的小型 C 项目：
 
 ```makefile
 CC = gcc
-CFLAGS = -Wall -Wextra -O2
-TARGET = main
-SRCS = main.c print.c
-OBJS = $(SRCS:.c=.o)
-DEPS = $(SRCS:.c=.d)
+CPPFLAGS =
+CFLAGS = -std=c17 -Wall -Wextra -O2
+LDFLAGS =
+LDLIBS =
+
+TARGET := main
+SRCS := main.c print.c
+OBJS := $(SRCS:.c=.o)
+DEPS := $(OBJS:.o=.d)
 
 .PHONY: all clean
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
-	$(CC) $(OBJS) -o $(TARGET)
+	$(CC) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 %.o: %.c
-	$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -MMD -MP -c $< -o $@
 
 clean:
 	rm -f $(TARGET) $(OBJS) $(DEPS)
@@ -1303,38 +808,26 @@ clean:
 -include $(DEPS)
 ```
 
----
+验证增量构建：
 
-## 小结 <a id="summary"></a>
+```bash
+make
+sleep 1
+touch print.h
+make
+make clean
+```
 
-### 1. 编译流程
+首次执行会编译两个翻译单元并链接。示例中的短暂等待用于避开文件系统时间戳粒度造成的同一时刻判断；实际操作时直接修改并保存
+`print.h`
+即可。更新后，`main.d` 和 `print.d` 都把它列为依赖，因此两个目标文件都会重新编译，随后重新链接 `main`。
 
-C/C++ 从源文件到可执行文件，通常会经历预处理、编译、汇编和链接四个阶段。理解这一点之后，再看 Makefile 中的 `.c`、`.o`
-和最终目标文件，关系会清晰很多。
+## 小结{#小结}
 
-### 2. Makefile 的基本结构
+Makefile 的主线是构建图：
 
-Makefile 的核心是规则：目标、依赖和命令。`make` 会根据这些规则决定应该构建什么、先构建谁，以及哪些部分可以跳过。
-
-### 3. 变量、函数与条件
-
-变量、内置函数、条件赋值和条件判断，主要解决的是“如何把 Makefile 写得更灵活、更少重复、更便于维护”。
-
-### 4. 增量编译的关键
-
-Make 并不是盲目地全量重编，而是依据依赖关系和时间戳，只重建已经过期的目标。
-
-### 5. `.d` 文件的意义
-
-头文件依赖如果没有被正确描述，增量编译就可能失真。`.d` 文件的价值就在于把这部分隐藏依赖补全。
-
-### 6. 本文的核心结论
-
-理解 Makefile，关键不在于死记语法，而在于建立一套稳定的思路：
-
-1. 目标是什么
-2. 它依赖什么
-3. 依赖变化后谁会过期
-4. 规则何时会被重新读取
-
-只要把这条主线理顺，Makefile 的大部分写法都能找到位置。
+1. 编译器把翻译单元变成目标文件，链接器再生成最终产物。
+2. Make 规则用目标、依赖和 recipe 描述产物关系。
+3. `make` 根据依赖图和时间戳，只重建过期目标。
+4. `.d` 文件把预处理阶段发现的头文件关系补入依赖图。
+5. `-MMD -MP` 适合在编译目标文件时生成依赖；独立 `%.d: %.c` 规则解释了被包含 makefile 的重建与重新读取机制。

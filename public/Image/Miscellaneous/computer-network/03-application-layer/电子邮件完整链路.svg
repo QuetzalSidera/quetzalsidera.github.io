@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="600" viewBox="0 0 1100 600" role="img" aria-labelledby="title desc">
+  <title id="title">电子邮件完整链路</title>
+  <desc id="desc">邮件从发件人 MUA 经 MSA 与发送方 MTA 发送，再经接收方 MTA、MDA 和 MAA 到达收件人 MUA</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <filter id="shadow" x="-15%" y="-20%" width="130%" height="150%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#0f172a" flood-opacity=".12"/>
+    </filter>
+  </defs>
+
+  <rect width="1100" height="600" rx="28" fill="#f8fafc"/>
+  <text x="40" y="58" fill="#0f172a" font-family="system-ui, sans-serif" font-size="25" font-weight="700">发送与中继</text>
+  <text x="40" y="340" fill="#0f172a" font-family="system-ui, sans-serif" font-size="25" font-weight="700">投递与访问</text>
+
+  <g filter="url(#shadow)" font-family="system-ui, sans-serif" text-anchor="middle">
+    <g>
+      <rect x="30" y="120" width="200" height="112" rx="18" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+      <text x="130" y="167" fill="#075985" font-size="25" font-weight="700">MUA</text>
+      <text x="130" y="202" fill="#334155" font-size="18">发件人用户代理</text>
+    </g>
+    <g>
+      <rect x="450" y="120" width="200" height="112" rx="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+      <text x="550" y="167" fill="#5b21b6" font-size="25" font-weight="700">MSA</text>
+      <text x="550" y="202" fill="#334155" font-size="18">邮件提交代理</text>
+    </g>
+    <g>
+      <rect x="870" y="120" width="200" height="112" rx="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+      <text x="970" y="167" fill="#5b21b6" font-size="25" font-weight="700">MTA</text>
+      <text x="970" y="202" fill="#334155" font-size="18">发送方传输代理</text>
+    </g>
+
+    <g>
+      <rect x="870" y="390" width="200" height="112" rx="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+      <text x="970" y="437" fill="#5b21b6" font-size="25" font-weight="700">MTA</text>
+      <text x="970" y="472" fill="#334155" font-size="18">接收方传输代理</text>
+    </g>
+    <g>
+      <rect x="590" y="390" width="200" height="112" rx="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+      <text x="690" y="437" fill="#5b21b6" font-size="25" font-weight="700">MDA</text>
+      <text x="690" y="472" fill="#334155" font-size="18">邮件投递代理</text>
+    </g>
+    <g>
+      <rect x="310" y="390" width="200" height="112" rx="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+      <text x="410" y="437" fill="#166534" font-size="25" font-weight="700">MAA</text>
+      <text x="410" y="472" fill="#334155" font-size="18">邮件访问代理</text>
+    </g>
+    <g>
+      <rect x="30" y="390" width="200" height="112" rx="18" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+      <text x="130" y="437" fill="#075985" font-size="25" font-weight="700">MUA</text>
+      <text x="130" y="472" fill="#334155" font-size="18">收件人用户代理</text>
+    </g>
+  </g>
+
+  <g fill="none" stroke="#475569" stroke-width="3" marker-end="url(#arrow)">
+    <path d="M 230 176 H 450"/>
+    <path d="M 650 176 H 870"/>
+    <path d="M 970 232 V 390"/>
+    <path d="M 870 446 H 790"/>
+    <path d="M 590 446 H 510" marker-start="url(#arrow)"/>
+    <path d="M 310 446 H 230" marker-start="url(#arrow)"/>
+  </g>
+
+  <g fill="#475569" font-family="system-ui, sans-serif" font-size="16" font-weight="600" text-anchor="middle">
+    <text x="340" y="102">SMTP submission</text>
+    <text x="340" y="268">TCP/587 或 TCP/465</text>
+    <text x="760" y="102">校验并入队</text>
+    <text x="946" y="305" text-anchor="end">SMTP relay · TCP/25</text>
+    <text x="830" y="375">本地投递</text>
+    <text x="550" y="375">邮箱：写入 / 访问</text>
+    <text x="270" y="375">POP3 / IMAP</text>
+  </g>
+</svg>

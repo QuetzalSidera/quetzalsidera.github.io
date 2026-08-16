@@ -27,6 +27,27 @@ export const path = {
   "电路交换的TDM": "/Image/Miscellaneous/computer-network/01-overview/电路交换的TDM.webp",
   "电路交换示意图": "/Image/Miscellaneous/computer-network/01-overview/电路交换示意图.webp",
 
+  // /Image/Miscellaneous/computer-network/02-overview-task
+  "习题11-处理时延": "/Image/Miscellaneous/computer-network/02-overview-task/习题11-处理时延.webp",
+  "习题11-处理时延时序": "/Image/Miscellaneous/computer-network/02-overview-task/习题11-处理时延时序.webp",
+  "习题12-交换方式": "/Image/Miscellaneous/computer-network/02-overview-task/习题12-交换方式.webp",
+  "习题13-分组流水线": "/Image/Miscellaneous/computer-network/02-overview-task/习题13-分组流水线.webp",
+  "习题15-传播时延": "/Image/Miscellaneous/computer-network/02-overview-task/习题15-传播时延.webp",
+  "习题16-吞吐量": "/Image/Miscellaneous/computer-network/02-overview-task/习题16-吞吐量.webp",
+
+  // /Image/Miscellaneous/computer-network/03-application-layer
+  "C:S模型": "/Image/Miscellaneous/computer-network/03-application-layer/C:S模型.webp",
+  "HTTP时延-HTTP2分帧": "/Image/Miscellaneous/computer-network/03-application-layer/HTTP时延-HTTP2分帧.svg",
+  "HTTP时延-持续流水线": "/Image/Miscellaneous/computer-network/03-application-layer/HTTP时延-持续流水线.svg",
+  "HTTP时延-持续非流水线": "/Image/Miscellaneous/computer-network/03-application-layer/HTTP时延-持续非流水线.svg",
+  "HTTP时延-非持续串行": "/Image/Miscellaneous/computer-network/03-application-layer/HTTP时延-非持续串行.svg",
+  "HTTP时延-非持续并行": "/Image/Miscellaneous/computer-network/03-application-layer/HTTP时延-非持续并行.svg",
+  "P2P模型": "/Image/Miscellaneous/computer-network/03-application-layer/P2P模型.webp",
+  SMTP: "/Image/Miscellaneous/computer-network/03-application-layer/SMTP.webp",
+  "电子邮件完整链路": "/Image/Miscellaneous/computer-network/03-application-layer/电子邮件完整链路.svg",
+  "各种DNS服务器": "/Image/Miscellaneous/computer-network/03-application-layer/各种DNS服务器.webp",
+  "迭代查询与递归查询": "/Image/Miscellaneous/computer-network/03-application-layer/迭代查询与递归查询.webp",
+
   // /Image/Miscellaneous/essay-openai-image-2
   "海报": "/Image/Miscellaneous/essay-openai-image-2/海报.webp",
   "漫画": "/Image/Miscellaneous/essay-openai-image-2/漫画.webp",
