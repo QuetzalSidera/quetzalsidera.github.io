@@ -42,6 +42,29 @@
   "各种DNS服务器": "/Image/Miscellaneous/computer-network/03-application-layer/各种DNS服务器.webp",
   "迭代查询与递归查询": "/Image/Miscellaneous/computer-network/03-application-layer/迭代查询与递归查询.webp",
 
+  "习题-DNS与Web访问": "/Image/Miscellaneous/computer-network/05-application-layer-task/习题-DNS与Web访问.webp",
+
+  "IPv4伪首部格式": "/Image/Miscellaneous/computer-network/06-transport-layer-udp/IPv4伪首部格式.svg",
+  "UDP校验和范围": "/Image/Miscellaneous/computer-network/06-transport-layer-udp/UDP校验和范围.svg",
+  "UDP首部格式": "/Image/Miscellaneous/computer-network/06-transport-layer-udp/UDP首部格式.svg",
+  "传输层通信范围": "/Image/Miscellaneous/computer-network/06-transport-layer-udp/传输层通信范围.svg",
+  "端口复用与分用": "/Image/Miscellaneous/computer-network/06-transport-layer-udp/端口复用与分用.svg",
+
+  "ARQ发送接收窗口": "/Image/Miscellaneous/computer-network/07-transport-layer-tcp/ARQ发送接收窗口.svg",
+  "ARQ信道利用率": "/Image/Miscellaneous/computer-network/07-transport-layer-tcp/ARQ信道利用率.svg",
+  "ARQ协议对比": "/Image/Miscellaneous/computer-network/07-transport-layer-tcp/ARQ协议对比.svg",
+  "TCP三次握手": "/Image/Miscellaneous/computer-network/07-transport-layer-tcp/TCP三次握手.svg",
+  "TCP发送窗口": "/Image/Miscellaneous/computer-network/07-transport-layer-tcp/TCP发送窗口.svg",
+  "TCP四次挥手": "/Image/Miscellaneous/computer-network/07-transport-layer-tcp/TCP四次挥手.svg",
+  "TCP拥塞控制": "/Image/Miscellaneous/computer-network/07-transport-layer-tcp/TCP拥塞控制.svg",
+  "TCP首部格式": "/Image/Miscellaneous/computer-network/07-transport-layer-tcp/TCP首部格式.svg",
+
+  "TCP习题-2016综合拓扑": "/Image/Miscellaneous/computer-network/08-09-transport-layer-task/TCP习题-2016综合拓扑.webp",
+  "TCP习题-2021接收窗口时序": "/Image/Miscellaneous/computer-network/08-09-transport-layer-task/TCP习题-2021接收窗口时序.webp",
+  "TCP习题-2025发送窗口时序": "/Image/Miscellaneous/computer-network/08-09-transport-layer-task/TCP习题-2025发送窗口时序.webp",
+  "TCP吞吐率-题库大题05": "/Image/Miscellaneous/computer-network/08-09-transport-layer-task/TCP吞吐率-题库大题05.svg",
+  "UDP习题-反码加法": "/Image/Miscellaneous/computer-network/08-09-transport-layer-task/UDP习题-反码加法.webp",
+
   "海报": "/Image/Miscellaneous/essay-openai-image-2/海报.webp",
   "漫画": "/Image/Miscellaneous/essay-openai-image-2/漫画.webp",
   "漫画_翻嵌": "/Image/Miscellaneous/essay-openai-image-2/漫画_翻嵌.webp",

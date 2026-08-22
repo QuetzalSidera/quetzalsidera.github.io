@@ -162,7 +162,11 @@ export function BlogCodeBlock({ children, className, ...preProps }: BlogCodeBloc
   const preClassName = [className, styles.pre].filter(Boolean).join(' ')
 
   return (
-    <div className={[styles.codeBlock, 'blog-code-block', `language-${language}`].join(' ')}>
+    <div
+      className={[styles.codeBlock, 'blog-code-block', `language-${language}`].join(' ')}
+      data-line-count={lineCount}
+      data-short={lineCount <= 18 ? 'true' : 'false'}
+    >
       <span className={[styles.lang, 'lang'].join(' ')}>{language}</span>
       <button
         className={[styles.copyButton, 'copy', copied ? styles.copied : ''].join(' ')}

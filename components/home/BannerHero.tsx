@@ -166,6 +166,7 @@ export function BannerHero({
 
   return (
     <div
+      data-site-chrome=""
       className={[
         styles.banner,
         isPostViewer ? styles.postViewer : '',

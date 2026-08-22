@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img" aria-labelledby="title desc">
+  <title id="title">端口实现传输层复用与分用</title>
+  <desc id="desc">发送端从多个应用套接字收集数据并写入端口号，接收端按目的端口将数据分别交给 DNS、SNMP 与自定义服务套接字。</desc>
+
+  <defs>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#ea580c"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .title { font-size: 23px; font-weight: 700; fill: #0f172a; }
+      .label { font-size: 17px; font-weight: 650; fill: #0f172a; }
+      .small { font-size: 14px; font-weight: 500; fill: #475569; }
+    </style>
+  </defs>
+
+  <rect width="1120" height="620" fill="#f8fafc"/>
+  <text x="40" y="45" class="title">发送端复用 · 接收端分用</text>
+  <text x="1080" y="44" class="small" text-anchor="end">端口号属于传输层名字空间</text>
+
+  <rect x="35" y="75" width="430" height="500" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="655" y="75" width="430" height="500" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text x="250" y="108" class="title" text-anchor="middle">发送主机</text>
+  <text x="870" y="108" class="title" text-anchor="middle">接收主机</text>
+
+  <g text-anchor="middle">
+    <rect x="65" y="135" width="110" height="58" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <rect x="195" y="135" width="110" height="58" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <rect x="325" y="135" width="110" height="58" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+    <text x="120" y="169" class="label" fill="#1d4ed8">进程 A</text>
+    <text x="250" y="169" class="label" fill="#6d28d9">进程 B</text>
+    <text x="380" y="169" class="label" fill="#c2410c">进程 C</text>
+
+    <rect x="65" y="225" width="110" height="58" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <rect x="195" y="225" width="110" height="58" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+    <rect x="325" y="225" width="110" height="58" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+    <text x="120" y="249" class="small">UDP Socket</text>
+    <text x="120" y="271" class="label">49160</text>
+    <text x="250" y="249" class="small">UDP Socket</text>
+    <text x="250" y="271" class="label">49161</text>
+    <text x="380" y="249" class="small">UDP Socket</text>
+    <text x="380" y="271" class="label">49162</text>
+
+    <rect x="130" y="350" width="240" height="72" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+    <text x="250" y="380" class="label" fill="#6d28d9">UDP 复用</text>
+    <text x="250" y="404" class="small">写入源端口与目的端口</text>
+    <rect x="130" y="472" width="240" height="58" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="250" y="507" class="label" fill="#15803d">IP</text>
+  </g>
+
+  <g fill="none" stroke-width="3">
+    <path d="M120 193V225" stroke="#2563eb" marker-end="url(#arrow-blue)"/>
+    <path d="M250 193V225" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+    <path d="M380 193V225" stroke="#ea580c" marker-end="url(#arrow-orange)"/>
+    <path d="M120 283V320H205V350" stroke="#2563eb" marker-end="url(#arrow-blue)"/>
+    <path d="M250 283V350" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+    <path d="M380 283V320H295V350" stroke="#ea580c" marker-end="url(#arrow-orange)"/>
+    <path d="M250 422V472" stroke="#475569" marker-end="url(#arrow-gray)"/>
+  </g>
+
+  <g text-anchor="middle">
+    <rect x="685" y="135" width="110" height="58" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <rect x="815" y="135" width="110" height="58" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <rect x="945" y="135" width="110" height="58" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+    <text x="740" y="169" class="label" fill="#1d4ed8">DNS</text>
+    <text x="870" y="169" class="label" fill="#6d28d9">SNMP</text>
+    <text x="1000" y="169" class="label" fill="#c2410c">自定义服务</text>
+
+    <rect x="685" y="225" width="110" height="58" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
+    <rect x="815" y="225" width="110" height="58" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2"/>
+    <rect x="945" y="225" width="110" height="58" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+    <text x="740" y="249" class="small">UDP Socket</text>
+    <text x="740" y="271" class="label">53</text>
+    <text x="870" y="249" class="small">UDP Socket</text>
+    <text x="870" y="271" class="label">161</text>
+    <text x="1000" y="249" class="small">UDP Socket</text>
+    <text x="1000" y="271" class="label">9000</text>
+
+    <rect x="750" y="350" width="240" height="72" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+    <text x="870" y="380" class="label" fill="#6d28d9">UDP 分用</text>
+    <text x="870" y="404" class="small">按本地 IP 与目的端口交付</text>
+    <rect x="750" y="472" width="240" height="58" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="870" y="507" class="label" fill="#15803d">IP</text>
+  </g>
+
+  <g fill="none" stroke-width="3">
+    <path d="M740 225V193" stroke="#2563eb" marker-end="url(#arrow-blue)"/>
+    <path d="M870 225V193" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+    <path d="M1000 225V193" stroke="#ea580c" marker-end="url(#arrow-orange)"/>
+    <path d="M805 350V320H740V283" stroke="#2563eb" marker-end="url(#arrow-blue)"/>
+    <path d="M870 350V283" stroke="#7c3aed" marker-end="url(#arrow-purple)"/>
+    <path d="M935 350V320H1000V283" stroke="#ea580c" marker-end="url(#arrow-orange)"/>
+    <path d="M870 472V422" stroke="#475569" marker-end="url(#arrow-gray)"/>
+  </g>
+
+  <path d="M370 501H750" stroke="#16a34a" stroke-width="3" marker-end="url(#arrow-gray)"/>
+  <rect x="474" y="466" width="172" height="70" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+  <text x="560" y="496" class="label" text-anchor="middle">IP 网络</text>
+  <text x="560" y="519" class="small" text-anchor="middle">主机到主机</text>
+
+  <g class="small" text-anchor="middle">
+    <text x="120" y="306" fill="#1d4ed8">目的端口 53</text>
+    <text x="250" y="306" fill="#6d28d9">目的端口 161</text>
+    <text x="380" y="306" fill="#c2410c">目的端口 9000</text>
+  </g>
+</svg>

@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -15,11 +19,21 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"],
-      "@/lib/*": ["./lib/*"],
-      "@/components/*": ["./components/*"],
-      "@/styles/*": ["./styles/*"],
-      "@public/*": ["./public/*"]
+      "@/*": [
+        "./*"
+      ],
+      "@/lib/*": [
+        "./lib/*"
+      ],
+      "@/components/*": [
+        "./components/*"
+      ],
+      "@/styles/*": [
+        "./styles/*"
+      ],
+      "@public/*": [
+        "./public/*"
+      ]
     },
     "plugins": [
       {
@@ -28,16 +42,18 @@
     ]
   },
   "include": [
-    "next-env.d.ts",
+    ".next-playwright/types/**/*.ts",
+    ".next/types/**/*.ts",
     "app/**/*.ts",
     "app/**/*.tsx",
     "components/**/*.ts",
     "components/**/*.tsx",
     "lib/**/*.ts",
     "lib/**/*.tsx",
+    "next-env.d.ts",
     "styles/**/*.ts",
     "types/**/*.ts",
-    ".next/types/**/*.ts"
+    ".next-nav-audit/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

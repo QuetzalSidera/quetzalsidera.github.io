@@ -1,0 +1,161 @@
+.root {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  border-block: 1px solid color-mix(in srgb, var(--font-color-grey) 22%, transparent);
+  background: color-mix(in srgb, var(--foreground-color) 94%, transparent);
+}
+
+.headingRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--font-color-grey) 16%, transparent);
+}
+
+.title {
+  color: var(--font-color-grey);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: left;
+  text-indent: 0;
+}
+
+.fitButton {
+  flex: none;
+  padding: 0.15rem 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-blue);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.fitButton:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 3px;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  height: var(--mindmap-height);
+  min-height: 18rem;
+  touch-action: none;
+}
+
+:global(html[theme='dark']) .root .canvas {
+  --markmap-circle-open-bg: var(--foreground-color) !important;
+  --markmap-text-color: var(--font-color-grey) !important;
+}
+
+.fallback {
+  margin: 0;
+  padding: 1rem 0;
+  overflow: auto;
+  background: transparent;
+  color: var(--font-color-grey);
+  font: inherit;
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.root[data-ready='true'][data-error='false'] .fallback {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.root[data-ready='false'][data-error='false'] .canvas {
+  visibility: hidden;
+}
+
+.root[data-ready='false'][data-error='false'] .fallback {
+  position: absolute;
+  inset: 3rem 0 auto;
+  max-height: calc(var(--mindmap-height) - 3rem);
+}
+
+.root[data-error='true'] .canvas {
+  display: none;
+}
+
+.root[data-print-sizing='true'] .canvas {
+  width: 178mm !important;
+  max-width: none !important;
+  height: var(--mindmap-print-height) !important;
+  min-height: 0 !important;
+}
+
+@media (max-width: 600px) {
+  .canvas {
+    min-height: 22rem;
+  }
+}
+
+@media print {
+  .root {
+    margin: 3mm 0;
+    overflow: visible;
+    border-block-color: #777;
+    background: #fff;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .headingRow {
+    padding: 1.5mm 0;
+    border-bottom-color: #aaa;
+  }
+
+  .title {
+    color: #111;
+    font-size: 9pt;
+  }
+
+  .fitButton {
+    display: none;
+  }
+
+  .root .canvas {
+    --markmap-circle-open-bg: #fff !important;
+    --markmap-text-color: #111 !important;
+    width: 100%;
+    height: var(--mindmap-print-height) !important;
+    min-height: 0 !important;
+  }
+
+  .root .canvas :global(.markmap-link),
+  .root .canvas :global(.markmap-node > line),
+  .root .canvas :global(.markmap-node > circle) {
+    stroke: #555 !important;
+  }
+
+  .fallback {
+    color: #111;
+    font-size: 9.5pt;
+  }
+
+  .root[data-ready='false'] .canvas {
+    display: none !important;
+  }
+
+  .root[data-ready='false'] .fallback {
+    position: static;
+    max-height: none;
+  }
+}

@@ -4,6 +4,9 @@ export type PostOutline = {
   slug: string
 }
 
+export type DocumentKind = 'note' | 'exercise' | 'experiment'
+export type ExerciseFont = 'kai' | 'song' | 'site'
+
 export type Post = {
   slug: string
   title: string
@@ -18,6 +21,8 @@ export type Post = {
   cover?: string
   excerpt?: string
   pinned?: boolean
+  kind: DocumentKind
+  exerciseFont: ExerciseFont
 }
 
 export type CollectionData = {

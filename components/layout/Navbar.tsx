@@ -40,6 +40,7 @@ export function Navbar() {
 
   return (
     <header
+      data-site-chrome=""
       className={[styles.headerContainer, isPostViewer ? styles.postViewer : '']
         .filter(Boolean)
         .join(' ')}

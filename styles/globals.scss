@@ -280,7 +280,7 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-body > div {
+body > [data-app-shell] {
   display: flex;
   flex: 1 0 auto;
   flex-direction: column;
@@ -434,7 +434,7 @@ ul {
     line-height: 1.6 !important;
   }
 
-  body > div,
+  body > [data-app-shell],
   body main,
   .main {
     display: block !important;
@@ -445,14 +445,12 @@ ul {
     filter: none !important;
   }
 
-  header,
-  footer,
+  [data-site-chrome],
   .post-side-list,
   .gt-container,
   .giscus,
   giscus-widget,
-  script,
-  canvas {
+  script {
     display: none !important;
   }
 }

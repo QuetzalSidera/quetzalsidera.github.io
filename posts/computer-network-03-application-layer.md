@@ -152,7 +152,7 @@ import { path as miscellaneousImagePath } from '@public/Image/Miscellaneous/path
 const clientServerModelImage = {
   src: miscellaneousImagePath['C:S模型'],
   alt: '多台客户端主机分别与一台中心服务器通信',
-  align: 'center',
+  align: 'right',
   wrap: false,
   maxHeight: '16rem',
   caption: '客户—服务器模型',
@@ -161,7 +161,7 @@ const clientServerModelImage = {
 const peerToPeerModelImage = {
   src: miscellaneousImagePath['P2P模型'],
   alt: '多台对等主机彼此直接连接并交换数据',
-  align: 'center',
+  align: 'right',
   wrap: false,
   maxHeight: '16rem',
   caption: 'P2P 模型',
@@ -170,9 +170,9 @@ const peerToPeerModelImage = {
 const dnsServerTypesImage = {
   src: miscellaneousImagePath['各种DNS服务器'],
   alt: '请求主机经本地域名服务器依次查询根服务器、TLD 服务器和权威域名服务器',
-  align: 'center',
-  wrap: false,
-  maxHeight: '32rem',
+  align: 'right',
+  wrap: true,
+  maxHeight: '20rem',
   caption: '根服务器、TLD 服务器、权威域名服务器与本地域名服务器的查询关系',
 } as const
 
@@ -197,7 +197,7 @@ const emailDeliveryFlowImage = {
 const httpNonPersistentSerialTimelineImage = {
   src: miscellaneousImagePath['HTTP时延-非持续串行'],
   alt: '客户端获取基础 HTML 后，为每个引用对象重新建立 TCP 连接并依次传输',
-  align: 'center',
+  align: 'right',
   wrap: false,
   maxHeight: '42rem',
   caption: '非持续连接串行获取基础 HTML 与引用对象的时序',
@@ -206,7 +206,7 @@ const httpNonPersistentSerialTimelineImage = {
 const httpNonPersistentParallelTimelineImage = {
   src: miscellaneousImagePath['HTTP时延-非持续并行'],
   alt: '客户端获取基础 HTML 后，以至多 K 条新 TCP 连接按固定批次并行获取引用对象',
-  align: 'center',
+  align: 'right',
   wrap: false,
   maxHeight: '42rem',
   caption: '非持续连接以至多 K 条连接分批获取引用对象的时序',
@@ -215,7 +215,7 @@ const httpNonPersistentParallelTimelineImage = {
 const httpPersistentNonPipelineTimelineImage = {
   src: miscellaneousImagePath['HTTP时延-持续非流水线'],
   alt: '客户端只建立一条 TCP 连接，等待前一对象完整到达后再请求下一个对象',
-  align: 'center',
+  align: 'right',
   wrap: false,
   maxHeight: '42rem',
   caption: '持续连接以非流水线方式依次获取对象的时序',
@@ -224,11 +224,22 @@ const httpPersistentNonPipelineTimelineImage = {
 const httpPersistentPipelineTimelineImage = {
   src: miscellaneousImagePath['HTTP时延-持续流水线'],
   alt: 'HTTP 1.1 流水线连续发送请求，各对象的首字节箭头与数据阴影按响应顺序排列',
+  align: 'right',
+  wrap: false,
+  maxHeight: '42rem',
+  caption: 'HTTP/1.1 流水线连续发送请求并按序发送完整响应',
+} as const
+
+
+const httpPersistentPipelineTimelineImage_Center = {
+  src: miscellaneousImagePath['HTTP时延-持续流水线'],
+  alt: 'HTTP 1.1 流水线连续发送请求，各对象的首字节箭头与数据阴影按响应顺序排列',
   align: 'center',
   wrap: false,
   maxHeight: '42rem',
   caption: 'HTTP/1.1 流水线连续发送请求并按序发送完整响应',
 } as const
+
 
 const http2MultiplexingTimelineImage = {
   src: miscellaneousImagePath['HTTP时延-HTTP2分帧'],
@@ -247,33 +258,73 @@ HTTP，并深入探讨了DNS与HTTP的时延，与此同时介绍了HTTP/1.1、H
 
 应用层协议规定应用进程间报文的格式、语义与交换顺序，并依赖传输层完成进程间通信。
 
+:::mindmap{title="应用层知识结构" height="28rem" print-height="82mm" interactive="true"}
+- 应用层
+  - 网络应用体系结构
+    - 客户—服务器
+    - P2P
+  - DNS
+    - 域名空间与区
+    - 域名服务器层次
+    - 资源记录
+    - 解析、缓存与时延
+  - FTP
+    - 控制连接
+    - 数据连接
+    - 主动与被动模式
+  - 电子邮件
+    - SMTP
+      - 提交与中继
+    - 邮件格式与 MIME
+    - POP3 与 IMAP
+      - 邮件访问
+  - Web 与 HTTP
+    - URI
+      - 标识资源
+    - 请求—响应与报文
+    - 连接复用、流水线与多路复用
+    - 时延分析
+:::
+
 ## 0. 网络应用体系结构{#网络应用体系结构}
 
 两种基本体系结构：客户—服务器（C/S）和对等（P2P）；实际系统可混合使用。
 
 ### 0.1 客户—服务器体系结构{#客户服务器体系结构}
 
-**组成**：服务器通常持续运行，并具有稳定的可定位地址；客户端按需发起请求，客户端之间通常不直接通信。
-
+::::flow{mode="float" side="right" media-width="38%" min-text-width="24rem" print="block"}
+:::media
 <Image {...clientServerModelImage} />
+:::
+:::body
+
+**组成**：服务器通常持续运行，并具有稳定的可定位地址；客户端按需发起请求，客户端之间通常不直接通信。
 
 **优点**：服务状态、权限和数据集中管理。
 
 **缺点**：服务器的计算能力和出口带宽可能成为瓶颈；服务器故障可能影响全部客户端。
 
 **扩展方式**：使用服务器集群、负载均衡和 CDN 扩展容量与可用性。
+:::
+::::
 
 ### 0.2 P2P 体系结构{#P2P体系结构}
 
-**组成**：纯 P2P 无固定中心服务器；对等方既请求资源，也提供资源。
-
+::::flow{mode="float" side="right" media-width="38%" min-text-width="24rem" print="block"}
+:::media
 <Image {...peerToPeerModelImage} />
+:::
+:::body
+
+**组成**：纯 P2P 无固定中心服务器；对等方既请求资源，也提供资源。
 
 **优点**：节点可贡献带宽、存储和计算能力，具有自扩展性。
 
 **缺点**：节点发现、动态上下线、地址变化、NAT 穿透和安全管理较复杂。
 
 **混合结构**：中心服务负责索引或节点发现，对等方直接交换数据。
+:::
+::::
 
 ## 1. 域名系统 DNS{#域名系统DNS}
 
@@ -344,9 +395,9 @@ www.example.com.
 > 主机上的 DNS 客户端（也称存根解析器）不属于服务器，它把请求交给配置的本地域名服务器。
 > 根服务器、TLD 服务器和权威域名服务器构成查询层次；本地域名服务器位于该层次之外，承担代理查询和缓存。
 
-典型冷查询路径：主机 DNS 客户端 => 本地域名服务器 => 根服务器（`NS`） => TLD 服务器（`NS`） => 权威域名服务器（`A`/`AAAA`）。
-
 <Image {...dnsServerTypesImage} />
+
+典型冷查询路径：主机 DNS 客户端 => 本地域名服务器 => 根服务器（`NS`） => TLD 服务器（`NS`） => 权威域名服务器（`A`/`AAAA`）。
 
 ### 1.3 资源记录{#资源记录}
 
@@ -428,16 +479,22 @@ bilibili.com.   600   IN        A       139.159.241.37
 
 ### 1.4.2 递归与迭代查询{#递归查询与迭代查询}
 
+::::flow{mode="split" side="left" media-width="42%" min-text-width="22rem" print="block"}
+:::media
 | 查询方式 | 服务器的责任       | 客户端的责任     |
 |------|--------------|------------|
 | 递归查询 | 得到最终答案，再统一返回 | 等待最终结果     |
 | 迭代查询 | 返回当前已知的最佳答案  | 根据返回信息继续查询 |
+:::
+:::body
 
 主机 DNS 客户端 => 本地域名服务器一般是递归查询；
 
 本地域名服务器 => 根服务器、TLD 服务器和权威域名服务器一般是迭代查询。
 
 > 若各级域名服务器都采用递归查询，上级服务器需要代查后续层级，负载和状态开销较大，因此这种递归链除本地域名服务器以外实际几乎不使用。
+:::
+::::
 
 <Image {...dnsQueryModesImage} />
 
@@ -465,6 +522,8 @@ DNS 缓存可位于浏览器等应用、操作系统和本地域名服务器。�
 
 DNS 查询与回答使用相同格式：
 
+::::flow{mode="split" side="left" media-width="42%" min-text-width="22rem" print="block"}
+:::media
 | 区域  | 内容                      |
 |-----|-------------------------|
 | 首部  | 16 位查询标识、标志位，以及后续各区的条目数 |
@@ -472,10 +531,14 @@ DNS 查询与回答使用相同格式：
 | 回答区 | 直接回答问题的资源记录             |
 | 权威区 | 指向相关权威域名服务器的资源记录        |
 | 附加区 | 辅助后续查询的资源记录，如服务器地址      |
+:::
+:::body
 
 查询标识由客户端生成，服务器复制到回答中，以便客户端匹配查询与回答。`AA` 标志表示回答是否由所查名称的权威域名服务器给出。
 
-DNS 传输方式、报文字段与 Wireshark 抓包分析将在 [应用层协议实验](./computer-network-04-application-layer-exp.md) 中展开。
+DNS 传输方式、报文字段与 Wireshark 抓包分析将在 [应用层协议实验](../ignore/computer-network-04-application-layer-exp.md) 中展开。
+:::
+::::
 
 ### 1.7 DNS 查询时延{#DNS查询时延}
 
@@ -483,12 +546,12 @@ DNS 传输方式、报文字段与 Wireshark 抓包分析将在 [应用层协议
 
 基本假设如下：
 
-1. 忽略处理、排队、丢包与传输时间，并假设各级响应同时提供 `NS` 记录及其可直接使用的 `A`/`AAAA` 地址（含必要的胶水记录），且没有
+1. **仅考虑必要时延：** 忽略处理、排队、丢包与传输时间，并假设各级响应同时提供 `NS` 记录及其可直接使用的 `A`/`AAAA`
+   地址（含必要的胶水记录），且没有
    `CNAME`、重传或其他附加查询。
-
-2. 本地域名服务器仅提供递归查询，其他域名服务器仅提供迭代查询。
-
-3. 设主机到本地域名服务器的往返时间为 $RTT_0$，本地域名服务器顺序访问 $n$ 台上游服务器的往返时间为 $RTT_i$：
+2. **递归与迭代：** 本地域名服务器仅提供递归查询，其他域名服务器仅提供迭代查询。
+3. **基本时延表示：** 设主机到本地域名服务器的往返时间为 $RTT_0$，本地域名服务器顺序访问 $n$
+   台上游服务器的往返时间为 $RTT_i$：
 
 $$
 T_{\mathrm{DNS}}=RTT_0+\sum_{i=1}^{n}RTT_i.
@@ -513,14 +576,14 @@ $$
 \end{aligned}
 $$
 
-| 冷查询目标                                        | 本地域名服务器的顺序查询                                   |                            查询时延 |
-|----------------------------------------------|------------------------------------------------|--------------------------------:|
-| 命中缓存记录                                       | 无上游查询                                          |                         $RTT_0$ |
-| `www.example.com`                            | 根服务器 => `com` TLD 服务器 => `example.com` 权威域名服务器 |       $RTT_0+RTT_1+RTT_2+RTT_3$ |
-| `example.com`                                | 同上；最后查询区顶点记录，区域文件中常写作 `@`                      |       $RTT_0+RTT_1+RTT_2+RTT_3$ |
-| `www.sub.example.com`，`sub` 未单独设区            | 同上；最后查询 `example.com` 区中的 `www.sub`            |       $RTT_0+RTT_1+RTT_2+RTT_3$ |
+| 冷查询目标                                        | 本地域名服务器的顺序查询                                   | 查询时延                            |
+|----------------------------------------------|------------------------------------------------|---------------------------------|
+| 命中缓存记录                                       | 无上游查询                                          | $RTT_0$                         |
+| `www.example.com`                            | 根服务器 => `com` TLD 服务器 => `example.com` 权威域名服务器 | $RTT_0+RTT_1+RTT_2+RTT_3$       |
+| `example.com`                                | 同上；最后查询区顶点记录，区域文件中常写作 `@`                      | $RTT_0+RTT_1+RTT_2+RTT_3$       |
+| `www.sub.example.com`，`sub` 未单独设区            | 同上；最后查询 `example.com` 区中的 `www.sub`            | $RTT_0+RTT_1+RTT_2+RTT_3$       |
 | `www.sub.example.com`，`sub.example.com` 单独设区 | 再查询 `sub.example.com` 权威域名服务器                  | $RTT_0+RTT_1+RTT_2+RTT_3+RTT_4$ |
-| 已知目标权威域名服务器                                  | 只查询目标权威域名服务器                                   |                   $RTT_0+RTT_3$ |
+| 已知目标权威域名服务器                                  | 只查询目标权威域名服务器                                   | $RTT_0+RTT_3$                   |
 
 > 域名标签数只能粗略估计最长查询链（标签数 = 最多迭代查询次数），实际查询次数由区的边界决定。
 >
@@ -588,7 +651,11 @@ TCP 连接，称为带外控制（out-of-band control）。
 
 五类代理是逻辑角色，可以由同一邮件服务器或软件实现。
 
+::::flow{mode="float" side="right" media-width="46%" min-text-width="24rem" print="block"}
+:::media
 <Image {...emailDeliveryFlowImage} />
+:::
+:::body
 
 1. **提交**：发件人 MUA 通过 SMTP submission（TCP/587；TCP/465 为隐式 TLS）向 MSA 提交邮件。
 2. **校验与排队**：MSA 校验邮件并交给发送方 MTA；MTA 将其放入外发队列。
@@ -598,6 +665,8 @@ TCP 连接，称为带外控制（out-of-band control）。
 6. **访问**：收件人 MUA 通过 MAA，以 POP3 或 IMAP 访问邮箱。
 
 MTA 发送邮件时是 SMTP 客户，接收邮件时是 SMTP 服务器。每一跳中继都是独立的 SMTP 会话；临时失败时保留队列并重试，永久失败时通常生成投递状态通知。
+:::
+::::
 
 ### 3.2 SMTP{#SMTP}
 
@@ -615,6 +684,8 @@ SMTP 是基于 TCP 的推送协议。服务器间中继使用 TCP/25；邮件提
 电子邮件由 **SMTP 信封**与**邮件内容**组成；邮件内容依次为首部、空行和主体。信封由 `MAIL FROM` 与一个或多个 `RCPT TO`
 构成并决定投递。
 
+::::flow{mode="split" side="left" media-width="42%" min-text-width="22rem" print="block"}
+:::media
 | 首部         | 作用           |
 |------------|--------------|
 | `From:`    | 标识邮件作者或显示发件人 |
@@ -622,6 +693,8 @@ SMTP 是基于 TCP 的推送协议。服务器间中继使用 TCP/25；邮件提
 | `Cc:`      | 列出显示的抄送收件人   |
 | `Subject:` | 描述邮件主题       |
 | `Date:`    | 记录邮件创建时间     |
+:::
+:::body
 
 SMTP 信封与邮件首部可以不同；实际投递以信封为准。
 
@@ -629,6 +702,8 @@ SMTP 信封与邮件首部可以不同；实际投递以信封为准。
 
 原始 SMTP 只支持 7 位 ASCII 邮件内容，不能直接传输非 ASCII 文本和二进制多媒体。多用途互联网邮件扩展（Multipurpose Internet
 Mail Extensions，MIME）通过媒体类型、多部分结构和传输编码扩展邮件内容；MIME 扩展而非替代 SMTP。
+:::
+::::
 
 常用 MIME 首部字段如下：
 
@@ -900,6 +975,12 @@ $$
 
 #### 5.7.2 非持续连接：串行与并行{#非持续连接串行与并行}
 
+::::flow{mode="float" side="right" media-width="42%" min-text-width="24rem" print="block"}
+:::media
+<Image {...httpNonPersistentSerialTimelineImage} />
+:::
+:::body
+
 非持续连接为每个对象新建一条 TCP 连接，共使用 $N+1$ 条连接。
 
 **串行**：取得一个对象后再为下一个对象建连。
@@ -914,8 +995,14 @@ T_{\text{非持续，串行}}
 \underbrace{2NRTT}_{\text{引用对象：逐一建连与响应}}
 +T_{\text{数据}}.
 $$
+:::
+::::
 
-<Image {...httpNonPersistentSerialTimelineImage} />
+::::flow{mode="float" side="right" media-width="42%" min-text-width="24rem" print="block"}
+:::media
+<Image {...httpNonPersistentParallelTimelineImage} />
+:::
+:::body
 
 **并行**：取得并解析基础 HTML 后，将小对象按至多 $K$ 个一批请求，其中 $K\in\mathbb N^+$。
 
@@ -930,13 +1017,19 @@ T_{\text{非持续，并行}}
 +T_{\text{data}}.
 $$
 
-<Image {...httpNonPersistentParallelTimelineImage} />
-
 该式按固定批次计算。若连接完成后动态补位、对象大小不同，或数据发送与握手重叠，应按依赖关系画时间线，并对并行分支取最大值。
+:::
+::::
 
 #### 5.7.3 持续连接：非流水线与流水线{#持续连接时延}
 
 持续连接时延默认只使用一条 TCP 连接，不考虑另外建立并行连接。
+
+::::flow{mode="float" side="right" media-width="42%" min-text-width="24rem" print="block"}
+:::media
+<Image {...httpPersistentNonPipelineTimelineImage} />
+:::
+:::body
 
 **非流水线**：每次收到完整响应后再发送下一个请求。
 
@@ -954,8 +1047,14 @@ T_{\text{持续，非流水线}}
 \underbrace{NRTT}_{\text{引用对象依次请求}}
 +T_{\text{data}}.
 $$
+:::
+::::
 
-<Image {...httpPersistentNonPipelineTimelineImage} />
+::::flow{mode="float" side="right" media-width="42%" min-text-width="24rem" print="block"}
+:::media
+<Image {...httpPersistentPipelineTimelineImage} />
+:::
+:::body
 
 **流水线**：取得基础 HTML 后，连续发送全部引用对象请求。
 
@@ -973,19 +1072,23 @@ T_{\text{持续，流水线}}
 \underbrace{RTT}_{\text{引用对象批量请求}}
 +T_{\text{data}}.
 $$
-
-<Image {...httpPersistentPipelineTimelineImage} />
+:::
+::::
 
 > #### HTTP/2 分帧与 HTTP/3
 >
 > **HTTP/1.1 流水线**只能连续发送请求；服务器仍按请求顺序发送完整响应。前序响应较慢或较大时，后续响应必须等待。这被称为“队头阻塞”（Head-of-Line
 > blocking）。
 >
-> <Image {...httpPersistentPipelineTimelineImage} />
+>
 >
 > **HTTP/2 分帧**将响应拆成带流标识的帧，并在一条 TCP 连接上交错发送。它解除不同响应必须依次完整发送的约束，缓解应用层队头阻塞。
 >
+> ::::image-group{columns="2" mobile-columns="1" print-columns="2"}
+> <Image {...httpPersistentPipelineTimelineImage_Center} />
+>
 > <Image {...http2MultiplexingTimelineImage} />
+> ::::
 >
 > 两图的阴影总面积相同，均为引用对象的数据传输量；分帧只改变数据传输的调度方式，并没有减少数据量，因此阴影总面积不变。
 > 在上述无丢包、小对象模型中，两者的控制时延均为 $3RTT$。

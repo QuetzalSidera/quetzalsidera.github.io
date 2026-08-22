@@ -5,7 +5,7 @@ export function Footer() {
   const { footerName, recordName, poweredList } = blogThemeConfig
 
   return (
-    <footer className={styles.footerContainer}>
+    <footer className={styles.footerContainer} data-site-chrome="">
       <div className={styles.footerInfo}>
         <span>
           © {new Date().getFullYear()} {footerName}{' '}

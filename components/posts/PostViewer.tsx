@@ -7,31 +7,42 @@ import styles from './PostViewer.module.css'
 type PostViewerProps = {
   post: Post
   children: ReactNode
+  comments?: boolean
+  shareDescription?: string
+  shareUrl?: string
 }
 
-function formatDate(timestamp: number) {
-  return new Intl.DateTimeFormat('zh-CN', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(new Date(timestamp))
-}
-
-export function PostViewer({ post, children }: PostViewerProps) {
+export function PostViewer({
+  post,
+  children,
+  comments = true,
+  shareDescription,
+  shareUrl = post.href,
+}: PostViewerProps) {
   return (
-    <div className={styles.postViewer}>
+    <div
+      className={styles.postViewer}
+      data-document-kind={post.kind}
+      data-exercise-font={post.exerciseFont}
+      data-post-viewer=""
+      data-print-mode={post.kind === 'exercise' ? 'practice' : 'note'}
+    >
       <div className={styles.viewBox}>
         <header className={styles.printHeader}>
           <h1>{post.title}</h1>
-          <p>
-            发布于 {formatDate(post.create)}
-            {post.collection ? ` | ${post.collection}` : ''}
-          </p>
+          {post.collection ? <p>{post.collection}</p> : null}
         </header>
         <article className={styles.content}>{children}</article>
-        <GiscusComments />
+        {comments ? <GiscusComments /> : null}
       </div>
-      <PostSideList outline={post.outline ?? []} title={post.title} />
+      <PostSideList
+        description={shareDescription}
+        outline={post.outline ?? []}
+        title={post.title}
+        url={shareUrl}
+        kind={post.kind}
+        exerciseFont={post.exerciseFont}
+      />
     </div>
   )
 }

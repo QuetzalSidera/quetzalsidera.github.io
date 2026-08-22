@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">TCP 三次握手</title>
+  <desc id="desc">客户端主动打开，从关闭进入同步已发送状态，发送序号 x 的 SYN；服务端从监听进入同步已接收状态，回复序号 y、确认号 x 加一的 SYN ACK；客户端进入已建立状态，回复序号 x 加一、确认号 y 加一的 ACK，该报文可捎带应用数据；服务端收到后进入已建立状态。</desc>
+
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrow-time" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#64748b"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .title { font-size: 24px; font-weight: 700; fill: #0f172a; }
+      .endpoint { font-size: 20px; font-weight: 700; fill: #0f172a; text-anchor: middle; }
+      .state { font-size: 15px; font-weight: 700; fill: #334155; }
+      .packet { font-size: 16px; font-weight: 700; text-anchor: middle; }
+      .note { font-size: 14px; font-weight: 550; fill: #475569; }
+      .clear-label { paint-order: stroke; stroke: #f8fafc; stroke-width: 6px; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="760" fill="#f8fafc"/>
+  <text x="38" y="42" class="title">TCP 连接建立</text>
+  <text x="1162" y="41" class="note" text-anchor="end">时间向下</text>
+
+  <text x="320" y="95" class="endpoint">客户端（主动打开）</text>
+  <text x="880" y="95" class="endpoint">服务端（被动打开）</text>
+  <line x1="320" y1="120" x2="320" y2="650" stroke="#64748b" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow-time)"/>
+  <line x1="880" y1="120" x2="880" y2="650" stroke="#64748b" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow-time)"/>
+
+  <text x="285" y="160" class="state" text-anchor="end">[CLOSED]</text>
+  <text x="915" y="215" class="state">[LISTEN]</text>
+
+  <circle cx="320" cy="190" r="6" fill="#2563eb"/>
+  <line x1="320" y1="190" x2="880" y2="310" stroke="#2563eb" stroke-width="3.2" marker-end="url(#arrow-blue)"/>
+  <text x="600" y="230" class="packet clear-label" fill="#1d4ed8">SYN = 1　ACK = 0　seq = x　ack = —</text>
+  <text x="285" y="310" class="state" text-anchor="end">[SYN-SENT]</text>
+  <text x="915" y="430" class="state">[SYN-RECEIVED]</text>
+
+  <circle cx="880" cy="310" r="6" fill="#7c3aed"/>
+  <line x1="880" y1="310" x2="320" y2="430" stroke="#7c3aed" stroke-width="3.2" marker-end="url(#arrow-purple)"/>
+  <text x="600" y="350" class="packet clear-label" fill="#6d28d9">SYN = 1　ACK = 1　seq = y　ack = x + 1</text>
+  <text x="285" y="540" class="state" text-anchor="end">[ESTABLISHED]</text>
+
+  <circle cx="320" cy="430" r="6" fill="#16a34a"/>
+  <line x1="320" y1="430" x2="880" y2="550" stroke="#16a34a" stroke-width="3.2" marker-end="url(#arrow-green)"/>
+  <text x="600" y="470" class="packet clear-label" fill="#15803d">SYN = 0　ACK = 1　seq = x + 1　ack = y + 1</text>
+  <text x="600" y="515" class="note clear-label" text-anchor="middle">第三次握手可捎带应用数据</text>
+  <text x="915" y="590" class="state">[ESTABLISHED]</text>
+</svg>

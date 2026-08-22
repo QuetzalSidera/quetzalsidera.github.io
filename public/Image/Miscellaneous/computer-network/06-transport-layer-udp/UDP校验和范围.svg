@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img"
+     aria-labelledby="title desc">
+  <title id="title">IPv4 UDP 校验和的输入与计算流程</title>
+  <desc id="desc">校验和覆盖十二字节 IPv4 伪首部、UDP 首部和数据。伪首部只参与计算，不随 UDP
+    数据报发送；各十六位字做反码加法后取反。
+  </desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
+            orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .title { font-size: 23px; font-weight: 700; fill: #0f172a; }
+      .label { font-size: 17px; font-weight: 650; fill: #0f172a; }
+      .small { font-size: 14px; font-weight: 500; fill: #475569; }
+      .field { font-size: 15px; font-weight: 650; text-anchor: middle; fill: #334155; }
+    </style>
+  </defs>
+
+  <rect width="1120" height="620" fill="#f8fafc"/>
+  <text x="40" y="46" class="title">IPv4 UDP 校验和</text>
+  <rect x="65" y="108" width="990" height="118" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.5"
+        stroke-dasharray="8 6"/>
+  <text x="85" y="137" class="label" fill="#6d28d9">IPv4 伪首部 · 12 B</text>
+  <text x="1035" y="136" class="small" text-anchor="end">只参与计算，不随 UDP 数据报发送</text>
+
+  <g>
+    <rect x="85" y="158" width="270" height="48" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <rect x="355" y="158" width="270" height="48" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <rect x="625" y="158" width="90" height="48" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <rect x="715" y="158" width="120" height="48" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <rect x="835" y="158" width="200" height="48" fill="#ede9fe" stroke="#8b5cf6" stroke-width="2"/>
+    <text x="220" y="188" class="field">源 IPv4 地址 · 32 位</text>
+    <text x="490" y="188" class="field">目的 IPv4 地址 · 32 位</text>
+    <text x="670" y="188" class="field">0 · 8 位</text>
+    <text x="775" y="179" class="field">协议号</text>
+    <text x="775" y="197" class="small" text-anchor="middle">17 · 8 位</text>
+    <text x="935" y="188" class="field">UDP 长度 · 16 位</text>
+  </g>
+
+  <g>
+    <rect x="65" y="252" width="420" height="96" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.5"/>
+    <text x="275" y="288" class="label" text-anchor="middle" fill="#075985">UDP 首部 · 8 B</text>
+    <text x="275" y="317" class="small" text-anchor="middle">发送端计算时先把校验和字段置 0</text>
+    <rect x="485" y="252" width="570" height="96" fill="#ecfdf5" stroke="#16a34a" stroke-width="2.5"/>
+    <text x="770" y="288" class="label" text-anchor="middle" fill="#166534">UDP 数据</text>
+    <text x="770" y="317" class="small" text-anchor="middle">奇数字节仅在计算副本末尾补 0</text>
+  </g>
+
+  <path d="M560 348V366" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="390" y="370" width="340" height="58" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+  <text x="560" y="395" class="label" text-anchor="middle">按网络字节序切成 16 位字</text>
+  <text x="560" y="417" class="small" text-anchor="middle">伪首部 + UDP 首部 + 数据</text>
+
+  <path d="M560 428V464" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <g>
+    <rect x="115" y="476" width="250" height="72" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <rect x="435" y="476" width="250" height="72" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <rect x="755" y="476" width="250" height="72" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <text x="240" y="507" class="label" text-anchor="middle">反码加法</text>
+    <text x="240" y="531" class="small" text-anchor="middle">最高位进位回卷</text>
+    <text x="560" y="507" class="label" text-anchor="middle">逐位取反</text>
+    <text x="560" y="531" class="small" text-anchor="middle">写入校验和字段</text>
+    <text x="880" y="507" class="label" text-anchor="middle">接收端复算</text>
+    <text x="880" y="531" class="small" text-anchor="middle">保留校验和，总和应为 0xffff</text>
+    <path d="M365 512H435" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M685 512H755" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+  </g>
+</svg>

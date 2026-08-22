@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: row-reverse;
   position: relative;
-  margin: 16px 0;
+  margin: 16px 2em;
   padding-top: 48px;
   overflow: hidden;
   background-color: var(--post-viewer-code-bg);

@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="350" viewBox="0 0 1000 350" role="img" aria-labelledby="title desc">
+  <title id="title">UDP 数据报格式</title>
+  <desc id="desc">UDP 首部固定为八字节，依次包含十六位源端口、目的端口、UDP 长度和校验和，首部之后是应用数据。</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .title { font-size: 22px; font-weight: 700; fill: #0f172a; }
+      .field { font-size: 18px; font-weight: 700; text-anchor: middle; }
+      .small { font-size: 13px; font-weight: 550; fill: #475569; }
+      .bit { font-size: 14px; font-weight: 650; fill: #334155; }
+    </style>
+  </defs>
+
+  <rect width="1000" height="350" fill="#f8fafc"/>
+  <text x="32" y="38" class="title">UDP 数据报</text>
+
+  <g class="bit">
+    <text x="120" y="69">0</text>
+    <text x="480" y="69" text-anchor="end">15</text>
+    <text x="520" y="69">16</text>
+    <text x="880" y="69" text-anchor="end">31</text>
+  </g>
+  <line x1="120" y1="78" x2="880" y2="78" stroke="#64748b" stroke-width="2"/>
+  <line x1="120" y1="73" x2="120" y2="83" stroke="#64748b" stroke-width="2"/>
+  <line x1="500" y1="73" x2="500" y2="83" stroke="#64748b" stroke-width="2"/>
+  <line x1="880" y1="73" x2="880" y2="83" stroke="#64748b" stroke-width="2"/>
+
+  <g>
+    <rect x="120" y="88" width="380" height="58" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+    <rect x="500" y="88" width="380" height="58" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+    <rect x="120" y="146" width="380" height="58" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+    <rect x="500" y="146" width="380" height="58" fill="#ffedd5" stroke="#ea580c" stroke-width="2.5"/>
+    <text x="310" y="115" class="field" fill="#1d4ed8">源端口</text>
+    <text x="310" y="137" class="small" text-anchor="middle">16 位</text>
+    <text x="690" y="115" class="field" fill="#6d28d9">目的端口</text>
+    <text x="690" y="137" class="small" text-anchor="middle">16 位</text>
+    <text x="310" y="173" class="field" fill="#15803d">UDP 长度</text>
+    <text x="310" y="195" class="small" text-anchor="middle">首部 + 数据，单位为字节</text>
+    <text x="690" y="173" class="field" fill="#c2410c">校验和</text>
+    <text x="690" y="195" class="small" text-anchor="middle">16 位 Internet checksum</text>
+  </g>
+
+  <rect x="120" y="204" width="760" height="72" fill="#f1f5f9" stroke="#64748b" stroke-width="2.5"/>
+  <text x="500" y="237" class="title" text-anchor="middle">应用数据</text>
+  <text x="500" y="260" class="small" text-anchor="middle">长度可以为 0；UDP 保留应用报文边界</text>
+
+  <path d="M108 88H90V204H108" fill="none" stroke="#475569" stroke-width="2.5"/>
+  <text x="72" y="146" class="field" fill="#334155" text-anchor="middle" transform="rotate(-90 72 146)">首部 8 B</text>
+
+  <path d="M892 88H910V276H892" fill="none" stroke="#475569" stroke-width="2.5"/>
+  <text x="930" y="182" class="small" text-anchor="middle" transform="rotate(90 930 182)">UDP 长度字段覆盖范围</text>
+
+  <path d="M120 300H880" stroke="#94a3b8" stroke-width="2" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text x="500" y="330" class="small" text-anchor="middle">字段可表示的最大 UDP 长度为 65 535 B；实际报文大小还受 IP 与路径 MTU 限制</text>
+</svg>

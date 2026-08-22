@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="520" viewBox="0 0 1120 520" role="img" aria-labelledby="title desc">
+  <title id="title">网络层与传输层的通信范围</title>
+  <desc id="desc">网络层完成主机到主机的交付，传输层只在两个端系统中运行，将数据交付给应用进程；中间路由器不维护传输层状态。</desc>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <style>
+      .label { font: 600 18px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #0f172a; }
+      .small { font: 500 15px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #475569; }
+      .host-title { font: 700 22px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #0f172a; }
+      .layer { font: 700 19px system-ui, -apple-system, "Segoe UI", sans-serif; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect width="1120" height="520" fill="#f8fafc"/>
+  <text x="40" y="45" class="host-title">传输层扩展网络层的交付范围</text>
+  <text x="1080" y="44" class="small" text-anchor="end">传输层协议实体只存在于端系统</text>
+
+  <g>
+    <rect x="40" y="75" width="310" height="370" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+    <text x="195" y="108" class="host-title" text-anchor="middle">端系统 A</text>
+    <rect x="75" y="135" width="240" height="66" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="195" y="175" class="layer" fill="#1d4ed8">应用进程</text>
+    <rect x="75" y="220" width="240" height="66" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="195" y="260" class="layer" fill="#6d28d9">传输层</text>
+    <rect x="75" y="305" width="240" height="66" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="195" y="345" class="layer" fill="#15803d">网络层</text>
+    <path d="M195 201V220" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M195 286V305" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <g>
+    <rect x="770" y="75" width="310" height="370" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+    <text x="925" y="108" class="host-title" text-anchor="middle">端系统 B</text>
+    <rect x="805" y="135" width="240" height="66" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="925" y="175" class="layer" fill="#1d4ed8">应用进程</text>
+    <rect x="805" y="220" width="240" height="66" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+    <text x="925" y="260" class="layer" fill="#6d28d9">传输层</text>
+    <rect x="805" y="305" width="240" height="66" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="925" y="345" class="layer" fill="#15803d">网络层</text>
+    <path d="M925 305V286" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <path d="M925 220V201" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow)"/>
+  </g>
+
+  <path d="M315 253H805" fill="none" stroke="#7c3aed" stroke-width="3" stroke-dasharray="9 8" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <rect x="442" y="226" width="236" height="42" fill="#f8fafc"/>
+  <text x="560" y="244" class="label" text-anchor="middle" fill="#6d28d9">进程到进程</text>
+  <text x="560" y="264" class="small" text-anchor="middle">传输层逻辑通信</text>
+
+  <g>
+    <path d="M315 338H420" stroke="#16a34a" stroke-width="3" marker-end="url(#arrow)"/>
+    <path d="M700 338H805" stroke="#16a34a" stroke-width="3" marker-end="url(#arrow)"/>
+    <rect x="420" y="300" width="280" height="82" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+    <circle cx="470" cy="341" r="18" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <circle cx="560" cy="341" r="18" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <circle cx="650" cy="341" r="18" fill="#ffffff" stroke="#64748b" stroke-width="2"/>
+    <path d="M488 341H542M578 341H632" stroke="#64748b" stroke-width="2.5" marker-end="url(#arrow)"/>
+    <text x="560" y="407" class="small" text-anchor="middle">网络核心：路由器按网络层转发</text>
+  </g>
+
+  <path d="M195 474H925" stroke="#16a34a" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text x="560" y="501" class="label" text-anchor="middle" fill="#15803d">主机到主机 通过 网络层交付</text>
+</svg>

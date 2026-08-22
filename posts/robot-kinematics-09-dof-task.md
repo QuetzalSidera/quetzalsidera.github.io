@@ -4,6 +4,8 @@ date: 2026-05-25T20:00:00
 tags: [ 机器人, 机构学, 自由度 ]
 pinned: false
 collection: 机器人机构学
+kind: exercise
+exerciseFont: kai
 outline:
   - title: 例 1：Sarrus 机构分析
     slug: Sarrus机构分析
@@ -75,10 +77,45 @@ const scottRussell = {
 本文将演示 Sarrus 机构与 Scott-Russell 机构的两个完整算例。
 
 ## 例 1：Sarrus 机构分析{#Sarrus机构分析}
-此机构可以视为一个含2个支链的并联机构
 
 ### a. 前置分析{#Sarrus-前置分析}
+
+:::::::exercise-set
+::::::exercise-group{start="1"}
+:::::exercise{type="calculation" answer-lines="10" keep-together="false"}
+::::stem
+根据图示 Sarrus 机构建立坐标系，写出各运动副的运动旋量，并建立两条支链的运动旋量系与约束旋量系。
+
 <Image {...sarrus} />
+::::
+::::answer
+两条支链的约束旋量系分别为
+
+$$
+\mathcal{S}^r_{b1}
+=
+\operatorname{span}
+\left\{
+(1,0,0;0,0,0),
+(0,0,0;0,1,0),
+(0,0,0;0,0,1)
+\right\},
+$$
+
+$$
+\mathcal{S}^r_{b2}
+=
+\operatorname{span}
+\left\{
+(0,1,0;0,0,0),
+(0,0,0;1,0,0),
+(0,0,0;0,0,1)
+\right\}.
+$$
+::::
+::::solution
+此机构可以视为一个含2个支链的并联机构
+
 建系如图，可得运动旋量：
 
 $$\boldsymbol{\$_1}=(1,0,0;0,0,0)$$
@@ -154,7 +191,23 @@ $$\mathcal{S}^r_{b1} =
 \right\}
 $$
 
+::::
+:::::
+::::::
+:::::::
+
 ### b. 自由度分析{#Sarrus-自由度分析}
+
+:::::::exercise-set
+::::::exercise-group{start="2"}
+:::::exercise{type="calculation" answer-lines="8" keep-together="false"}
+::::stem
+根据两条支链的约束旋量系，求动平台的约束旋量系、运动旋量系及自由度。
+::::
+::::answer
+$\mathcal{S}_f=\operatorname{span}\{(0,0,0;0,0,1)\}$，因此 $F=1$，机构具有一个沿 $Z$ 轴平动的自由度。
+::::
+::::solution
 由支链约束旋量系可得动平台约束旋量系：
 $$\mathcal{S}^r =
 \mathcal{S}^{r}_{b1} \cup \mathcal{S}^{r}_{b2}
@@ -182,7 +235,23 @@ $$\mathcal{S}_f=
 $$
 即，自由度$F = \dim(\mathcal{S}_f)=1$，包含一个沿 $Z$ 轴平动的自由度。
 
+::::
+:::::
+::::::
+:::::::
+
 ### c. 公共约束分析{#Sarrus-公共约束分析}
+
+:::::::exercise-set
+::::::exercise-group{start="3"}
+:::::exercise{type="calculation" answer-lines="8" keep-together="false"}
+::::stem
+根据两条支链的运动旋量系，求机构的公共约束旋量系与公共约束数。
+::::
+::::answer
+$\mathcal{S}^c=\operatorname{span}\{(0,0,0;0,0,1)\}$，公共约束数为 $\dim(\mathcal{S}^c)=1$。
+::::
+::::solution
 总运动旋量系
 $$
 \mathcal{S}_m=
@@ -225,8 +294,23 @@ $$
 $$
 即，公共约束数为$\dim(\mathcal{S}^c)=1$。
 
+::::
+:::::
+::::::
+:::::::
+
 ### d. 冗余约束分析{#Sarrus-冗余约束分析}
 
+:::::::exercise-set
+::::::exercise-group{start="4"}
+:::::exercise{type="calculation" answer-lines="8" keep-together="false"}
+::::stem
+根据支链约束旋量系与公共约束旋量系，求该机构的冗余约束数。
+::::
+::::answer
+$\langle\mathcal{S}^r_c\rangle=\mathcal{S}^r_c$，故 $\nu=0$，该机构无冗余约束。
+::::
+::::solution
 $$
 \langle\mathcal{S}^r\rangle=
 \mathcal{S}^{r}_{b1} \oplus \mathcal{S}^{r}_{b2}=
@@ -293,12 +377,33 @@ $$
 
 因此，$\langle\mathcal{S}^r_c\rangle=\mathcal{S}^r_c$，$\nu = \operatorname{card}(\langle\mathcal{S}^r_c\rangle) - \dim(\mathcal{S}^r_c)=0$
 ，该机构无冗余约束。
+::::
+:::::
+::::::
+:::::::
 
 ## 例 2：Scott-Russell 机构分析{#Scott-Russell机构分析}
+
 ### a. 前置分析{#Scott-Russell-前置分析}
-Scott-Russell 机构存在 1 个冗余约束与3 个公共约束，下面用旋量法验证。
+
+:::::::exercise-set
+::::::exercise-group{start="5"}
+:::::exercise{type="calculation" answer-lines="10" keep-together="false"}
+::::stem
+根据图示 Scott-Russell 机构建立坐标系，划分支链，并写出 $O$、$A$、$B$、$C$ 四处的运动副旋量。
 
 <Image {...scottRussell} />
+::::
+::::answer
+各运动副旋量为
+
+$$\boldsymbol{\$}_O=(0,0,1;0,0,0)^T,$$
+$$\boldsymbol{\$}_A=(0,0,1;-b,c,0)^T,$$
+$$\boldsymbol{\$}_{B1}=(0,0,0;0,1,0)^T,\quad\boldsymbol{\$}_{B2}=(0,0,1;-2b,0,0)^T,$$
+$$\boldsymbol{\$}_{C1}=(0,0,0;1,0,0)^T,\quad\boldsymbol{\$}_{C2}=(0,0,1;0,2c,0)^T.$$
+::::
+::::solution
+Scott-Russell 机构存在 1 个冗余约束与3 个公共约束，下面用旋量法验证。
 
 建立$\vec{OC}$为$X$轴，$\vec{OB}$为$Y$轴，垂直纸面向外为$Z$轴。$|\vec{OB}|=2b$，$|\vec{OC}|=2c$。
 
@@ -321,8 +426,23 @@ $$\boldsymbol{\$}_{B1}=(0,0,0;0,1,0)^T(平动),\$_{B2}=(0,0,1;-2b,0,0)^T(转动)
 
 $$\boldsymbol{\$}_{C1}=(0,0,0;1,0,0)^T(平动),\$_{C2}=(0,0,1;0,2c,0)^T(转动)$$
 
+::::
+:::::
+::::::
+:::::::
+
 ### b. 自由度分析{#Scott-Russell-自由度分析}
 
+:::::::exercise-set
+::::::exercise-group{start="6"}
+:::::exercise{type="calculation" answer-lines="12" keep-together="false"}
+::::stem
+建立各支链的运动旋量系与约束旋量系，求动平台 $BC$ 的运动旋量系、自由度及运动形式。
+::::
+::::answer
+$\mathcal{S}_f=\operatorname{span}\{(0,0,1,-2b,2c,0)\}$，因此 $F=1$；机构绕过点 $(-2c,-2b,0)$、方向向量为 $(0,0,1)$ 的轴转动。
+::::
+::::solution
 分析可得，此机构无局部自由度。
 
 对于各支链，建立运动旋量系$\mathcal{S}_{bi}$：
@@ -483,7 +603,34 @@ $$\mathcal{S}^r \boldsymbol{\Delta} \boldsymbol{\$} = \boldsymbol{0}$$
 $$\mathcal{S}_f=\operatorname{span}\left\{ (0,0,1,-2b,2c,0)\right\}$$
 即，此机构仅有$F = \dim(\mathcal{S}_f)=1$个自由度，运动形式是绕轴转动。旋转轴过点$(-2c,-2b,0)$，方向向量为$(0,0,1)$。
 
+::::
+:::::
+::::::
+:::::::
+
 ### c. 公共约束分析{#Scott-Russell-公共约束分析}
+
+:::::::exercise-set
+::::::exercise-group{start="7"}
+:::::exercise{type="calculation" answer-lines="8" keep-together="false"}
+::::stem
+根据各支链的运动旋量系，求机构的公共约束旋量系与公共约束数。
+::::
+::::answer
+
+$$
+\mathcal{S}^c=
+\operatorname{span}
+\left\{
+(0,0,1;0,0,0),
+(0,0,0;1,0,0),
+(0,0,0;0,1,0)
+\right\},
+\qquad
+\lambda=3.
+$$
+::::
+::::solution
 根据上文的$\mathcal{S}_{bi}$，可得机构总运动旋量系 $\mathcal{S}_m$：
 
 $$\mathcal{S}_{m} =
@@ -529,8 +676,23 @@ $$
 $$\lambda = \dim(\mathcal{S}^c)=3$$
 
 
+::::
+:::::
+::::::
+:::::::
+
 ### d. 冗余约束分析{#Scott-Russell-冗余约束分析}
 
+:::::::exercise-set
+::::::exercise-group{start="8"}
+:::::exercise{type="calculation" answer-lines="8" keep-together="false"}
+::::stem
+根据各支链约束旋量系及公共约束旋量系，求该机构的冗余约束数。
+::::
+::::answer
+$\operatorname{card}(\langle\mathcal{S}^r_c\rangle)=3$，$\dim(\mathcal{S}^r_c)=2$，故 $\nu=1$。
+::::
+::::solution
 由$\mathcal{S}^{r}_{bi}$可得：
 $$\langle\mathcal{S}^r\rangle=\mathcal{S}^{r}_{b1} \oplus \mathcal{S}^{r}_{b2} \oplus \cdots \oplus \mathcal{S}^{r}_{bp}=
 \operatorname{span}
@@ -593,3 +755,7 @@ $$
 即得冗余约束数$\nu$：
 
 $$\nu = \operatorname{card}(\langle\mathcal{S}^r_c\rangle) - \dim(\mathcal{S}^r_c)=1$$
+::::
+:::::
+::::::
+:::::::

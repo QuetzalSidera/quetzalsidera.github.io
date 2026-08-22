@@ -30,7 +30,7 @@
   <rect width="1100" height="900" rx="28" fill="#f8fafc"/>
 
   <g font-family="system-ui, -apple-system, sans-serif">
-    <text x="40" y="55" fill="#0f172a" font-size="26" font-weight="700">非持续连接 · 固定批次并行</text>
+    <text x="40" y="55" fill="#0f172a" font-size="26" font-weight="700">非持续连接 · 并行</text>
     <text x="1060" y="54" fill="#64748b" font-size="16" text-anchor="end">不同连接使用不同时间线</text>
 
     <rect x="55" y="85" width="990" height="325" rx="22" fill="#ffffff" stroke="#dbe4ef" stroke-width="2"/>

@@ -1,0 +1,472 @@
+.exerciseSet {
+  --exercise-font-site: var(--font-body, sans-serif);
+  --exercise-font-song: 'Songti SC', 'STSong', SimSun, serif;
+  --exercise-font-kai: 'LXGW WenKai', 'Kaiti SC', 'STKaiti', KaiTi, serif;
+  --exercise-font-family: var(--exercise-font-kai);
+  --exercise-number-width: 3.1em;
+  --exercise-column-gap: 0.5em;
+  counter-reset: exercise;
+  color: inherit;
+  font-family: var(--exercise-font-family);
+  line-height: 1.55;
+}
+
+:global([data-exercise-font='song']) .exerciseSet {
+  --exercise-font-family: var(--exercise-font-song);
+}
+
+:global([data-exercise-font='site']) .exerciseSet {
+  --exercise-font-family: var(--exercise-font-site);
+}
+
+:global([data-exercise-font='kai']) .exerciseSet {
+  --exercise-font-family: var(--exercise-font-kai);
+}
+
+@counter-style exercise-circled-decimal {
+  system: fixed;
+  symbols: '①' '②' '③' '④' '⑤' '⑥' '⑦' '⑧' '⑨' '⑩' '⑪' '⑫' '⑬' '⑭' '⑮' '⑯' '⑰' '⑱' '⑲' '⑳';
+  fallback: decimal;
+}
+
+.exerciseSet[data-font='song'] {
+  --exercise-font-family: var(--exercise-font-song);
+}
+
+.exerciseSet[data-font='kai'] {
+  --exercise-font-family: var(--exercise-font-kai);
+}
+
+.exerciseSet[data-font='site'] {
+  --exercise-font-family: var(--exercise-font-site);
+}
+
+.exerciseGroup {
+  counter-reset: exercise var(--exercise-start, 0);
+  margin: 1.2em 0;
+  padding: 0;
+}
+
+.groupTitle {
+  margin: 0 0 0.65em;
+  padding: 0;
+  font-size: 1.22em;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.exercise {
+  counter-increment: exercise;
+  display: block;
+  position: relative;
+  margin: 0.8em 0;
+  padding: 0 0 0 calc(var(--exercise-number-width) + var(--exercise-column-gap));
+}
+
+.exerciseNumber {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--exercise-number-width);
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  line-height: inherit;
+  text-align: right;
+}
+
+.exerciseNumber::before {
+  content: counter(exercise, decimal-leading-zero) '.';
+}
+
+.exerciseBody {
+  min-width: 0;
+}
+
+.source {
+  float: left;
+  margin: 0.08em 0.5em 0 0;
+  font-family: var(--exercise-font-site);
+  font-size: 0.8em;
+  font-weight: 500;
+  line-height: 1.55;
+  opacity: 0.72;
+  white-space: nowrap;
+}
+
+.source::before {
+  content: '[';
+}
+
+.source::after {
+  content: ']';
+}
+
+.stem {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  text-indent: 0;
+}
+
+.stem::after {
+  display: block;
+  clear: both;
+  content: '';
+}
+
+.stem > :first-child,
+.disclosureBody > :first-child {
+  margin-top: 0 !important;
+}
+
+.stem > :last-child,
+.disclosureBody > :last-child {
+  margin-bottom: 0 !important;
+}
+
+.exerciseSet .stem :global(p),
+.exerciseSet .disclosureBody :global(p) {
+  margin: 0.18em 0 !important;
+  line-height: inherit !important;
+  text-indent: 0 !important;
+}
+
+.exerciseSet .solution .disclosureBody > :global(p) {
+  text-indent: 2em !important;
+}
+
+.parts,
+.choices {
+  margin: 0.28em 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+.parts {
+  counter-reset: exercise-part var(--exercise-parts-start, 0);
+}
+
+.parts > li {
+  counter-increment: exercise-part;
+  position: relative;
+  min-width: 0;
+  margin: 0.22em 0 !important;
+  padding: 0 0 0 2.35em;
+}
+
+.parts > li::before {
+  content: counter(exercise-part, exercise-circled-decimal);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2em;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.choices {
+  counter-reset: exercise-choice var(--exercise-choices-start, 0);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  column-gap: 1.4em;
+  row-gap: 0.16em;
+}
+
+.choices[data-choice-columns='2'] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.choices[data-choice-columns='4'] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.choices > li {
+  counter-increment: exercise-choice;
+  position: relative;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0 0 0 1.75em;
+  break-inside: avoid;
+  overflow-wrap: anywhere;
+}
+
+.choices > li::before {
+  content: counter(exercise-choice, upper-alpha) '.';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1.45em;
+  font-weight: 500;
+  text-align: right;
+}
+
+.parts > li > .choices {
+  margin-top: 0.2em !important;
+}
+
+.disclosure {
+  margin: 0.32em 0 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+}
+
+.disclosureSummary {
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  font-weight: 600;
+  line-height: inherit;
+  text-indent: 0 !important;
+}
+
+.disclosureBody {
+  margin: 0.18em 0 0;
+  padding: 0 0 0 1em;
+  border: 0;
+  border-left: 1px solid currentColor;
+  border-radius: 0;
+  background: none;
+}
+
+.answerSpace {
+  display: none;
+}
+
+@media screen and (max-width: 900px) {
+  .choices[data-choice-columns='4'] {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 560px) {
+  .exerciseSet {
+    --exercise-number-width: 2.7em;
+    --exercise-column-gap: 0.35em;
+  }
+
+  .choices[data-choice-columns='2'],
+  .choices[data-choice-columns='4'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media print {
+  .exerciseSet {
+    --exercise-number-width: 3em;
+    --exercise-column-gap: 0.42em;
+    color: #111 !important;
+    font-family: var(--exercise-font-family) !important;
+    font-size: 10.5pt !important;
+    line-height: 1.45 !important;
+  }
+
+  :global([data-print-font='site']) .exerciseSet {
+    --exercise-font-family: var(--exercise-font-site);
+  }
+
+  :global([data-print-font='song']) .exerciseSet {
+    --exercise-font-family: var(--exercise-font-song);
+  }
+
+  :global([data-print-font='kai']) .exerciseSet {
+    --exercise-font-family: var(--exercise-font-kai);
+  }
+
+  .exerciseGroup {
+    margin: 0.65em 0 !important;
+  }
+
+  .groupTitle {
+    margin: 0 0 0.38em !important;
+    font-size: 14pt !important;
+    line-height: 1.25 !important;
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .exercise {
+    margin: 0.32em 0 !important;
+    color: #111 !important;
+    line-height: 1.45 !important;
+  }
+
+  :global([data-print-mode='practice']) .exercise[data-keep-together='true'] {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .exercise[data-keep-together='false'],
+  :global([data-print-mode='solution']) .exercise,
+  :global([data-print-mode='note']) .exercise {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  .exercise[data-break-before='true'] {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .exerciseNumber,
+  .exerciseBody,
+  .stem,
+  .source,
+  .parts,
+  .choices,
+  .parts > li,
+  .choices > li {
+    color: #111 !important;
+    line-height: 1.45 !important;
+  }
+
+  .exerciseSet .stem :global(p),
+  .exerciseSet .exerciseBody :global(p),
+  .exerciseSet .disclosureBody :global(p) {
+    margin: 0.12em 0 !important;
+    color: #111 !important;
+    line-height: 1.45 !important;
+    text-indent: 0 !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+    orphans: 2;
+    widows: 2;
+  }
+
+  .exerciseSet .stem :global(ul),
+  .exerciseSet .stem :global(ol),
+  .exerciseSet .disclosureBody :global(ul),
+  .exerciseSet .disclosureBody :global(ol),
+  .exerciseSet .parts,
+  .exerciseSet .choices {
+    margin: 0.18em 0 !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+  }
+
+  .parts > li {
+    margin: 0.12em 0 !important;
+  }
+
+  .choices {
+    row-gap: 0.08em;
+  }
+
+  .choices > li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .disclosure {
+    display: none !important;
+  }
+
+  .answerSpace {
+    display: none;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 0.08em;
+    margin: 0.18em 0 0;
+    padding: 0;
+  }
+
+  .answerLine {
+    display: block;
+    height: 1.38em;
+    border: 0;
+    border-bottom: 0.45pt solid #777;
+  }
+
+  :global([data-print-mode='practice']) .disclosure {
+    display: none !important;
+  }
+
+  :global([data-print-mode='practice']) .answerSpace {
+    display: grid;
+  }
+
+  :global([data-print-mode='practice'])
+    .exercise:is([data-type='short'], [data-type='calculation'], [data-type='proof'])
+    .answerLine {
+    border-bottom-color: transparent;
+  }
+
+  :global([data-print-mode='solution']) .answerSpace {
+    display: none !important;
+  }
+
+  :global([data-print-mode='note']) .answerSpace {
+    display: none !important;
+  }
+
+  :global([data-print-mode='solution']) .disclosure,
+  :global([data-print-mode='note']) .disclosure {
+    display: block !important;
+    margin: 0.16em 0 0 !important;
+    color: #111 !important;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  :global([data-print-mode='solution']) .disclosureSummary,
+  :global([data-print-mode='note']) .disclosureSummary {
+    display: none !important;
+  }
+
+  :global([data-print-mode='solution']) .disclosureBody,
+  :global([data-print-mode='note']) .disclosureBody {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 0 0 1.7em !important;
+    border: 0 !important;
+    color: #111 !important;
+  }
+
+  :global([data-print-mode='solution']) .answer .disclosureBody::before,
+  :global([data-print-mode='solution']) .solution .disclosureBody::before,
+  :global([data-print-mode='solution']) .hint .disclosureBody::before,
+  :global([data-print-mode='note']) .answer .disclosureBody::before,
+  :global([data-print-mode='note']) .solution .disclosureBody::before,
+  :global([data-print-mode='note']) .hint .disclosureBody::before {
+    float: left;
+    width: 1.7em;
+    margin-left: -1.7em;
+    font-weight: 700;
+  }
+
+  :global([data-print-mode='solution']) .answer .disclosureBody::before,
+  :global([data-print-mode='note']) .answer .disclosureBody::before {
+    content: '答：';
+  }
+
+  :global([data-print-mode='solution']) .solution .disclosureBody::before,
+  :global([data-print-mode='note']) .solution .disclosureBody::before {
+    content: '解：';
+  }
+
+  :global([data-print-mode='solution']) .hint .disclosureBody::before,
+  :global([data-print-mode='note']) .hint .disclosureBody::before {
+    content: '提示：';
+    width: 3.4em;
+    margin-left: -3.4em;
+  }
+
+  :global([data-print-mode='solution']) .hint .disclosureBody,
+  :global([data-print-mode='note']) .hint .disclosureBody {
+    padding-left: 3.4em !important;
+  }
+
+  :global([data-print-mode='solution']) .solution .disclosureBody > :global(p),
+  :global([data-print-mode='note']) .solution .disclosureBody > :global(p) {
+    text-indent: 2em !important;
+  }
+
+  :global([data-print-mode='solution']) .solution .disclosureBody > :global(p:first-child),
+  :global([data-print-mode='note']) .solution .disclosureBody > :global(p:first-child) {
+    text-indent: 0 !important;
+  }
+}

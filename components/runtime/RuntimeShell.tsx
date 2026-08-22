@@ -20,21 +20,16 @@ export function RuntimeShell() {
   const pathname = usePathname()
 
   useEffect(() => {
-    let timer: number | undefined
-
     function startLoading() {
-      window.clearTimeout(timer)
       pushBannerMessage({
         id: 'route-loading',
         type: 'info',
         text: '加载中……',
         duration: 0,
       })
-      timer = window.setTimeout(() => removeBannerMessage('route-loading'), 1800)
     }
 
     function stopLoading() {
-      window.clearTimeout(timer)
       removeBannerMessage('route-loading')
     }
 
@@ -43,7 +38,6 @@ export function RuntimeShell() {
     window.addEventListener('pageshow', stopLoading)
 
     return () => {
-      window.clearTimeout(timer)
       window.removeEventListener('blog-route-loading-start', startLoading)
       window.removeEventListener('blog-route-loading-stop', stopLoading)
       window.removeEventListener('pageshow', stopLoading)
@@ -73,7 +67,7 @@ export function RuntimeShell() {
   }, [pathname, removeBannerMessage])
 
   return (
-    <>
+    <div data-site-chrome="" style={{ display: 'contents' }}>
       <Splash />
       <DevContentRefresh />
       {searchDialogOpen ? <SearchDialog onClose={closeSearchDialog} /> : null}
@@ -82,6 +76,6 @@ export function RuntimeShell() {
       <audio id="background-music" loop>
         <source src="/assets/banner/bgm.mp3" type="audio/mpeg" />
       </audio>
-    </>
+    </div>
   )
 }

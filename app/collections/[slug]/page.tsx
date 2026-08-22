@@ -2,9 +2,16 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import { CollectionBanner } from '@/components/collections/CollectionBanner'
 import { BannerHero } from '@/components/home/BannerHero'
 import { PostList } from '@/components/posts/PostList'
+import { PageSideActions } from '@/components/shared/PageSideActions'
+import { ScrollToTopControl } from '@/components/shared/ScrollToTopControl'
+import { ShareControl } from '@/components/shared/ShareControl'
 import { getAllCollections, getAllCollectionSlugs, getCollectionPageData } from '@/lib/collections'
 import { mapPostsToListItems } from '@/lib/post-list'
-import { createCollectionJsonLd, createCollectionMetadata } from '@/lib/seo'
+import {
+  createCollectionJsonLd,
+  createCollectionMetadata,
+  createCollectionShareData,
+} from '@/lib/seo'
 import styles from './page.module.css'
 
 type PageProps = {
@@ -44,6 +51,7 @@ export default async function CollectionPage({ params }: PageProps) {
 
   const listItems = mapPostsToListItems(collection.posts, getAllCollections())
   const jsonLd = createCollectionJsonLd(collection)
+  const share = createCollectionShareData(collection)
 
   return (
     <main className={styles.main}>
@@ -57,6 +65,14 @@ export default async function CollectionPage({ params }: PageProps) {
       <section className={[styles.section, 'section-route-enter'].join(' ')}>
         <PostList items={listItems} sortMode={'oldest'} />
       </section>
+      <PageSideActions>
+        <ShareControl
+          description={share.description}
+          title={share.title}
+          url={share.url}
+        />
+        <ScrollToTopControl />
+      </PageSideActions>
     </main>
   )
 }

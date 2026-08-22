@@ -15,8 +15,10 @@ const mathFenceRE = /^\s*(?:>\s*)?\$\$\s*$/
 const headingAnchorRE = /<a\s+id="[^"]+"\s*><\/a>/g
 const headingWithLegacyIdRE = /^(\s{0,3}#{1,6}\s+.*?)(?:\s*\{#([^}]+)\}|<a\s+id=["']?([^"'\s>]+)["']?\s*><\/a>)\s*$/
 const singleLineDisplayMathRE = /^(\s*)\$\$\s*(\S(?:[\s\S]*?\S)?)\s*\$\$(\s*)$/
-const legacyImageMarkerRE = /@@LEGACY_IMAGE:([^@]+)@@/
-const legacyImageMarkerGlobalRE = /@@LEGACY_IMAGE:([^@]+)@@/g
+// Avoid `:` here: remark-directive interprets `:payload` as a text directive
+// before the legacy image pass can replace the marker.
+const legacyImageMarkerRE = /@@LEGACY_IMAGE_DATA_([^@]+)@@/
+const legacyImageMarkerGlobalRE = /@@LEGACY_IMAGE_DATA_([^@]+)@@/g
 type LegacyImageProps = Record<string, string | boolean | number>
 type LegacyMdastNode = {
   type: string
@@ -209,11 +211,11 @@ function decodeLegacyImageProps(value: string): LegacyImageProps | null {
 }
 
 function serializeLegacyImageMarker(props: LegacyImageProps): string {
-  return `@@LEGACY_IMAGE:${encodeLegacyImageProps(props)}@@`
+  return `@@LEGACY_IMAGE_DATA_${encodeLegacyImageProps(props)}@@`
 }
 
 function serializeLegacyImageMissing(message: string): string {
-  return `@@LEGACY_IMAGE:${encodeLegacyImageProps({ legacyMissing: message })}@@`
+  return `@@LEGACY_IMAGE_DATA_${encodeLegacyImageProps({ legacyMissing: message })}@@`
 }
 
 function legacyImageToNode(props: LegacyImageProps): LegacyMdastNode {

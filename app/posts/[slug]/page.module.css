@@ -5,3 +5,10 @@
   padding: 0 0 96px;
   font-family: var(--font-body);
 }
+
+@media print {
+  .main {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}

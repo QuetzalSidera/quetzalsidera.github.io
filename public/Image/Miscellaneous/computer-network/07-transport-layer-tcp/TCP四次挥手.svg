@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1040" viewBox="0 0 1200 1040" role="img" aria-labelledby="title desc">
+  <title id="title">TCP 四次挥手</title>
+  <desc id="desc">客户端从已建立经过 FIN-WAIT-1、FIN-WAIT-2 和 TIME-WAIT 进入关闭；服务端从已建立经过 CLOSE-WAIT 和 LAST-ACK 进入关闭。客户端首先发送序号 u的 FIN，服务端确认 u 加一；半关闭期间服务端仍可从序号 v 开始发送数据，结束序号 w 大于或等于 v；服务端再发送序号 w 的 FIN，客户端确认 w 加一并等待两倍 MSL。</desc>
+
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#ea580c"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrow-time" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#64748b"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .title { font-size: 24px; font-weight: 700; fill: #0f172a; }
+      .endpoint { font-size: 20px; font-weight: 700; fill: #0f172a; text-anchor: middle; }
+      .state { font-size: 15px; font-weight: 700; fill: #334155; }
+      .packet { font-size: 16px; font-weight: 700; text-anchor: middle; }
+      .note { font-size: 14px; font-weight: 550; fill: #475569; }
+      .measure { font-size: 15px; font-weight: 700; fill: #334155; text-anchor: middle; }
+      .clear-label { paint-order: stroke; stroke: #f8fafc; stroke-width: 6px; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="1040" fill="#f8fafc"/>
+  <text x="38" y="42" class="title">TCP 连接释放</text>
+  <text x="1162" y="41" class="note" text-anchor="end">客户端主动关闭 · 时间向下</text>
+
+  <text x="320" y="95" class="endpoint">客户端（主动关闭）</text>
+  <text x="880" y="95" class="endpoint">服务端（被动关闭）</text>
+  <line x1="320" y1="120" x2="320" y2="960" stroke="#64748b" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow-time)"/>
+  <line x1="880" y1="120" x2="880" y2="900" stroke="#64748b" stroke-width="2.5" stroke-dasharray="7 6" marker-end="url(#arrow-time)"/>
+
+  <text x="285" y="155" class="state" text-anchor="end">[ESTABLISHED]</text>
+  <text x="915" y="205" class="state">[ESTABLISHED]</text>
+
+  <circle cx="320" cy="190" r="6" fill="#2563eb"/>
+  <line x1="320" y1="190" x2="880" y2="290" stroke="#2563eb" stroke-width="3.2" marker-end="url(#arrow-blue)"/>
+  <text x="600" y="220" class="packet clear-label" fill="#1d4ed8">FIN = 1　ACK = 1　seq = u　ack = v</text>
+  <text x="285" y="290" class="state" text-anchor="end">[FIN-WAIT-1]</text>
+  <text x="915" y="455" class="state">[CLOSE-WAIT]</text>
+
+  <circle cx="880" cy="290" r="6" fill="#7c3aed"/>
+  <line x1="880" y1="290" x2="320" y2="390" stroke="#7c3aed" stroke-width="3.2" marker-end="url(#arrow-purple)"/>
+  <text x="600" y="320" class="packet clear-label" fill="#6d28d9">FIN = 0　ACK = 1　seq = v　ack = u + 1</text>
+  <text x="285" y="555" class="state" text-anchor="end">[FIN-WAIT-2]</text>
+
+  <line x1="880" y1="450" x2="320" y2="550" stroke="#ea580c" stroke-width="3.2" stroke-dasharray="9 6" marker-end="url(#arrow-orange)"/>
+  <text x="600" y="480" class="packet clear-label" fill="#c2410c">可选数据　seq = v … w − 1　ack = u + 1</text>
+  <text x="600" y="515" class="note clear-label" text-anchor="middle">半关闭：客户端不再发送，服务端仍可发送数据</text>
+  <text x="600" y="560" class="note" text-anchor="middle">w ≥ v；若没有数据，w = v</text>
+
+  <circle cx="880" cy="620" r="6" fill="#2563eb"/>
+  <line x1="880" y1="620" x2="320" y2="720" stroke="#2563eb" stroke-width="3.2" marker-end="url(#arrow-blue)"/>
+  <text x="600" y="650" class="packet clear-label" fill="#1d4ed8">FIN = 1　ACK = 1　seq = w　ack = u + 1</text>
+  <text x="915" y="720" class="state">[LAST-ACK]</text>
+
+  <circle cx="320" cy="720" r="6" fill="#16a34a"/>
+  <line x1="320" y1="720" x2="880" y2="820" stroke="#16a34a" stroke-width="3.2" marker-end="url(#arrow-green)"/>
+  <text x="600" y="750" class="packet clear-label" fill="#15803d">FIN = 0　ACK = 1　seq = u + 1　ack = w + 1</text>
+  <text x="285" y="835" class="state" text-anchor="end">[TIME-WAIT]</text>
+  <text x="915" y="870" class="state">[CLOSED]</text>
+
+  <path d="M185 720H163V950H185" fill="none" stroke="#334155" stroke-width="2.5"/>
+  <text x="133" y="835" class="measure" transform="rotate(-90 133 835)">2 MSL</text>
+  <line x1="275" y1="950" x2="365" y2="950" stroke="#334155" stroke-width="2.5"/>
+  <text x="285" y="980" class="state" text-anchor="end">[CLOSED]</text>
+
+  <text x="600" y="1010" class="note" text-anchor="middle">FIN 与 SYN 各占用一个序号；纯 ACK 不占用序号</text>
+</svg>

@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">TCP 发送窗口</title>
+  <desc id="desc">TCP 发送窗口按字节序号划分为已确认、已发送未确认、可立即发送和超出窗口四部分。SND.UNA 指向最早未确认字节，SND.NXT 指向下一个待发送字节，发送窗口上限由接收窗口和拥塞窗口的较小值决定。下方展示零窗口与持续计时器的处理流程。</desc>
+
+  <defs>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#2563eb"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .title { font-size: 24px; font-weight: 700; fill: #0f172a; }
+      .label { font-size: 17px; font-weight: 700; fill: #0f172a; text-anchor: middle; }
+      .small { font-size: 14px; font-weight: 550; fill: #475569; }
+      .boundary { font-size: 15px; font-weight: 700; fill: #334155; text-anchor: middle; }
+      .formula { font-size: 18px; font-weight: 700; fill: #1d4ed8; }
+      .step { font-size: 15px; font-weight: 650; fill: #0f172a; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" fill="#f8fafc"/>
+  <text x="38" y="43" class="title">TCP 发送窗口</text>
+  <text x="1162" y="42" class="small" text-anchor="end">序号按字节计数，而非按报文段计数</text>
+
+  <rect x="50" y="78" width="1100" height="330" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text x="80" y="116" class="title">字节序号空间</text>
+  <text x="1120" y="115" class="formula" text-anchor="end">W = min(rwnd, cwnd)</text>
+
+  <g stroke-width="2.5">
+    <rect x="105" y="182" width="270" height="86" fill="#e2e8f0" stroke="#64748b"/>
+    <rect x="375" y="182" width="245" height="86" fill="#dbeafe" stroke="#2563eb"/>
+    <rect x="620" y="182" width="245" height="86" fill="#dcfce7" stroke="#16a34a"/>
+    <rect x="865" y="182" width="230" height="86" fill="#f1f5f9" stroke="#94a3b8" stroke-dasharray="8 5"/>
+  </g>
+
+  <g class="label">
+    <text x="240" y="218">已确认</text>
+    <text x="240" y="244" class="small">可以从发送缓存移除</text>
+    <text x="497.5" y="218" fill="#1d4ed8">已发送，未确认</text>
+    <text x="497.5" y="244" class="small">飞行中的数据</text>
+    <text x="742.5" y="218" fill="#15803d">可立即发送</text>
+    <text x="742.5" y="244" class="small">仍在发送窗口内</text>
+    <text x="980" y="218" fill="#64748b">暂不可发送</text>
+    <text x="980" y="244" class="small">等待窗口右移</text>
+  </g>
+
+  <g fill="none" stroke="#334155" stroke-width="2.5">
+    <path d="M375 170V285"/>
+    <path d="M620 170V285"/>
+    <path d="M865 170V285"/>
+  </g>
+  <g class="boundary">
+    <text x="375" y="151">SND.UNA</text>
+    <text x="375" y="302" class="small">最早未确认字节</text>
+    <text x="620" y="151">SND.NXT</text>
+    <text x="620" y="302" class="small">下一个待发送字节</text>
+    <text x="865" y="151">SND.UNA + W</text>
+    <text x="865" y="302" class="small">发送窗口右边界</text>
+  </g>
+
+  <path d="M375 334V354H865V334" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+  <text x="620" y="382" class="boundary" fill="#1d4ed8">发送窗口：从 SND.UNA 起最多覆盖 W 字节</text>
+  <text x="80" y="392" class="small">ACK 推进 SND.UNA</text>
+  <path d="M205 387H344" stroke="#475569" stroke-width="2" marker-end="url(#arrow-gray)"/>
+  <text x="1120" y="392" class="small" text-anchor="end">飞行数据量：SND.NXT − SND.UNA ≤ W</text>
+
+  <rect x="50" y="432" width="1100" height="220" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text x="80" y="470" class="title">零窗口与持续计时器</text>
+
+  <g stroke-width="2">
+    <rect x="85" y="510" width="190" height="66" fill="#ffedd5" stroke="#ea580c"/>
+    <rect x="340" y="510" width="190" height="66" fill="#fef3c7" stroke="#d97706"/>
+    <rect x="595" y="510" width="190" height="66" fill="#dbeafe" stroke="#2563eb"/>
+    <rect x="850" y="510" width="215" height="66" fill="#dcfce7" stroke="#16a34a"/>
+  </g>
+  <g class="step">
+    <text x="180" y="536">收到 rwnd = 0</text>
+    <text x="180" y="559" class="small">暂停发送新数据</text>
+    <text x="435" y="536">启动持续计时器</text>
+    <text x="435" y="559" class="small">避免双方永久等待</text>
+    <text x="690" y="536">超时后发送探测</text>
+    <text x="690" y="559" class="small">请求当前窗口值</text>
+    <text x="957.5" y="536">ACK 通告 rwnd</text>
+    <text x="957.5" y="559" class="small">非零则恢复发送</text>
+  </g>
+  <g fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow-gray)">
+    <path d="M275 543H330"/>
+    <path d="M530 543H585"/>
+    <path d="M785 543H840"/>
+  </g>
+  <path d="M957 586V617H435V586" fill="none" stroke="#2563eb" stroke-width="2.2" marker-end="url(#arrow-blue)"/>
+  <text x="696" y="638" class="small" text-anchor="middle">若 rwnd 仍为 0，则重新设置持续计时器并继续探测</text>
+</svg>

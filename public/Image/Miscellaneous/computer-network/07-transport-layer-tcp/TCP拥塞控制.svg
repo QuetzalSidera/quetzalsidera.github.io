@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">TCP Reno 拥塞控制</title>
+  <desc id="desc">经典 TCP Reno 教学模型中，拥塞窗口在慢启动阶段按往返轮次指数增长，到达慢启动门限后在线性拥塞避免阶段增长。超时使门限减半且拥塞窗口回到一个最大报文段；三个冗余确认触发快速重传和快速恢复，使窗口减半后直接进入拥塞避免。</desc>
+
+  <defs>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#475569"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .title { font-size: 24px; font-weight: 700; fill: #0f172a; }
+      .axis { font-size: 14px; font-weight: 600; fill: #475569; }
+      .label { font-size: 15px; font-weight: 700; fill: #0f172a; }
+      .small { font-size: 14px; font-weight: 550; fill: #475569; }
+      .event { font-size: 14px; font-weight: 700; }
+      .point { stroke: #ffffff; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="760" fill="#f8fafc"/>
+  <text x="38" y="43" class="title">TCP Reno 拥塞控制</text>
+  <text x="1162" y="42" class="small" text-anchor="end">经典教学模型 · cwnd 以 MSS 为单位</text>
+
+  <rect x="55" y="75" width="1090" height="520" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+
+  <!-- 网格与坐标轴 -->
+  <g stroke="#e2e8f0" stroke-width="1">
+    <path d="M125 525H1085M125 455H1085M125 385H1085M125 315H1085M125 245H1085M125 175H1085M125 105H1085"/>
+    <path d="M125 105V525M272.7 105V525M420.4 105V525M568.1 105V525M715.8 105V525M863.5 105V525M1011.2 105V525"/>
+  </g>
+  <path d="M125 95V525H1105" fill="none" stroke="#475569" stroke-width="2.5" marker-end="url(#arrow-gray)"/>
+
+  <g class="axis" text-anchor="end">
+    <text x="111" y="530">0</text>
+    <text x="111" y="460">4</text>
+    <text x="111" y="390">8</text>
+    <text x="111" y="320">12</text>
+    <text x="111" y="250">16</text>
+    <text x="111" y="180">20</text>
+    <text x="111" y="110">24</text>
+  </g>
+  <g class="axis" text-anchor="middle">
+    <text x="125" y="550">0</text>
+    <text x="272.7" y="550">4</text>
+    <text x="420.4" y="550">8</text>
+    <text x="568.1" y="550">12</text>
+    <text x="715.8" y="550">16</text>
+    <text x="863.5" y="550">20</text>
+    <text x="1011.2" y="550">24</text>
+  </g>
+  <text x="605" y="580" class="label" text-anchor="middle">传输轮次（RTT）</text>
+  <text x="38" y="315" class="label" text-anchor="middle" transform="rotate(-90 38 315)">拥塞窗口 cwnd（MSS）</text>
+
+  <!-- ssthresh -->
+  <g fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="7 6">
+    <path d="M125 245H568.1"/>
+    <path d="M605 315H900.4"/>
+    <path d="M937.3 385H1085"/>
+  </g>
+  <g class="small">
+    <text x="135" y="235">初始 ssthresh = 16</text>
+    <text x="615" y="305">超时后 ssthresh = 12</text>
+    <text x="937" y="408">新的 ssthresh = 8</text>
+  </g>
+
+  <!-- 慢启动：1, 2, 4, 8, 16 -->
+  <path d="M125 507.5L161.9 490L198.8 455L235.8 385L272.7 245" fill="none" stroke="#2563eb" stroke-width="4"/>
+  <!-- 拥塞避免：16 到 24 -->
+  <path d="M272.7 245L309.6 227.5L346.5 210L383.5 192.5L420.4 175L457.3 157.5L494.2 140L531.2 122.5L568.1 105" fill="none" stroke="#7c3aed" stroke-width="4"/>
+  <!-- 超时，窗口回到 1 -->
+  <path d="M568.1 105L605 507.5" fill="none" stroke="#dc2626" stroke-width="3.5" stroke-dasharray="8 5"/>
+  <!-- 第二次慢启动：1, 2, 4, 8, 12 -->
+  <path d="M605 507.5L641.9 490L678.8 455L715.8 385L752.7 315" fill="none" stroke="#2563eb" stroke-width="4"/>
+  <!-- 拥塞避免：12 到 16 -->
+  <path d="M752.7 315L789.6 297.5L826.5 280L863.5 262.5L900.4 245" fill="none" stroke="#7c3aed" stroke-width="4"/>
+  <!-- 三个冗余 ACK，窗口减半 -->
+  <path d="M900.4 245L937.3 385" fill="none" stroke="#ea580c" stroke-width="3.5" stroke-dasharray="8 5"/>
+  <!-- 快速恢复后直接拥塞避免 -->
+  <path d="M937.3 385L974.2 367.5L1011.2 350L1048.1 332.5L1085 315" fill="none" stroke="#7c3aed" stroke-width="4"/>
+
+  <g fill="#2563eb">
+    <circle class="point" cx="125" cy="507.5" r="5"/><circle class="point" cx="161.9" cy="490" r="5"/>
+    <circle class="point" cx="198.8" cy="455" r="5"/><circle class="point" cx="235.8" cy="385" r="5"/>
+    <circle class="point" cx="272.7" cy="245" r="5"/><circle class="point" cx="605" cy="507.5" r="5"/>
+    <circle class="point" cx="641.9" cy="490" r="5"/><circle class="point" cx="678.8" cy="455" r="5"/>
+    <circle class="point" cx="715.8" cy="385" r="5"/><circle class="point" cx="752.7" cy="315" r="5"/>
+  </g>
+  <g fill="#7c3aed">
+    <circle class="point" cx="309.6" cy="227.5" r="5"/><circle class="point" cx="346.5" cy="210" r="5"/>
+    <circle class="point" cx="383.5" cy="192.5" r="5"/><circle class="point" cx="420.4" cy="175" r="5"/>
+    <circle class="point" cx="457.3" cy="157.5" r="5"/><circle class="point" cx="494.2" cy="140" r="5"/>
+    <circle class="point" cx="531.2" cy="122.5" r="5"/><circle class="point" cx="568.1" cy="105" r="5"/>
+    <circle class="point" cx="789.6" cy="297.5" r="5"/><circle class="point" cx="826.5" cy="280" r="5"/>
+    <circle class="point" cx="863.5" cy="262.5" r="5"/><circle class="point" cx="900.4" cy="245" r="5"/>
+    <circle class="point" cx="937.3" cy="385" r="5"/><circle class="point" cx="974.2" cy="367.5" r="5"/>
+    <circle class="point" cx="1011.2" cy="350" r="5"/><circle class="point" cx="1048.1" cy="332.5" r="5"/>
+    <circle class="point" cx="1085" cy="315" r="5"/>
+  </g>
+
+  <g class="event">
+    <path d="M568.1 105L520 82" fill="none" stroke="#dc2626" stroke-width="2"/>
+    <text x="505" y="87" fill="#b91c1c" text-anchor="end">超时</text>
+    <path d="M900.4 245L855 220" fill="none" stroke="#ea580c" stroke-width="2"/>
+    <text x="842" y="216" fill="#c2410c" text-anchor="end">3 个冗余 ACK</text>
+  </g>
+
+  <rect x="55" y="620" width="1090" height="100" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <g class="label">
+    <line x1="85" y1="651" x2="130" y2="651" stroke="#2563eb" stroke-width="4"/>
+    <text x="145" y="656">慢启动</text>
+    <text x="230" y="656" class="small">每个新 ACK 使 cwnd 增加 1 MSS，约每 RTT 翻倍</text>
+
+    <line x1="600" y1="651" x2="645" y2="651" stroke="#7c3aed" stroke-width="4"/>
+    <text x="660" y="656">拥塞避免</text>
+    <text x="765" y="656" class="small">约每 RTT 增加 1 MSS</text>
+  </g>
+  <text x="85" y="693" class="small">超时：ssthresh ← cwnd / 2，cwnd ← 1，重新慢启动。</text>
+  <text x="600" y="685" class="small">3 个冗余 ACK：快速重传；ssthresh ← cwnd / 2，</text>
+  <text x="600" y="707" class="small">cwnd ← ssthresh，直接进入拥塞避免。</text>
+  <text x="1125" y="744" class="small" text-anchor="end">图中 8 → 12 展示慢启动跨越门限时将 cwnd 截至 ssthresh 的教学约定。</text>
+</svg>

@@ -38,6 +38,7 @@ pnpm preview
 | `collections/` | 文集索引 |
 | `public/` | 静态资源 |
 | `docs/AGENT_WRITING.md` | 写作规范 |
+| `docs/CONTENT_USAGE.md` | 内容组件、习题与打印语法规范 |
 | `docs/IMAGE_USAGE.md` | 文章图片引用规范 |
 | `AGENT.md` | AI 协作者项目约束 |
 | `MIGRATION.md` | VitePress 到 Next.js 的迁移记录 |
@@ -50,5 +51,6 @@ pnpm preview
 
 - [协作约束](./AGENT.md)
 - [写作规范](./docs/AGENT_WRITING.md)
+- [内容组件规范](./docs/CONTENT_USAGE.md)
 - [图片引用规范](./docs/IMAGE_USAGE.md)
 - [迁移记录](./MIGRATION.md)

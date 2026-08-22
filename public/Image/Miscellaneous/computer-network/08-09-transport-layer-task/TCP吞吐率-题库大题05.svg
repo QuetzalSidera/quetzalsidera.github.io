@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="420" viewBox="0 0 980 420" role="img" aria-labelledby="title desc">
+  <title id="title">题库大题 05 TCP 窗口吞吐率时序</title>
+  <desc id="desc">一个窗口包含连续发送的 60 个 1000 字节报文段，单个报文段传输时延为 0.08 毫秒，往返传播时延为 40 毫秒，窗口周期为 40.08 毫秒。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#345995" />
+    </marker>
+    <style>
+      .title { font: 600 22px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #1f2937; }
+      .label { font: 500 16px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #374151; }
+      .note { font: 14px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #4b5563; }
+      .axis { stroke: #9ca3af; stroke-width: 2; }
+      .line { stroke: #345995; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .packet { fill: #dce8f7; stroke: #345995; stroke-width: 1.5; }
+      .ack { fill: #e8edf3; stroke: #6b7280; stroke-width: 1.5; }
+      .bracket { stroke: #6b7280; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+  <text x="28" y="32" class="title">题库大题 05 · TCP 窗口吞吐率</text>
+  <text x="952" y="32" class="note" text-anchor="end">窗口 = 60 × 1000 B</text>
+
+  <text x="30" y="108" class="label">发送方</text>
+  <text x="30" y="218" class="label">接收方</text>
+  <line x1="115" y1="102" x2="900" y2="102" class="axis" />
+  <line x1="115" y1="212" x2="900" y2="212" class="axis" />
+
+  <rect x="150" y="82" width="92" height="40" rx="4" class="packet" />
+  <text x="196" y="103" class="label" text-anchor="middle">60 个报文段</text>
+  <text x="196" y="119" class="note" text-anchor="middle">连续发送 · T_D=0.08 ms/段</text>
+  <line x1="242" y1="102" x2="545" y2="212" class="line" />
+  <rect x="535" y="192" width="74" height="40" rx="4" class="ack" />
+  <text x="572" y="217" class="label" text-anchor="middle">ACK</text>
+  <line x1="609" y1="212" x2="850" y2="102" class="line" />
+
+  <path d="M150 74 v-10 M150 69 H242 M242 74 v-10" class="bracket" />
+  <text x="196" y="60" class="note" text-anchor="middle">60T_D = 4.8 ms</text>
+  <path d="M150 270 v12 M150 276 H850 M850 270 v12" class="bracket" />
+  <text x="500" y="307" class="note" text-anchor="middle">T = RTT + T_D = 40 ms + 0.08 ms = 40.08 ms</text>
+
+  <text x="150" y="350" class="note">单向传播时延 = 20 ms</text>
+  <text x="500" y="350" class="note" text-anchor="middle">ACK 发送时延忽略</text>
+  <text x="850" y="350" class="note" text-anchor="end">R = 60 × 1000 × 8 / 40.08 ms ≈ 11.98 Mb/s</text>
+</svg>

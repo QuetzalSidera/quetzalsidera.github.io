@@ -1,0 +1,175 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1160" viewBox="0 0 1440 1160" role="img" aria-labelledby="title desc">
+  <title id="title">ARQ 协议对比</title>
+  <desc id="desc">对比停止等待、后退 N 帧和选择重传协议的发送窗口、接收窗口、确认语义、计时器和丢失处理。停止等待使用零和一两个序号；GBN 与 SR 示例的序号空间为零到七。GBN 的发送窗口为四、接收窗口为一，分组二丢失后丢弃失序的三到五并重传二到五。SR 的收发窗口均为四，会缓存三到五并只重传二。</desc>
+
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#7c3aed"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#ea580c"/>
+    </marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#64748b"/>
+    </marker>
+    <style>
+      text { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .title { font-size: 25px; font-weight: 750; fill: #0f172a; }
+      .protocol { font-size: 21px; font-weight: 750; fill: #0f172a; }
+      .label { font-size: 15px; font-weight: 700; fill: #334155; }
+      .small { font-size: 14px; font-weight: 550; fill: #475569; }
+      .seq { font-size: 13px; font-weight: 700; fill: #334155; text-anchor: middle; }
+      .event { font-size: 14px; font-weight: 700; text-anchor: middle; }
+      .endpoint { font-size: 14px; font-weight: 700; fill: #334155; text-anchor: middle; }
+    </style>
+  </defs>
+
+  <rect width="1440" height="1160" fill="#f8fafc"/>
+  <text x="32" y="42" class="title">ARQ：窗口、ACK 与重传范围</text>
+  <g class="small">
+    <rect x="1048" y="20" width="24" height="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+    <text x="1082" y="35">发送窗口</text>
+    <rect x="1180" y="20" width="24" height="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+    <text x="1214" y="35">接收窗口</text>
+  </g>
+
+  <!-- 停止等待 -->
+  <g>
+    <rect x="24" y="68" width="1392" height="334" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+    <text x="50" y="105" class="protocol">1. 停止等待（Stop-and-Wait）</text>
+    <text x="50" y="137" class="label">W<tspan baseline-shift="sub" font-size="11">S</tspan> = 1　W<tspan baseline-shift="sub" font-size="11">R</tspan> = 1</text>
+    <text x="50" y="165" class="small">ACK：确认当前分组；序号只需区分新旧，通常用 0 / 1</text>
+    <text x="50" y="191" class="small">计时器：唯一在途分组</text>
+
+    <text x="50" y="230" class="label">1 位序号空间（示例状态：等待序号 0）</text>
+    <text x="50" y="263" class="small">发送</text>
+    <text x="50" y="303" class="small">接收</text>
+    <g transform="translate(116 240)">
+      <g fill="#ffffff" stroke="#94a3b8" stroke-width="1.5">
+        <rect x="0" y="0" width="76" height="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <rect x="76" y="0" width="76" height="30"/>
+      </g>
+      <g class="seq"><text x="38" y="20">0</text><text x="114" y="20">1</text></g>
+      <g transform="translate(0 40)" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5">
+        <rect x="0" y="0" width="76" height="30" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+        <rect x="76" y="0" width="76" height="30"/>
+      </g>
+      <g class="seq" transform="translate(0 40)"><text x="38" y="20">0</text><text x="114" y="20">1</text></g>
+    </g>
+
+    <text x="772" y="105" class="endpoint">发送方</text>
+    <text x="1248" y="105" class="endpoint">接收方</text>
+    <path d="M772 120V374M1248 120V374" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 5"/>
+    <path d="M772 148L1030 185" stroke="#2563eb" stroke-width="3"/>
+    <path d="M1018 171L1042 195M1042 171L1018 195" stroke="#dc2626" stroke-width="3"/>
+    <text x="900" y="154" class="event" fill="#1d4ed8">DATA 0</text>
+    <text x="1072" y="184" class="small" fill="#b91c1c">丢失</text>
+    <path d="M772 258L1248 300" stroke="#2563eb" stroke-width="3" marker-end="url(#arrow-blue)"/>
+    <text x="1010" y="266" class="event" fill="#1d4ed8">超时后重传 DATA 0</text>
+    <path d="M1248 320L772 354" stroke="#16a34a" stroke-width="3" marker-end="url(#arrow-green)"/>
+    <text x="1010" y="350" class="event" fill="#15803d">ACK 0</text>
+    <text x="660" y="225" class="small" text-anchor="end">发送方在收到 ACK 前不发下一个分组</text>
+  </g>
+
+  <!-- GBN -->
+  <g>
+    <rect x="24" y="416" width="1392" height="334" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+    <text x="50" y="453" class="protocol">2. 后退 N 帧（GBN）</text>
+    <text x="50" y="485" class="label">W<tspan baseline-shift="sub" font-size="11">S</tspan> = 4　W<tspan baseline-shift="sub" font-size="11">R</tspan> = 1</text>
+    <text x="50" y="513" class="small">ACK：累计确认；ACK 1 表示 0、1 已按序接收，下一个期望序号为 2</text>
+    <text x="50" y="539" class="small">计时器：最早未确认分组；超时时回退重传</text>
+
+    <text x="50" y="578" class="label">序号空间 0～7（当前基序号为 2）</text>
+    <text x="50" y="611" class="small">发送</text>
+    <text x="50" y="651" class="small">接收</text>
+    <g transform="translate(116 588)">
+      <g fill="#ffffff" stroke="#94a3b8" stroke-width="1.5">
+        <rect x="0" y="0" width="38" height="30"/><rect x="38" y="0" width="38" height="30"/>
+        <rect x="76" y="0" width="38" height="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <rect x="114" y="0" width="38" height="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <rect x="152" y="0" width="38" height="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <rect x="190" y="0" width="38" height="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <rect x="228" y="0" width="38" height="30"/><rect x="266" y="0" width="38" height="30"/>
+      </g>
+      <g class="seq"><text x="19" y="20">0</text><text x="57" y="20">1</text><text x="95" y="20">2</text><text x="133" y="20">3</text><text x="171" y="20">4</text><text x="209" y="20">5</text><text x="247" y="20">6</text><text x="285" y="20">7</text></g>
+      <g transform="translate(0 40)" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5">
+        <rect x="0" y="0" width="38" height="30"/><rect x="38" y="0" width="38" height="30"/>
+        <rect x="76" y="0" width="38" height="30" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+        <rect x="114" y="0" width="38" height="30"/><rect x="152" y="0" width="38" height="30"/><rect x="190" y="0" width="38" height="30"/><rect x="228" y="0" width="38" height="30"/><rect x="266" y="0" width="38" height="30"/>
+      </g>
+      <g class="seq" transform="translate(0 40)"><text x="19" y="20">0</text><text x="57" y="20">1</text><text x="95" y="20">2</text><text x="133" y="20">3</text><text x="171" y="20">4</text><text x="209" y="20">5</text><text x="247" y="20">6</text><text x="285" y="20">7</text></g>
+    </g>
+
+    <text x="772" y="453" class="endpoint">发送方</text>
+    <text x="1248" y="453" class="endpoint">接收方</text>
+    <path d="M772 468V722M1248 468V722" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 5"/>
+    <path d="M772 490L1030 522" stroke="#2563eb" stroke-width="3"/>
+    <path d="M1018 508L1042 532M1042 508L1018 532" stroke="#dc2626" stroke-width="3"/>
+    <text x="900" y="496" class="event" fill="#1d4ed8">2</text>
+    <text x="1065" y="522" class="small" fill="#b91c1c">丢失</text>
+    <path d="M772 530L1248 558M772 556L1248 584M772 582L1248 610" stroke="#ea580c" stroke-width="2.5" marker-end="url(#arrow-orange)"/>
+    <g class="event" fill="#c2410c"><text x="1010" y="538">3</text><text x="1010" y="564">4</text><text x="1010" y="590">5</text></g>
+    <text x="1280" y="580" class="small" fill="#b91c1c">失序：全部丢弃</text>
+    <path d="M1248 622L772 646" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arrow-purple)"/>
+    <text x="1010" y="650" class="event" fill="#6d28d9">重复 ACK 1</text>
+    <path d="M772 682L1248 710" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)"/>
+    <text x="1010" y="691" class="event" fill="#1d4ed8">2 超时：重传 2、3、4、5</text>
+  </g>
+
+  <!-- SR -->
+  <g>
+    <rect x="24" y="764" width="1392" height="334" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+    <text x="50" y="801" class="protocol">3. 选择重传（SR）</text>
+    <text x="50" y="833" class="label">W<tspan baseline-shift="sub" font-size="11">S</tspan> = 4　W<tspan baseline-shift="sub" font-size="11">R</tspan> = 4</text>
+    <text x="50" y="861" class="small">ACK：选择确认；ACK n 单独确认分组 n</text>
+    <text x="50" y="887" class="small">计时器：每个未确认分组；超时时只重传该分组</text>
+
+    <text x="50" y="926" class="label">序号空间 0～7（W = 4，不超过序号空间的一半）</text>
+    <text x="50" y="959" class="small">发送</text>
+    <text x="50" y="999" class="small">接收</text>
+    <g transform="translate(116 936)">
+      <g fill="#ffffff" stroke="#94a3b8" stroke-width="1.5">
+        <rect x="0" y="0" width="38" height="30"/><rect x="38" y="0" width="38" height="30"/>
+        <rect x="76" y="0" width="38" height="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <rect x="114" y="0" width="38" height="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <rect x="152" y="0" width="38" height="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <rect x="190" y="0" width="38" height="30" fill="#dbeafe" stroke="#2563eb" stroke-width="2.5"/>
+        <rect x="228" y="0" width="38" height="30"/><rect x="266" y="0" width="38" height="30"/>
+      </g>
+      <g class="seq"><text x="19" y="20">0</text><text x="57" y="20">1</text><text x="95" y="20">2</text><text x="133" y="20">3</text><text x="171" y="20">4</text><text x="209" y="20">5</text><text x="247" y="20">6</text><text x="285" y="20">7</text></g>
+      <g transform="translate(0 40)" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5">
+        <rect x="0" y="0" width="38" height="30"/><rect x="38" y="0" width="38" height="30"/>
+        <rect x="76" y="0" width="38" height="30" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+        <rect x="114" y="0" width="38" height="30" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+        <rect x="152" y="0" width="38" height="30" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+        <rect x="190" y="0" width="38" height="30" fill="#dcfce7" stroke="#16a34a" stroke-width="2.5"/>
+        <rect x="228" y="0" width="38" height="30"/><rect x="266" y="0" width="38" height="30"/>
+      </g>
+      <g class="seq" transform="translate(0 40)"><text x="19" y="20">0</text><text x="57" y="20">1</text><text x="95" y="20">2</text><text x="133" y="20">3</text><text x="171" y="20">4</text><text x="209" y="20">5</text><text x="247" y="20">6</text><text x="285" y="20">7</text></g>
+    </g>
+
+    <text x="772" y="801" class="endpoint">发送方</text>
+    <text x="1248" y="801" class="endpoint">接收方</text>
+    <path d="M772 816V1070M1248 816V1070" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 5"/>
+    <path d="M772 838L1030 870" stroke="#2563eb" stroke-width="3"/>
+    <path d="M1018 856L1042 880M1042 856L1018 880" stroke="#dc2626" stroke-width="3"/>
+    <text x="900" y="844" class="event" fill="#1d4ed8">2</text>
+    <text x="1065" y="870" class="small" fill="#b91c1c">丢失</text>
+    <path d="M772 878L1248 906M772 904L1248 932M772 930L1248 958" stroke="#ea580c" stroke-width="2.5" marker-end="url(#arrow-orange)"/>
+    <g class="event" fill="#c2410c"><text x="1010" y="886">3</text><text x="1010" y="912">4</text><text x="1010" y="938">5</text></g>
+    <text x="1280" y="932" class="small" fill="#15803d">缓存 3、4、5</text>
+    <path d="M1248 970L772 994" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arrow-purple)"/>
+    <text x="1010" y="998" class="event" fill="#6d28d9">ACK 3、ACK 4、ACK 5</text>
+    <path d="M772 1028L1248 1056" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)"/>
+    <text x="1010" y="1037" class="event" fill="#1d4ed8">2 超时：只重传 2</text>
+    <text x="1280" y="1070" class="small" fill="#15803d">收到 2 后按序交付 2～5</text>
+  </g>
+
+  <text x="720" y="1136" class="small" text-anchor="middle">停等与 GBN 行以 ACK n 表示“下一个期望序号为 n”；SR 行中 ACK n 表示单独确认分组 n。</text>
+</svg>

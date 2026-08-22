@@ -4,9 +4,11 @@ import { Footer } from '@/components/layout/Footer'
 import { Navbar } from '@/components/layout/Navbar'
 import { BlogRuntimeProvider } from '@/components/runtime/BlogRuntime'
 import { RuntimeShell } from '@/components/runtime/RuntimeShell'
+import { PAGE_OVERLAY_ROOT_ID } from '@/components/shared/PageOverlayRoot'
 import { siteMeta } from '@/lib/site'
 import 'normalize.css'
 import '@fontsource/jetbrains-mono'
+import '@fontsource/lxgw-wenkai/500.css'
 import 'katex/dist/katex.min.css'
 import '@/styles/icons.css'
 import '@/styles/globals.scss'
@@ -205,11 +207,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body>
         <BlogRuntimeProvider>
-          <Navbar />
-          {children}
-          <Footer />
-          <RuntimeShell />
+          <div data-app-shell="">
+            <Navbar />
+            {children}
+            <Footer />
+            <RuntimeShell />
+          </div>
         </BlogRuntimeProvider>
+        <div id={PAGE_OVERLAY_ROOT_ID} data-page-overlay-root="" />
       </body>
     </html>
   )

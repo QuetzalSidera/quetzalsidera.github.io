@@ -3,7 +3,7 @@
   max-width: var(--max-content-width);
   margin: 0 auto 25px;
   overflow: visible;
-  padding: 0 24px;
+  padding: 0 24px 0 24px;
   animation: fade-route-in 0.5s ease;
 }
 
@@ -21,7 +21,7 @@
   max-width: 100%;
   box-sizing: border-box;
   position: relative;
-  padding: 36px;
+  padding: 30px 50px 30px 30px;
   border-radius: 32px;
   border: solid 2px var(--foreground-color);
   background: var(--foreground-color);
@@ -48,7 +48,8 @@
 
 .content :global(p),
 .content :global(summary) {
-  margin: 16px 0;
+  margin: 0 0;
+  text-indent: 2em;
 }
 
 .content :global(p) {
@@ -57,9 +58,9 @@
 
 .content :global(blockquote) {
   clear: both;
-  margin: 16px 0;
+  margin: 8px 0 8px 2em;
   border-left: 3px solid var(--post-viewer-blockquote-border);
-  padding: 2px 5px 2px 16px;
+  padding: 2px 5px 2px 8px;
   background-color: var(--post-viewer-blockquote-bg);
   border-radius: 8px;
 }
@@ -67,6 +68,15 @@
 .content :global(blockquote > p) {
   margin: 0;
   font-size: 16px;
+}
+
+.content :global(blockquote > h1),
+.content :global(blockquote > h2),
+.content :global(blockquote > h3),
+.content :global(blockquote > h4),
+.content :global(blockquote > h5),
+.content :global(blockquote > h6) {
+  padding-left: 8px;
 }
 
 .content :global(a) {
@@ -118,18 +128,18 @@
   letter-spacing: -0.02em;
   line-height: 32px;
   font-size: 30px;
-  --h2-padding-top: 24px;
+  --h2-padding-top: 12px;
+  margin: var(--h2-padding-top) 0;
   padding-top: var(--h2-padding-top);
   border-top: 2px dashed var(--post-viewer-heading-divider);
   scroll-margin-top: 96px;
   width: 100%;
-
-
 }
 
 
 .content :global(h3) {
-  margin: 25px 0;
+  margin: 8px 0;
+  padding-left: 8px;
   letter-spacing: -0.01em;
   line-height: 28px;
   font-size: 25px;
@@ -139,7 +149,8 @@
 .content :global(h4),
 .content :global(h5),
 .content :global(h6) {
-  margin: 20px 0;
+  padding-left: 12px;
+  margin: 8px 0;
   line-height: 24px;
   font-size: 20px;
   scroll-margin-top: 96px;
@@ -152,8 +163,8 @@
 
 .content :global(ul),
 .content :global(ol) {
-  padding-left: 1.25rem;
-  margin: 16px 0;
+  padding-left: 4em;
+  margin: 8px 0;
 }
 
 .content :global(ul) {
@@ -176,8 +187,8 @@
 .content :global(table) {
   display: block;
   width: fit-content;
-  max-width: 100%;
-  margin: 16px auto;
+  max-width: 90%;
+  margin: 8px auto;
   overflow-x: auto;
   border-collapse: collapse;
   border: 2px solid var(--post-viewer-table-border);
@@ -190,7 +201,6 @@
   text-align: center;
   border-bottom: 1px solid var(--post-viewer-table-border);
   border-top: 1px solid var(--post-viewer-table-border);
-
 }
 
 .content :global(th) {
@@ -498,6 +508,17 @@
   transition: color 0.25s ease-in-out, opacity 0.25s ease-in-out;
 }
 
+
+.content :global(blockquote > h1 .header-anchor),
+.content :global(blockquote > h2 .header-anchor),
+.content :global(blockquote > h3 .header-anchor),
+.content :global(blockquote > h4 .header-anchor),
+.content :global(blockquote > h5 .header-anchor),
+.content :global(blockquote > h6 .header-anchor) {
+  margin-left: -0.3em;
+}
+
+
 .content :global(.header-anchor::before) {
   content: '#';
 }
@@ -521,9 +542,10 @@
   top: var(--h2-padding-top);
 }
 
+
 @page {
   size: A4;
-  margin: 14mm 12mm;
+  margin: 14mm 16mm;
 }
 
 @media print {
@@ -541,7 +563,7 @@
     border: 0 !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    color: #24303d !important;
+    color: #111 !important;
     animation: none !important;
     transform: none !important;
     filter: none !important;
@@ -549,17 +571,18 @@
 
   .printHeader {
     display: block !important;
-    margin: 0 0 9mm !important;
-    padding: 0 0 5mm !important;
-    border-bottom: 1px solid #d7dee6 !important;
+    margin: 0 0 4mm !important;
+    padding: 0 0 2mm !important;
+    border-bottom: 0.6pt solid #777 !important;
     break-after: avoid;
     page-break-after: avoid;
   }
 
   .printHeader h1 {
-    margin: 0 0 2mm !important;
-    color: #24303d !important;
-    font-size: 24pt !important;
+    margin: 0 0 1mm !important;
+    color: #111 !important;
+    font-family: 'Songti SC', STSong, SimSun, serif !important;
+    font-size: 15.5pt !important;
     line-height: 1.25 !important;
     font-weight: 700 !important;
     letter-spacing: 0 !important;
@@ -567,16 +590,20 @@
 
   .printHeader p {
     margin: 0 !important;
-    color: #627181 !important;
-    font-size: 9.5pt !important;
-    line-height: 1.5 !important;
+    color: #555 !important;
+    font-family: 'Songti SC', STSong, SimSun, serif !important;
+    font-size: 8.25pt !important;
+    line-height: 1.35 !important;
+    text-indent: 0 !important;
   }
 
   .content {
-    font-size: 11pt !important;
-    line-height: 1.62 !important;
-    orphans: 3;
-    widows: 3;
+    color: #111 !important;
+    font-family: 'Songti SC', STSong, SimSun, 'Noto Serif CJK SC', serif !important;
+    font-size: 9.75pt !important;
+    line-height: 1.45 !important;
+    orphans: 2;
+    widows: 2;
   }
 
   .content :global(*) {
@@ -595,20 +622,34 @@
   .content :global(p),
   .content :global(summary),
   .content :global(li) {
-    color: #24303d !important;
-    line-height: 1.62 !important;
+    color: #111 !important;
+    line-height: 1.45 !important;
   }
 
-  .content :global(p),
+  .content :global(p) {
+    margin: 0.28em 0 !important;
+    text-indent: 2em !important;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  .content :global(blockquote p),
+  .content :global(li > p),
+  .content :global(th p),
+  .content :global(td p) {
+    text-indent: 0 !important;
+  }
+
   .content :global(ul),
-  .content :global(ol),
-  .content :global(blockquote),
-  .content :global(.custom-block),
+  .content :global(ol) {
+    margin: 0.3em 0 !important;
+    padding-left: 1.75em !important;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
   .content :global(figure),
   .content :global(.legacy-image-block),
-  .content :global(table),
-  .content :global(pre),
-  .content :global(.blog-code-block),
   .content :global(.katex-display) {
     break-inside: avoid;
     page-break-inside: avoid;
@@ -620,87 +661,110 @@
   .content :global(h4),
   .content :global(h5),
   .content :global(h6) {
-    color: #24303d !important;
+    color: #111 !important;
     break-after: avoid;
     page-break-after: avoid;
     letter-spacing: 0 !important;
   }
 
   .content :global(h1) {
-    margin: 10mm 0 4mm !important;
-    font-size: 21pt !important;
-    line-height: 1.25 !important;
+    margin: 1.25em 0 0.42em !important;
+    font-size: 16pt !important;
+    line-height: 1.3 !important;
   }
 
   .content :global(h2) {
-    margin: 8mm 0 4mm !important;
-    padding-top: 5mm !important;
-    border-top: 1px dashed #d7dee6 !important;
-    font-size: 17pt !important;
+    margin: 1.05em 0 0.38em !important;
+    padding-top: 0.42em !important;
+    border-top: 0.6pt solid #aaa !important;
+    font-size: 13.5pt !important;
     line-height: 1.3 !important;
   }
 
   .content :global(h3) {
-    margin: 7mm 0 3mm !important;
-    font-size: 14.5pt !important;
+    margin: 0.9em 0 0.32em !important;
+    padding-left: 0 !important;
+    font-size: 11.5pt !important;
     line-height: 1.35 !important;
   }
 
   .content :global(h4),
   .content :global(h5),
   .content :global(h6) {
-    margin: 5mm 0 2.5mm !important;
-    font-size: 12.5pt !important;
+    margin: 0.72em 0 0.25em !important;
+    padding-left: 0 !important;
+    font-size: 10.25pt !important;
     line-height: 1.35 !important;
   }
 
   .content :global(a) {
-    color: #0b72c9 !important;
-    text-decoration: underline !important;
-    text-underline-offset: 2px !important;
+    color: #111 !important;
+    text-decoration: none !important;
   }
 
   .content :global(hr) {
-    margin: 7mm 0 !important;
+    margin: 1em 0 !important;
     border: 0 !important;
-    border-top: 1px solid #d7dee6 !important;
+    border-top: 0.6pt solid #888 !important;
   }
 
   .content :global(blockquote) {
-    margin: 4mm 0 !important;
-    padding: 2mm 0 2mm 4mm !important;
-    border-left: 3px solid #5cd3ff !important;
-    border-radius: 2mm !important;
-    background: #f2fbff !important;
-    color: #24303d !important;
+    margin: 0.5em 0 !important;
+    padding: 1.2mm 2mm !important;
+    border: 0.45pt solid #aaa !important;
+    border-left: 1.4pt solid #333 !important;
+    border-radius: 0 !important;
+    background: #f5f5f5 !important;
+    color: #111 !important;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  .content :global(blockquote:has([data-image-group])) {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .content :global(blockquote > p) {
-    font-size: 10.5pt !important;
+    font-size: 9.25pt !important;
   }
 
   .content :global(:not(pre) > code) {
-    border: 1px solid #d7dee6 !important;
-    border-radius: 5px !important;
-    background: #f4f7fa !important;
-    color: #1f2937 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    color: #111 !important;
+    font-size: 0.9em !important;
     line-height: 1.2 !important;
-    padding: 0 0.1rem !important;
+    padding: 0 !important;
   }
 
   .content :global(pre),
   .content :global(.blog-code-block) {
-    margin: 4mm 0 !important;
-    border: 1px solid #d7dee6 !important;
-    border-radius: 3mm !important;
-    background: #f7f9fb !important;
-    color: #1f2937 !important;
+    margin: 0.55em 0 !important;
+    border: 0.6pt solid #555 !important;
+    border-radius: 0 !important;
+    background: #f5f5f5 !important;
+    color: #111 !important;
     overflow: visible !important;
   }
 
   .content :global(.blog-code-block) {
     display: block !important;
     padding-top: 0 !important;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  .content :global(.blog-code-block pre) {
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+  }
+
+  .content :global(.blog-code-block[data-short='true']) {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .content :global(.blog-code-block::before),
@@ -711,7 +775,7 @@
   }
 
   .content :global(pre) {
-    padding: 4mm !important;
+    padding: 2mm !important;
     white-space: pre-wrap !important;
     word-break: break-word !important;
   }
@@ -719,69 +783,63 @@
   .content :global(pre code) {
     color: inherit !important;
     background: transparent !important;
+    font-size: 8.25pt !important;
     white-space: inherit !important;
-    line-height: 1.55 !important;
+    line-height: 1.35 !important;
   }
 
   .content :global(table) {
     display: table !important;
     width: 100% !important;
     max-width: 100% !important;
-    margin: 4mm auto !important;
+    margin: 0.55em auto !important;
     overflow: visible !important;
-    border: 1px solid #d7dee6 !important;
+    border: 0.6pt solid #444 !important;
     border-collapse: collapse !important;
-    font-size: 9.5pt !important;
+    font-size: 8.75pt !important;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+
+  .content :global(thead) {
+    display: table-header-group !important;
+  }
+
+  .content :global(tr) {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 
   .content :global(th),
   .content :global(td) {
-    padding: 2mm 2.5mm !important;
-    border: 1px solid #d7dee6 !important;
+    padding: 1mm 1.4mm !important;
+    border: 0.45pt solid #777 !important;
     background: #ffffff !important;
-    color: #24303d !important;
+    color: #111 !important;
     text-align: left !important;
   }
 
   .content :global(th),
   .content :global(th:nth-child(odd)) {
-    background: #eef6fb !important;
-    color: #1f2937 !important;
+    background: #fff !important;
+    color: #111 !important;
     font-weight: 700 !important;
   }
 
+  .content :global(.custom-block),
   .content :global(.custom-block.tip),
   .content :global(.custom-block.info),
   .content :global(.custom-block.warning),
   .content :global(.custom-block.danger),
   .content :global(.custom-block.details) {
-    margin: 4mm 0 !important;
-    border-radius: 3mm !important;
-    background: #f7f9fb !important;
-    color: #24303d !important;
-  }
-
-  .content :global(.custom-block.tip),
-  .content :global(.custom-block.info),
-  .content :global(.custom-block.warning),
-  .content :global(.custom-block.danger) {
-    padding: 1mm 4mm !important;
-  }
-
-  .content :global(.custom-block.tip) {
-    border-color: #5cd3ff !important;
-  }
-
-  .content :global(.custom-block.info) {
-    border-color: #95a1b2 !important;
-  }
-
-  .content :global(.custom-block.warning) {
-    border-color: #d7a600 !important;
-  }
-
-  .content :global(.custom-block.danger) {
-    border-color: #d85f5f !important;
+    margin: 0.5em 0 !important;
+    padding: 0.3em 0.55em !important;
+    border: 0.6pt solid #999 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    color: #111 !important;
+    break-inside: auto;
+    page-break-inside: auto;
   }
 
   .content :global(img),
@@ -796,7 +854,7 @@
   .content :global(.legacy-image-block) {
     width: fit-content !important;
     max-width: min(100%, 42rem) !important;
-    margin: 5mm 0 !important;
+    margin: 0.65em 0 !important;
     text-align: center !important;
   }
 
@@ -820,12 +878,12 @@
 
   .content :global(.legacy-image-block--wrap.legacy-image-block--left) {
     float: left !important;
-    margin-right: 5mm !important;
+    margin-right: 4mm !important;
   }
 
   .content :global(.legacy-image-block--wrap.legacy-image-block--right) {
     float: right !important;
-    margin-left: 5mm !important;
+    margin-left: 4mm !important;
   }
 
   .content :global(.legacy-image-block--wrap.legacy-image-block--center) {
@@ -838,27 +896,26 @@
     width: 100% !important;
     max-width: 100% !important;
     height: auto !important;
-    max-height: 96mm !important;
-    border-radius: 2mm !important;
+    border-radius: 0 !important;
     object-fit: contain !important;
   }
 
   .content :global(.legacy-image-block figcaption) {
-    color: #627181 !important;
-    font-size: 9pt !important;
-    line-height: 1.5 !important;
+    color: #444 !important;
+    font-size: 8.25pt !important;
+    line-height: 1.35 !important;
   }
 
   .content :global(.katex) {
-    color: #24303d !important;
+    color: #111 !important;
     font-size: 1em !important;
     line-height: 1.2 !important;
   }
 
   .content :global(.katex-display) {
     display: block !important;
-    margin: 4mm 0 !important;
-    padding: 1mm 0 !important;
+    margin: 0.55em 0 !important;
+    padding: 0.1em 0 !important;
     overflow: visible !important;
     text-align: center !important;
     white-space: normal !important;

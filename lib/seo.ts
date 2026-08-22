@@ -338,6 +338,22 @@ function collectionToSeoInput(collection: CollectionData | CollectionPageData): 
   }
 }
 
+function createShareData(input: SeoInput) {
+  return {
+    title: input.title,
+    description: normalizeDescription(input.description) || getDefaultDescription(input.kind),
+    url: resolveAbsoluteUrl(normalizePagePath(input.path)),
+  }
+}
+
+export function createPostShareData(post: Post) {
+  return createShareData(postToSeoInput(post))
+}
+
+export function createCollectionShareData(collection: CollectionData | CollectionPageData) {
+  return createShareData(collectionToSeoInput(collection))
+}
+
 export function createHomeMetadata() {
   const markdownMeta = getMarkdownMeta('index.md')
   return createMetadata({

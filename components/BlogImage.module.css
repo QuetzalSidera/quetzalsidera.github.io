@@ -102,3 +102,25 @@
     width: 100%;
   }
 }
+
+@media print {
+  .figure {
+    margin-top: 0.65em;
+    margin-bottom: 0.65em;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .image {
+    border-radius: 0;
+    box-shadow: none;
+    filter: none;
+  }
+
+  .caption {
+    margin-top: 0.25em;
+    color: #444;
+    font-size: 8.25pt;
+    line-height: 1.35;
+  }
+}

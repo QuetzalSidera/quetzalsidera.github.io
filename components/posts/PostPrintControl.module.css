@@ -1,0 +1,176 @@
+.title {
+  margin: 0 0 0.85rem;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.description {
+  margin: 0 0 0.8rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  opacity: 0.84;
+}
+
+.fieldset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 0.75rem;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: 0;
+}
+
+.fieldset legend,
+.selectLabel {
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.fieldset legend {
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-bottom: 0.2rem;
+}
+
+.fieldset label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+  font-weight: 400;
+  border-radius: 8px;
+}
+
+.fieldset input {
+  margin: 0;
+  accent-color: var(--color-blue);
+}
+
+.selectLabel {
+  display: grid;
+  gap: 0.3rem;
+  margin-bottom: 0.85rem;
+}
+
+.selectLabel select {
+  width: 100%;
+  padding: 0.35rem 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--font-color-grey) 32%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--foreground-color) 84%, transparent);
+  color: var(--font-color-grey);
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.printButton {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--color-blue) 42%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--color-blue) 10%, transparent);
+  color: var(--color-blue);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.preparingIcon {
+  animation: preparing-icon 0.9s linear infinite;
+}
+
+.printButton:hover {
+  background: color-mix(in srgb, var(--color-blue) 16%, transparent);
+}
+
+.preparingOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1250;
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  padding: 1.25rem;
+  background: color-mix(in srgb, var(--foreground-color) 66%, transparent);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+}
+
+.preparingCard {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: 0.85rem;
+  width: min(25rem, 100%);
+  box-sizing: border-box;
+  padding: 1.15rem 1.25rem;
+  border: var(--sidelist-button-border, none);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--foreground-color) 92%, transparent);
+  box-shadow: 0 0 8px rgb(var(--blue-shadow-color), 0.8);
+  color: var(--font-color-grey);
+}
+
+.preparingStatusIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0.1rem auto 0;
+  color: var(--color-blue);
+  animation: preparing-status-icon 0.9s linear infinite;
+}
+
+.preparingCopy p {
+  margin: 0;
+}
+
+.preparingTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.preparingDescription {
+  margin-top: 0.35rem !important;
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.preparingHint {
+  margin-top: 0.2rem !important;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  opacity: 0.72;
+}
+
+@keyframes preparing-status-icon {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes preparing-icon {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.printButton:focus-visible,
+.selectLabel select:focus-visible,
+.fieldset input:focus-visible {
+  outline: 2px solid var(--color-blue);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preparingStatusIcon,
+  .preparingIcon {
+    animation-duration: 1.8s;
+  }
+}
+
+@media print {
+  .preparingOverlay {
+    display: none !important;
+  }
+}

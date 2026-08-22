@@ -1,0 +1,193 @@
+.root {
+  --flow-gap: clamp(1rem, 2.5vw, 1.5rem);
+
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.5rem 0;
+}
+
+.root[data-mode='block'],
+.root[data-mode='float'] {
+  display: flow-root;
+}
+
+.media,
+.body {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.media {
+  grid-area: media;
+  width: min(100%, var(--flow-media-width));
+}
+
+.body {
+  grid-area: body;
+}
+
+.root[data-mode='block'] > .media {
+  margin-bottom: var(--flow-gap);
+}
+
+.root[data-mode='block'][data-side='left'] > .media,
+.root[data-stacked='true'][data-side='left'] > .media {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.root[data-mode='block'][data-side='right'] > .media,
+.root[data-stacked='true'][data-side='right'] > .media {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.root[data-mode='float'][data-stacked='false'][data-side='left'] > .media {
+  float: left;
+  margin: 0 var(--flow-gap) var(--flow-gap) 0;
+}
+
+.root[data-mode='float'][data-stacked='false'][data-side='right'] > .media {
+  float: right;
+  margin: 0 0 var(--flow-gap) var(--flow-gap);
+}
+
+.root[data-mode='float'][data-stacked='true'] > .media {
+  float: none;
+  margin-bottom: var(--flow-gap);
+}
+
+.root[data-mode='float'][data-stacked='true'] > .body {
+  clear: both;
+}
+
+.root[data-mode='split'] {
+  display: grid;
+  align-items: start;
+  gap: var(--flow-gap);
+}
+
+.root[data-mode='split'][data-side='left'][data-stacked='false'] {
+  grid-template-areas: 'media body';
+  grid-template-columns:
+    minmax(0, min(100%, var(--flow-media-width)))
+    minmax(0, 1fr);
+}
+
+.root[data-mode='split'][data-side='right'][data-stacked='false'] {
+  grid-template-areas: 'body media';
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, min(100%, var(--flow-media-width)));
+}
+
+.root[data-mode='split'][data-stacked='false'] > .media {
+  width: 100%;
+}
+
+.root[data-mode='split'][data-stacked='true'] {
+  display: flow-root;
+}
+
+.root[data-stacked='true'] > .media {
+  width: 100%;
+}
+
+.root[data-mode='split'][data-stacked='true'] > .media {
+  margin-bottom: var(--flow-gap);
+}
+
+.media > :first-child,
+.body > :first-child {
+  margin-top: 0;
+}
+
+.media > :last-child,
+.body > :last-child {
+  margin-bottom: 0;
+}
+
+.root .media :global(figure),
+.root .media :global(img),
+.root .media :global(svg),
+.root .media :global(video),
+.root .media :global(canvas) {
+  max-width: 100%;
+}
+
+.root .media :global(figure) {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.root .media :global(table) {
+  display: table;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  table-layout: auto;
+}
+
+.root .media :global(pre) {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.measureProbe {
+  position: absolute;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.minTextProbe {
+  width: var(--flow-min-text-width);
+}
+
+.mediaWidthProbe {
+  width: min(100%, var(--flow-media-width));
+}
+
+.gapProbe {
+  width: var(--flow-gap);
+}
+
+@media print {
+  .root {
+    --flow-gap: 3mm;
+    margin: 3mm 0;
+  }
+
+  .root[data-print='block'] {
+    display: flow-root !important;
+  }
+
+  .root[data-print='block'] > .media {
+    float: none !important;
+    grid-area: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 0 !important;
+    margin-bottom: var(--flow-gap) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .root[data-print='block'] > .media > :global(figure) {
+    width: min(100%, var(--flow-media-width)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .root[data-print='block'] > .body {
+    clear: both !important;
+    grid-area: auto !important;
+  }
+}

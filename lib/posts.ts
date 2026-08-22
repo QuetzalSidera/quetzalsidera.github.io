@@ -12,12 +12,27 @@ import fs from 'node:fs'
 import path from 'node:path'
 import matter from 'gray-matter'
 import { toMdxSource } from '@/lib/mdx'
-import type { Post } from '@/lib/types'
+import type { DocumentKind, ExerciseFont, Post } from '@/lib/types'
 export type { Post, PostOutline } from '@/lib/types'
 
 const cwd = process.cwd()
 const POSTS_DIR = path.join(cwd, 'posts')
 const shouldCachePosts = process.env.NODE_ENV !== 'development'
+
+const documentKinds = new Set<DocumentKind>(['note', 'exercise', 'experiment'])
+const exerciseFonts = new Set<ExerciseFont>(['kai', 'song', 'site'])
+
+function readDocumentKind(value: unknown): DocumentKind {
+  return typeof value === 'string' && documentKinds.has(value as DocumentKind)
+    ? (value as DocumentKind)
+    : 'note'
+}
+
+function readExerciseFont(value: unknown): ExerciseFont {
+  return typeof value === 'string' && exerciseFonts.has(value as ExerciseFont)
+    ? (value as ExerciseFont)
+    : 'kai'
+}
 
 function countWords(text: string): number {
   const replacedText = text.replace(/[a-zA-Z]+/g, 'A')
@@ -50,6 +65,8 @@ function readPostFromFile(file: string): Post {
     cover: data.cover,
     excerpt: normalizedExcerpt || undefined,
     pinned: !!data.pinned,
+    kind: readDocumentKind(data.kind),
+    exerciseFont: readExerciseFont(data.exerciseFont),
   }
 }
 
@@ -62,7 +79,12 @@ export function getAllPosts(): Post[] {
 
   const posts = fs
     .readdirSync(POSTS_DIR)
-    .filter((file) => file.endsWith('.md') && file !== 'index.md')
+    .filter(
+      (file) =>
+        file.endsWith('.md') &&
+        file !== 'index.md' &&
+        !file.endsWith('-back-up.md'),
+    )
     .map(readPostFromFile)
     .sort((a, b) => {
       if (a.pinned && !b.pinned) return -1

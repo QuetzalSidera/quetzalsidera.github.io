@@ -8,6 +8,9 @@ export default function nextConfig(phase) {
     // Cloudflare Pages 走静态导出；dev 下保留 Next server，供本地内容热更新 endpoint 使用
     output: isDev ? undefined : 'export',
 
+    // Playwright 使用独立缓存，避免与本地 dev 或生产构建争用 .next
+    distDir: process.env.NEXT_DIST_DIR || '.next',
+
     // 静态导出不支持 next/image 优化
     images: {
       unoptimized: true,

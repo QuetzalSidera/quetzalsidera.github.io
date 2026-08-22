@@ -17,6 +17,7 @@
 | `README.md` | 仓库介绍 |
 | `docs/AGENT_WRITING.md` | AI 写作与文章结构规范 |
 | `docs/IMAGE_USAGE.md` | 文章图片引用规范 |
+| `docs/CONTENT_USAGE.md` | 图文布局、思维导图、习题组件与打印配置 |
 | `MIGRATION.md` | 迁移过程、测试矩阵与历史决策 |
 
 `ignore/` 目录不进入 Git 管理，不作为长期协作规范来源。需要长期保留的约定应写入 `docs/` 或根目录文档。

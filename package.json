@@ -9,11 +9,14 @@
     "dev": "next dev",
     "build": "pnpm typecheck && next build",
     "check:post-images": "node scripts/check-post-images.mjs",
+    "test:content": "node --experimental-strip-types --test tests/remark-content-directives.test.mjs",
+    "test:content:e2e": "playwright test",
     "preview": "npx serve out",
     "typecheck": "tsc --noEmit && pnpm check:post-images"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/lxgw-wenkai": "^5.3.0",
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
     "@fortawesome/free-brands-svg-icons": "^7.2.0",
     "@fortawesome/free-regular-svg-icons": "^7.2.0",
@@ -23,17 +26,23 @@
     "giscus": "^1.5.0",
     "gray-matter": "^4.0.3",
     "katex": "^0.16.11",
+    "markmap-lib": "^0.18.12",
+    "markmap-view": "^0.18.12",
+    "mdast-util-to-markdown": "^2.1.2",
     "minisearch": "^7.1.1",
     "next": "^15.0.0",
     "next-mdx-remote": "^5.0.0",
     "normalize.css": "^8.0.1",
+    "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-motion": "^0.5.2",
     "rehype-katex": "^7.0.1",
+    "remark-directive": "^4.0.0",
     "remark-gfm": "^4.0.0",
     "remark-math": "^6.0.0",
-    "shiki": "^4.1.0"
+    "shiki": "^4.1.0",
+    "unist-util-visit": "^5.1.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",
@@ -41,7 +50,9 @@
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "remark-parse": "^11.0.0",
     "sass": "^1.100.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.6.0",
+    "unified": "^11.0.5"
   }
 }

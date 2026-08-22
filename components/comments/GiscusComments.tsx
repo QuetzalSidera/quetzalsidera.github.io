@@ -127,7 +127,11 @@ export function GiscusComments() {
   }
 
   return (
-    <section className={[styles.giscusContainer, 'giscus'].join(' ')} aria-label="评论区">
+    <section
+      className={[styles.giscusContainer, 'giscus'].join(' ')}
+      data-site-chrome=""
+      aria-label="评论区"
+    >
       <div className={styles.giscusInner} ref={containerRef} />
     </section>
   )

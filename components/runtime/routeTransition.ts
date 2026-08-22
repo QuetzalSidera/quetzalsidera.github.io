@@ -6,6 +6,12 @@ function normalizePath(href: string) {
   return `${pathname}${url.search}${url.hash}`
 }
 
+function isSameDocument(href: string) {
+  const currentUrl = new URL(window.location.href)
+  const nextUrl = new URL(href, currentUrl)
+  return currentUrl.pathname === nextUrl.pathname && currentUrl.search === nextUrl.search
+}
+
 export function navigateWithRouteTransition(
   event: MouseEvent<HTMLAnchorElement>,
   href: string,
@@ -17,8 +23,14 @@ export function navigateWithRouteTransition(
     event.metaKey ||
     event.ctrlKey ||
     event.shiftKey ||
-    event.altKey
+    event.altKey ||
+    event.currentTarget.hasAttribute('download') ||
+    (event.currentTarget.target && event.currentTarget.target !== '_self')
   ) {
+    return
+  }
+
+  if (isSameDocument(href) && new URL(href, window.location.href).hash) {
     return
   }
 
@@ -36,14 +48,9 @@ export function navigateWithRouteTransition(
   document.body.classList.remove('page-settling')
   document.body.classList.add('page-exiting')
   window.scrollTo({ top: 0, behavior: 'smooth' })
+  window.dispatchEvent(new CustomEvent('blog-route-loading-start'))
 
   window.setTimeout(() => {
-    window.dispatchEvent(new CustomEvent('blog-route-loading-start'))
     push(href)
   }, 100)
-
-  window.setTimeout(() => {
-    document.body.classList.remove('page-exiting')
-    window.dispatchEvent(new CustomEvent('blog-route-loading-stop'))
-  }, 900)
 }
