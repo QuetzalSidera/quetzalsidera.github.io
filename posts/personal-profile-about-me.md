@@ -6,53 +6,48 @@ pinned: true
 collection: 个人档案
 cover: /Image/Portrait/阿洛娜_比心.webp
 outline:
-  - title: 主线剧情
+  - title: 1. 主线剧情
     slug: 主线剧情
-  - title: 1. 学习
+  - title: 1.1 学习
     slug: 学习
     level: 1
-
-  - title: 2. 个人项目
+  - title: 1.2 个人项目
     slug: 个人项目
     level: 1
-  - title: 2.1 QQ机器人迁移
+  - title: 1.2.1 QQ 机器人迁移
     slug: QQ机器人迁移
     level: 2
-  - title: 2.2 CSVX
+  - title: 1.2.2 CSVX
     slug: CSVX
     level: 2
-  - title: 2.3 个人博客维护
+  - title: 1.2.3 个人博客维护
     slug: 个人博客维护
     level: 2
-  - title: 2.4 个人邮件系统
-    slug: 个人邮件系统
-    level: 2
 
-  - title: 技术栈
+  - title: 2. 技术栈
     slug: 技术栈
-  - title: 3.1 C#
+  - title: 2.1 C#
     slug: C#
     level: 1
-  - title: 3.2 Ts / Js
+  - title: 2.2 TypeScript / JavaScript
     slug: Ts-Js
     level: 1
-  - title: 3.3 CSS/Html
+  - title: 2.3 CSS / HTML
     slug: CSS-Html
     level: 1
-  - title: 3.4 C 与嵌入式
+  - title: 2.4 C 与嵌入式
     slug: C与嵌入式
     level: 1
-  - title: 3.5 工具链
-    slug: 工具链
+  - title: 2.5 常用工具链
+    slug: 常用工具链
     level: 1
 
-  - title: 文化建设
+  - title: 3. 文化建设
     slug: 文化建设
-
 head:
   - - meta
     - name: description
-      content: QuetzalSidera 的个人介绍，包含专业方向、兴趣爱好与博客记录计划。
+      content: QuetzalSidera 的个人介绍，记录机器人工程、计算机科学、个人项目与兴趣文化。
   - - meta
     - name: keywords
       content: QuetzalSidera, 个人博客, 机器人, 计算机科学, 自我介绍
@@ -62,196 +57,211 @@ head:
 
 ---
 
-
 ```ts image-setup
+import { path as miscellaneousImagePath } from '@public/Image/Miscellaneous/path'
+import { path as groupPhotoPath } from '@public/Image/GroupPhoto/path'
 
-import {path as miscellaneousImagePath} from '@public/Image/Miscellaneous/path'
-import {path as groupPhotoPath} from '@public/Image/GroupPhoto/path'
-
-const imageOfAronaAndPlana = {
+const aronaAndPlanaImage = {
   src: groupPhotoPath['阿洛娜与普拉娜'],
-  alt: '阿洛娜与普拉娜',
+  alt: '阿洛娜与普拉娜并肩站立',
   align: 'right',
-  wrap: true,
-  maxHeight: '16rem',
+  wrap: false,
+  maxHeight: '18rem',
+  caption: '阿洛娜与普拉娜',
 } as const
 
-
-const blueArchive = {
+const blueArchiveImage = {
   src: miscellaneousImagePath['蔚蓝档案'],
-  alt: '蔚蓝档案',
-  align: 'right',
-  wrap: true,
-  maxHeight: '20rem',
-  caption:'《蔚蓝档案》：“一切奇迹的起点”',
-  captionLink:'https://bluearchive-cn.com',
-} as const
- 
- 
-const minecraft ={
-  src: miscellaneousImagePath['我的世界'],
-  alt: '蔚蓝档案',
-  align: 'right',
-  wrap: true,
-  maxHeight: '20rem',
-  caption:'Minecraft：无限续杯的创作沙盒。',
-  captionLink:'https://www.minecraft.net/zh-hans',
+  alt: '蔚蓝档案游戏画面',
+  align: 'center',
+  wrap: false,
+  maxHeight: '16rem',
+  caption: '《蔚蓝档案》：“一切奇迹的起点”',
+  captionLink: 'https://bluearchive-cn.com',
 } as const
 
-const bigFishBegonia={
+const minecraftImage = {
+  src: miscellaneousImagePath['我的世界'],
+  alt: 'Minecraft 游戏画面',
+  align: 'center',
+  wrap: false,
+  maxHeight: '16rem',
+  caption: 'Minecraft：无限续杯的创作沙盒',
+  captionLink: 'https://www.minecraft.net/zh-hans',
+} as const
+
+const bigFishBegoniaImage = {
   src: miscellaneousImagePath['大鱼海棠'],
-  alt: '大鱼海棠',
-  align: 'right',
-  wrap: true,
-  maxHeight: '20rem',
-  caption:'《大鱼海棠》',
+  alt: '动画电影《大鱼海棠》画面',
+  align: 'center',
+  wrap: false,
+  maxHeight: '16rem',
+  caption: '《大鱼海棠》',
   captionLink: 'https://www.imdb.com/title/tt1920885/',
 } as const
 
-const planetarian={
+const planetarianImage = {
   src: miscellaneousImagePath['星之梦'],
-  alt: '星之梦',
-  align: 'right',
-  wrap: true,
-  maxHeight: '20rem',
-  caption:'《星之梦》',
-  captionLink:'https://www.bilibili.com/bangumi/play/ep90842',
+  alt: '动画《星之梦》画面',
+  align: 'center',
+  wrap: false,
+  maxHeight: '16rem',
+  caption: '《星之梦》',
+  captionLink: 'https://www.bilibili.com/bangumi/play/ep90842',
 } as const
 
-const insideOut={
+const insideOutImage = {
   src: miscellaneousImagePath['头脑特工队'],
-  alt: '头脑特工队',
-  align: 'right',
-  wrap: true,
-  maxHeight: '20rem',
-  caption:'《头脑特工队》',
-  captionLink:'https://www.bilibili.com/bangumi/play/ss46265',
+  alt: '动画电影《头脑特工队》画面',
+  align: 'center',
+  wrap: false,
+  maxHeight: '16rem',
+  caption: '《头脑特工队》',
+  captionLink: 'https://www.bilibili.com/bangumi/play/ss46265',
 } as const
 
-
-const yourName={
+const yourNameImage = {
   src: miscellaneousImagePath['你的名字'],
-  alt: '你的名字',
-  align: 'right',
-  wrap: true,
-  maxHeight: '20rem',
-  caption:'《你的名字》',
-  captionLink:'https://www.imdb.com/title/tt5311514/',
+  alt: '动画电影《你的名字》画面',
+  align: 'center',
+  wrap: false,
+  maxHeight: '16rem',
+  caption: '《你的名字》',
+  captionLink: 'https://www.imdb.com/title/tt5311514/',
 } as const
 
-const touhouYouReimu= {
+const touhouYouReimuImage = {
   src: miscellaneousImagePath['东方幼灵梦'],
-  alt: '东方幼灵梦',
-  align: 'right',
-  wrap: true,
-  maxHeight: '20rem',
-  caption:'《东方幼灵梦》',
-  captionLink:'https://baike.baidu.com/item/%E4%B8%9C%E6%96%B9%E5%B9%BC%E7%81%B5%E6%A2%A6/7904133',
+  alt: '同人动画《东方幼灵梦》画面',
+  align: 'center',
+  wrap: false,
+  maxHeight: '16rem',
+  caption: '《东方幼灵梦》',
+  captionLink: 'https://baike.baidu.com/item/%E4%B8%9C%E6%96%B9%E5%B9%BC%E7%81%B5%E6%A2%A6/7904133',
 } as const
-
-
 ```
 
-我目前是 23 级本科生，主修机器人工程，辅修工程力学，同时也对计科保持着“上头”状态。
+::::flow{mode="float" side="right" media-width="38%" min-text-width="24rem" print="block"}
+:::media
+<Image {...aronaAndPlanaImage} />
+:::
+:::body
+我目前是 23 级本科生，主修机器人工程，辅修工程力学，同时也对计算机科学保持着“上头”状态。
 
-## 主线剧情{#主线剧情}
+这个博客既是学习笔记，也是项目日志：一边整理课程与计算机基础，一边记录从想法到实现的过程。
+:::
+::::
 
-### 1. 学习{#学习}
+## 1. 主线剧情{#主线剧情}
 
-最近这段时间，我主要在肝**计科基础**以及课内的**机器人学**相关知识，后续在机器人学结束后应该会精进游戏开发
+### 1.1 学习{#学习}
 
-后期计划：
+最近主要学习操作系统与计算机网络，并继续补充机器人、力学和数学基础。
 
-- 计科：计算机操作系统 => 数据结构与算法（当前） => 数据库 => 计算机网络复习
-- 课内：机器人机构学（当前） => 机器人学基础/理论力学/高等数学/线性代数复习
+### 1.2 个人项目{#个人项目}
 
-### 2. 个人项目{#个人项目}
+#### 1.2.1 QQ 机器人迁移{#QQ机器人迁移}
 
-#### 2.1 QQ机器人迁移{#QQ机器人迁移}
-[项目Demo地址](https://article.millealice.com)
+[项目演示](https://article.millealice.com)
 
-将原本的QQ机器人拆分成微服务、迁移到腾讯官方平台、接入身份认证、并配套网页端控制中心
-，目前只是一个小小的前端Demo，后端还在开发中...
+将原有 QQ 机器人拆分为微服务，迁移至腾讯官方平台，并接入身份认证和网页控制中心。目前前端演示已经完成，后端仍在开发。
 
-技术栈
+**技术栈**
 
-- 前端：Next.js + Module CSS
-- 微服务框架：ASP.NET Core + EF Core + Pgsql
-- 微服务：ASP.NET Core API
+- 前端：Next.js、CSS Modules
+- 微服务框架：ASP.NET Core、EF Core、PostgreSQL
+- 服务：ASP.NET Core API、TypeScript、Cloudflare Workers
 
-#### 2.2 CSV-enhance (CSVX){#CSVX}
+#### 1.2.2 CSV-enhance（CSVX）{#CSVX}
 
-[项目Demo地址](https://github.com/QuetzalSidera/csv-enhance)
+[项目仓库](https://github.com/QuetzalSidera/csv-enhance)
 
-CSVX是一个文本优先、AI友好、类似于LaTeX的声明式标记语言，可以编译成Excel，目的是解决Excel难以使用普通文本大模型编写的难点。
+CSVX 是一种文本优先、对 AI 友好的声明式标记语言，写法类似 LaTeX，可编译为 Excel 工作簿。它试图解决电子表格难以由普通文本模型直接编写和维护的问题。
 
-~~目前这个项目有点烂尾了~~ ，因为是纯Vibe的项目，而且从有想法立项到开发结束不超过18小时，虽然已经写了个编译器与插件代码高亮的雏形，但后续能否继续下去看情况吧～。
+这个项目从构想到首个版本不超过 18 小时，目前已经具备编译器和编辑器语法高亮雏形，后续是否继续扩展仍待评估。
 
-技术栈
+**技术栈**
 
-- Ts + Node.js
-- ~~Codex~~
+- TypeScript、Node.js
 
-#### 2.3 个人博客维护{#个人博客维护}
+#### 1.2.3 个人博客维护{#个人博客维护}
 
-此部分可以参见专门的文集：[博客更新日志](../collections/blog-change-log.md)
+博客的技术迁移、内容组件与排版改动记录在[博客更新日志](../collections/blog-change-log.md)中。
 
-#### 2.4 个人邮件系统{#个人邮件系统}
+## 2. 技术栈{#技术栈}
 
-个人博客之下的邮件系统，目前还只是一个Vibe出来的雏型，之后应该会重构一次，引入现代化的后端设施与更漂亮的前端主题。
+### 2.1 C#{#C#}
 
-参见[个人邮件系统](./project-mail-system-intro.md)
+最顺手的主力语言之一。语法与工具链完整，常用 EF Core 与 LINQ 处理数据访问。
 
-## 技术栈{#技术栈}
+### 2.2 TypeScript / JavaScript{#Ts-Js}
 
-#### 3.1 C#{#C#}
+主要用于 Web 前端和 Cloudflare Workers。生态丰富、工具成熟，但 TypeScript 的高级类型有时会显得过于复杂。
 
-最顺手的主力语言之一，语法确实很舒服，但社区生态除了微软以外的都不太行。 EF Core 搭配上Linq真挺好用的。
+### 2.3 CSS / HTML{#CSS-Html}
 
-#### 3.2 Ts / Js{#Ts-Js}
+偏好 CSS Modules：组件与样式可以放在同一目录，同时保留接近原生 CSS 的写法。Tailwind CSS 适合快速开发，但在复杂页面中容易使结构与样式分散。
 
-生态太好了，前端框架、工具库、社区资源都非常丰富。而且大模型支持也很完善，只不过Ts的类型系统有些过于绕了。
+### 2.4 C 与嵌入式{#C与嵌入式}
 
-#### 3.3 CSS/Html{#CSS-Html}
+这部分与机器人方向联系更紧。曾在 RoboMaster 项目中使用 C，也会在计算机网络等课程的底层编程实践中继续使用。
 
-一开始并没有想专门学CSS的，但是为了做Web项目不得不学（泪目）。还是比较喜欢接近传统CSS语法的Module CSS，将组件和样式放在一个目录下。Tailwind
-CSS快速开发很好用，但是样式分散在Jsx里面，原子类的CSS又写在自定义的文件中，就很难受。
+### 2.5 常用工具链{#常用工具链}
 
-#### 3.4 C 与嵌入式{#C与嵌入式}
+- `ASP.NET Core APIs`：后端服务
+- `EF Core`：数据访问
+- `React` / `Next.js`：Web 前端
+- `Docker`：构建与部署
 
-这部分和机器人方向联系更紧，接触过一年时间（指RoboMaster）。学习计算机网络等基础课程时也是不得不用的。
+## 3. 文化建设{#文化建设}
 
-#### 3.5 ASP.NET Core APIs / EF Core / React / Docker{#工具链}
+> 这是一个关于爱、自由、知识与幸福的故事……
 
-这些属于我比较熟悉的一整套工具链：
+::::::flow{mode="float" side="right" media-width="46%" min-text-width="24rem" print="preserve"}
+:::::media
+::::image-group{columns="2" mobile-columns="2" print-columns="2"}
+<Image {...blueArchiveImage} />
 
-- `ASP.NET Core APIs` 后端框架
-- `EF Core` 沟通数据库
-- `React`/`Next.js`前端框架，虽然现在博客为了打包成静态页换成了 VitePress（Vue.js），但在其他项目里它还是我主要的前端框架
-- `Docker` 部署
+<Image {...minecraftImage} />
+:::caption
+从游戏中获得的故事与创造欲
+:::
+::::
+:::::
+:::::body
+“文化”通常用于描述集体、社会或国家；如果将它从社会迁移到个人，也许能为“个人爱好”提供另一个观察角度。
 
+社会因文化而有所区分，民族因传统而具有独特性；个人在成长过程中，也会逐渐发现一些使自己区别于群体的东西。
+:::::
+::::::
 
-## 文化建设{#文化建设}
+::::::flow{mode="float" side="left" media-width="50%" min-text-width="24rem" print="preserve"}
+:::::media
+::::image-group{columns="2" mobile-columns="2" print-columns="2"}
+<Image {...bigFishBegoniaImage} />
 
-> 这是一个关于爱、自由、知识与幸福的故事...
+<Image {...planetarianImage} />
 
-<Image {...blueArchive} />
-<Image {...bigFishBegonia} />
-<Image {...planetarian} />
-<Image {...touhouYouReimu} />
-<Image {...insideOut} />
+<Image {...yourNameImage} />
 
-“文化”这一词语多用在集体、社会或者国家上，但如果将它从“社会”迁移至“个人”，也许能给简单的“个人爱好”这一概念带来不同视角下的理解吧。
+<Image {...touhouYouReimuImage} />
+:::caption
+留在记忆里的动画作品
+:::
+::::
+:::::
+:::::body
+往小看，爱好可以算作个人文化；往大看，价值观也可以算作个人文化。它没有固定的物理表征，也很难画出严格边界，却始终在外部现实之外保持某种独立性，同时不断受到现实影响——像主旋律下的一组隐藏和弦，只属于自己。
 
-社会以文化相区分，民族以传统而独特，也许个人在成长过程中，也会逐渐发现一些使自己独立于群体的东西。
+爱因斯坦曾写道：“完成同样一件工作对学生产生的教育方面的影响可能有很大不同，这取决于使他完成这件工作的内因究竟是害怕受伤害、利己主义的情感，还是获得喜悦和满足感。”个人文化正是外部行为背后的内部意识；它又在持续表达中得到强化，使人逐渐摆脱行为的工具性，发展真正属于自己的东西。
+:::::
+::::::
 
-这样的事物既没有外在的物理表征来感受其真实，也没有一个严格的界限来定义其范围。
-往小看，也许爱好算是个人文化；往大看，也许价值观也算个人文化——但无论它究竟可以被定义成为什么，有一点是明确的，
-它始终是在物理意义上和外部现实相互独立的，但又无时无刻不受到外界影响的，时时刻刻作为每一个现实主旋律之下的隐藏和弦的一个特殊存在——它只属于自己，而不属于任何外界。
-
-
-正如爱因斯坦所说过的，“完成同样一件工作对学生产生的教育方面的影响可能有很大不同，这取决于使他完成这件工作的内因究竟是害怕受伤害、利己主义的情感，还是获得喜悦和满足感”。
-“个人文化”便是如此——作为外部行为后的内部意识而存在，这样的意识又因为表达而得到强化，也因此个人脱离了它的外在工具性，得以发展真正属于自己的东西。
-
-与集体、社会和国家的文化相似的一点在于，个人文化以同样类似于一种“传统”——它需要“被”建设，而不会自己长出来。日积月累的照料会使其成长得健康，但若缺乏妥善的维护、保存与建设，个人文化也会消亡。
-正如沙漠里的纪念碑，长时间得不到清扫便会掩埋于黄沙之中。
+::::flow{mode="float" side="right" media-width="42%" min-text-width="24rem" print="preserve"}
+:::media
+<Image {...insideOutImage} />
+:::
+:::body
+与集体文化相似，个人文化也像一种传统：它需要被建设，而不会自行生长。日积月累的照料会使它保持活力；若缺少维护、保存与表达，它也会像沙漠中的纪念碑，逐渐被黄沙掩埋。
+:::
+::::
