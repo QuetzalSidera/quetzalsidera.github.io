@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1160" height="640" viewBox="0 0 1160 640" role="img" aria-labelledby="title desc">
+  <title id="title">ARP 请求与响应</title>
+  <desc id="desc">主机 A 在本地 ARP 缓存未命中后以广播帧发送请求，局域网内各主机都能收到；目标主机 B 以单播帧返回自己的 MAC 地址，双方随后缓存 IP 到 MAC 的映射。</desc>
+  <defs><marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker><marker id="green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#16a34a"/></marker><style>text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.title{font-size:25px;font-weight:750;fill:#0f172a}.box{font-size:18px;font-weight:750;text-anchor:middle}.sub{font-size:14px;font-weight:550;fill:#475569;text-anchor:middle}.packet{font-size:15px;font-weight:650;fill:#334155}.step{font-size:17px;font-weight:750}</style></defs>
+  <rect width="1160" height="640" fill="#f8fafc"/>
+  <text x="38" y="45" class="title">ARP：本广播域内的 IP → MAC 解析</text>
+  <g stroke-width="2.5"><rect x="55" y="115" width="240" height="112" fill="#dbeafe" stroke="#2563eb"/><rect x="460" y="115" width="240" height="112" fill="#f1f5f9" stroke="#64748b"/><rect x="865" y="115" width="240" height="112" fill="#dcfce7" stroke="#16a34a"/></g>
+  <text x="175" y="154" class="box" fill="#1d4ed8">主机 A</text><text x="175" y="184" class="sub">192.0.2.10</text><text x="175" y="207" class="sub">MAC_A</text><text x="580" y="154" class="box">其他主机</text><text x="580" y="184" class="sub">收到广播后检查目标 IP</text><text x="580" y="207" class="sub">不匹配则忽略</text><text x="985" y="154" class="box" fill="#15803d">主机 B</text><text x="985" y="184" class="sub">192.0.2.20</text><text x="985" y="207" class="sub">MAC_B</text>
+  <path d="M175 260V315H985" fill="none" stroke="#2563eb" stroke-width="4" marker-end="url(#blue)"/><path d="M580 315V275" fill="none" stroke="#2563eb" stroke-width="3" marker-end="url(#blue)"/>
+  <text x="175" y="286" class="step" fill="#1d4ed8">① 请求 · 广播</text><text x="350" y="345" class="packet">以太网：MAC_A → FF-FF-FF-FF-FF-FF</text><text x="350" y="369" class="packet">ARP：谁拥有 192.0.2.20？请告知 192.0.2.10 / MAC_A</text>
+  <path d="M985 415H175" fill="none" stroke="#16a34a" stroke-width="4" marker-end="url(#green)"/>
+  <text x="985" y="393" class="step" fill="#15803d" text-anchor="end">② 响应 · 单播</text><text x="350" y="445" class="packet">以太网：MAC_B → MAC_A</text><text x="350" y="469" class="packet">ARP：192.0.2.20 位于 MAC_B</text>
+  <g transform="translate(55 520)"><rect width="1050" height="80" fill="#fff" stroke="#cbd5e1" stroke-width="2"/><text x="525" y="29" class="box">解析结果写入 ARP 缓存，并设置有效期</text><text x="525" y="56" class="sub">ARP 不跨越路由器；跨网发送时解析的是默认网关或下一跳接口的 MAC 地址</text></g>
+</svg>

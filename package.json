@@ -8,11 +8,12 @@
   "scripts": {
     "dev": "next dev",
     "build": "pnpm typecheck && next build",
+    "check:post-diagrams": "node --experimental-strip-types scripts/check-post-diagrams.mjs",
     "check:post-images": "node scripts/check-post-images.mjs",
-    "test:content": "node --experimental-strip-types --test tests/remark-content-directives.test.mjs",
+    "test:content": "node --experimental-strip-types --test tests/remark-content-directives.test.mjs tests/check-post-diagrams.test.mjs",
     "test:content:e2e": "playwright test",
     "preview": "npx serve out",
-    "typecheck": "tsc --noEmit && pnpm check:post-images"
+    "typecheck": "tsc --noEmit && pnpm check:post-images && pnpm check:post-diagrams"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.2.8",
@@ -29,6 +30,7 @@
     "markmap-lib": "^0.18.12",
     "markmap-view": "^0.18.12",
     "mdast-util-to-markdown": "^2.1.2",
+    "mermaid": "11.17.0",
     "minisearch": "^7.1.1",
     "next": "^15.0.0",
     "next-mdx-remote": "^5.0.0",
@@ -50,6 +52,7 @@
     "@types/node": "^22.13.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "jsdom": "26.1.0",
     "remark-parse": "^11.0.0",
     "sass": "^1.100.0",
     "typescript": "^5.6.0",

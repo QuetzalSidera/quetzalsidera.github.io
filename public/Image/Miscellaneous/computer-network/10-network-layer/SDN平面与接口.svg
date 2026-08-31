@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="680" viewBox="0 0 1120 680" role="img" aria-labelledby="title desc">
+  <title id="title">SDN 的平面与接口</title>
+  <desc id="desc">网络应用通过北向接口访问逻辑集中式控制器，控制器集群通过东西向接口协同，并经南向接口向分布式转发设备下发流表。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#475569"/></marker>
+    <style>text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.title{font-size:25px;font-weight:750;fill:#0f172a}.box{font-size:18px;font-weight:700;text-anchor:middle}.sub{font-size:14px;font-weight:550;fill:#475569;text-anchor:middle}.side{font-size:17px;font-weight:700;fill:#334155;text-anchor:middle}.iface{font-size:15px;font-weight:700;fill:#475569;text-anchor:middle}</style>
+  </defs>
+  <rect width="1120" height="680" fill="#f8fafc"/>
+  <text x="42" y="46" class="title">软件定义网络（SDN）</text>
+  <line x1="165" y1="70" x2="165" y2="630" stroke="#cbd5e1" stroke-width="2"/>
+  <g class="side"><text x="88" y="142">应用层</text><text x="88" y="342">控制平面</text><text x="88" y="567">数据平面</text></g>
+
+  <g stroke-width="2.5">
+    <rect x="245" y="92" width="220" height="80" fill="#e0f2fe" stroke="#0284c7"/><rect x="500" y="92" width="220" height="80" fill="#e0f2fe" stroke="#0284c7"/><rect x="755" y="92" width="220" height="80" fill="#e0f2fe" stroke="#0284c7"/>
+    <text x="355" y="126" class="box" fill="#075985">流量工程</text><text x="355" y="151" class="sub">路径与带宽策略</text><text x="610" y="126" class="box" fill="#075985">访问控制</text><text x="610" y="151" class="sub">安全与隔离策略</text><text x="865" y="126" class="box" fill="#075985">监控应用</text><text x="865" y="151" class="sub">拓扑与流量视图</text>
+
+    <rect x="275" y="280" width="260" height="116" fill="#ede9fe" stroke="#7c3aed"/><rect x="625" y="280" width="260" height="116" fill="#ede9fe" stroke="#7c3aed"/>
+    <text x="405" y="325" class="box" fill="#5b21b6">控制器 A</text><text x="405" y="354" class="sub">全局拓扑 · 路径计算</text><text x="405" y="379" class="sub">生成并维护流表</text><text x="755" y="325" class="box" fill="#5b21b6">控制器 B</text><text x="755" y="354" class="sub">状态副本 · 故障接管</text><text x="755" y="379" class="sub">逻辑集中而非单机</text>
+
+    <rect x="230" y="515" width="220" height="92" fill="#dcfce7" stroke="#16a34a"/><rect x="500" y="515" width="220" height="92" fill="#dcfce7" stroke="#16a34a"/><rect x="770" y="515" width="220" height="92" fill="#dcfce7" stroke="#16a34a"/>
+    <text x="340" y="553" class="box" fill="#166534">转发设备 1</text><text x="340" y="581" class="sub">匹配流表 → 执行动作</text><text x="610" y="553" class="box" fill="#166534">转发设备 2</text><text x="610" y="581" class="sub">匹配流表 → 执行动作</text><text x="880" y="553" class="box" fill="#166534">转发设备 3</text><text x="880" y="581" class="sub">匹配流表 → 执行动作</text>
+  </g>
+
+  <g fill="none" stroke="#475569" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)">
+    <path d="M355 172V245H405V280"/><path d="M610 172V245H550"/><path d="M865 172V245H755V280"/>
+    <path d="M535 338H625"/>
+    <path d="M405 396V460H340V515"/><path d="M545 396V460H610V515"/><path d="M755 396V460H880V515"/>
+  </g>
+  <g class="iface"><rect x="467" y="219" width="188" height="34" fill="#f8fafc"/><text x="561" y="242">北向接口 · 应用 API</text><rect x="542" y="310" width="76" height="34" fill="#f8fafc"/><text x="580" y="333">东西向</text><rect x="480" y="435" width="260" height="34" fill="#f8fafc"/><text x="610" y="458">南向接口 · OpenFlow 等协议</text></g>
+  <text x="560" y="650" class="sub">控制逻辑集中统一优化；实际控制器通常组成集群，转发设备仍分布部署</text>
+</svg>

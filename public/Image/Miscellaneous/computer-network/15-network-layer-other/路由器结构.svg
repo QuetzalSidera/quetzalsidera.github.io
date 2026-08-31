@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">路由器的控制平面与数据平面</title>
+  <desc id="desc">控制平面的路由处理器运行路由协议并维护路由表，再把转发表下发到数据平面。输入端口完成物理层、链路层与网络层查表，经输入队列和交换结构进入输出队列，再由输出端口重新封装并发送。</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#475569"/></marker><style>text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.title{font-size:25px;font-weight:750;fill:#0f172a}.plane{font-size:18px;font-weight:750;fill:#334155}.box{font-size:17px;font-weight:750;text-anchor:middle}.sub{font-size:13px;font-weight:550;fill:#475569;text-anchor:middle}.queue{font-size:14px;font-weight:700;text-anchor:middle}</style></defs>
+  <rect width="1200" height="720" fill="#f8fafc"/>
+  <text x="38" y="45" class="title">路由器：慢速控制与逐包高速转发分离</text>
+  <rect x="55" y="78" width="1090" height="220" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/><text x="75" y="110" class="plane">控制平面</text>
+  <g stroke-width="2.5"><rect x="210" y="130" width="300" height="110" fill="#ede9fe" stroke="#7c3aed"/><rect x="690" y="130" width="300" height="110" fill="#fae8ff" stroke="#a21caf"/></g>
+  <text x="360" y="172" class="box" fill="#6d28d9">路由选择处理器</text><text x="360" y="202" class="sub">运行 RIP / OSPF / BGP 等协议</text><text x="360" y="226" class="sub">处理拓扑变化与管理任务</text><text x="840" y="172" class="box" fill="#86198f">路由表（RIB）</text><text x="840" y="202" class="sub">保存多来源路由与控制信息</text><text x="840" y="226" class="sub">选出可安装的最佳路由</text>
+  <path d="M510 185H690" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="55" y="325" width="1090" height="335" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/><text x="75" y="357" class="plane">数据平面</text>
+  <g stroke-width="2.5"><rect x="90" y="395" width="235" height="170" fill="#dbeafe" stroke="#2563eb"/><rect x="390" y="395" width="170" height="170" fill="#fef3c7" stroke="#d97706"/><rect x="625" y="395" width="170" height="170" fill="#dcfce7" stroke="#16a34a"/><rect x="860" y="395" width="235" height="170" fill="#dbeafe" stroke="#2563eb"/></g>
+  <text x="207" y="430" class="box" fill="#1d4ed8">输入端口</text><text x="207" y="461" class="sub">物理层：接收比特</text><text x="207" y="486" class="sub">链路层：检验并解帧</text><text x="207" y="511" class="sub">网络层：查转发表</text><text x="207" y="540" class="queue" fill="#b45309">输入队列</text>
+  <text x="475" y="451" class="box" fill="#b45309">转发表（FIB）</text><text x="475" y="483" class="sub">面向最长前缀</text><text x="475" y="508" class="sub">优化高速查找</text><text x="710" y="451" class="box" fill="#15803d">交换结构</text><text x="710" y="483" class="sub">把分组送到</text><text x="710" y="508" class="sub">匹配的输出端口</text><text x="977" y="430" class="box" fill="#1d4ed8">输出端口</text><text x="977" y="461" class="sub">网络层：更新首部</text><text x="977" y="486" class="sub">链路层：重新封装</text><text x="977" y="511" class="sub">物理层：发送比特</text><text x="977" y="540" class="queue" fill="#b45309">输出队列</text>
+  <g stroke="#475569" stroke-width="4" marker-end="url(#arrow)"><path d="M325 480H390"/><path d="M560 480H625"/><path d="M795 480H860"/></g>
+  <path d="M840 240V340H475V395" fill="none" stroke="#7c3aed" stroke-width="3" stroke-dasharray="8 6" marker-end="url(#arrow)"/><text x="650" y="326" class="sub">安装 / 更新转发表</text>
+  <g transform="translate(120 600)"><rect width="960" height="40" fill="#fff" stroke="#cbd5e1"/><text x="480" y="26" class="queue" fill="#334155">到达速率超过查表、交换或发送能力时，输入/输出队列增长；缓冲区耗尽后发生丢包</text></g>
+  <text x="600" y="693" class="sub">物理端口通常同时承担输入与输出；图中分开绘制以展示逐包处理路径</text>
+</svg>

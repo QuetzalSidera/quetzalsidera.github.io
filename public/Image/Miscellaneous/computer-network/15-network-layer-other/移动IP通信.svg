@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">经典移动 IPv4 的通信过程</title>
+  <desc id="desc">移动节点在被访网络向外地代理登记转交地址，外地代理再向归属代理注册。通信者发往永久地址的数据报由归属代理截获，经 IP 隧道送到转交地址并交付移动节点；移动节点向通信者发送数据时经被访网络直接转发而不经过归属代理，形成三角路由。</desc>
+  <defs><marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker><marker id="orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#ea580c"/></marker><marker id="purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7c3aed"/></marker><style>text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.title{font-size:25px;font-weight:750;fill:#0f172a}.zone{font-size:18px;font-weight:750;fill:#334155;text-anchor:middle}.box{font-size:18px;font-weight:750;text-anchor:middle}.sub{font-size:14px;font-weight:550;fill:#475569;text-anchor:middle}.edge{font-size:14px;font-weight:700;text-anchor:middle}</style></defs>
+  <rect width="1200" height="700" fill="#f8fafc"/>
+  <text x="38" y="45" class="title">经典移动 IPv4：永久地址不变，转交地址表示当前位置</text>
+  <rect x="50" y="82" width="430" height="500" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/><rect x="720" y="82" width="430" height="500" fill="#f5f3ff" stroke="#c4b5fd" stroke-width="2"/>
+  <text x="265" y="118" class="zone">归属网络 · 131.8.0.0/16</text><text x="935" y="118" class="zone">被访网络 · 15.0.0.0/8</text>
+  <g stroke-width="2.5"><rect x="135" y="175" width="260" height="105" fill="#dbeafe" stroke="#2563eb"/><rect x="805" y="175" width="260" height="105" fill="#ede9fe" stroke="#7c3aed"/><rect x="805" y="420" width="260" height="115" fill="#dcfce7" stroke="#16a34a"/><rect x="485" y="590" width="230" height="80" fill="#ffedd5" stroke="#ea580c"/></g>
+  <text x="265" y="216" class="box" fill="#1d4ed8">归属代理</text><text x="265" y="246" class="sub">截获发往永久地址的分组</text><text x="265" y="268" class="sub">维护 永久地址 → 转交地址</text><text x="935" y="216" class="box" fill="#6d28d9">外地代理</text><text x="935" y="246" class="sub">转交地址 15.5.6.7</text><text x="935" y="268" class="sub">解封装并在本地交付</text><text x="935" y="459" class="box" fill="#15803d">移动节点 A</text><text x="935" y="489" class="sub">永久地址 131.8.6.7</text><text x="935" y="513" class="sub">应用始终使用永久地址</text><text x="600" y="625" class="box" fill="#c2410c">通信者 B</text><text x="600" y="650" class="sub">只知道 A 的永久地址</text>
+
+  <path d="M935 420V280" stroke="#7c3aed" stroke-width="4" marker-end="url(#purple)"/><text x="1010" y="350" class="edge" fill="#6d28d9">① 登记转交地址</text>
+  <path d="M805 228C650 120 515 120 395 220" fill="none" stroke="#7c3aed" stroke-width="4" stroke-dasharray="9 7" marker-end="url(#purple)"/><text x="600" y="130" class="edge" fill="#6d28d9">② 向归属代理注册</text>
+  <path d="M515 590C390 515 255 405 265 280" fill="none" stroke="#2563eb" stroke-width="5" marker-end="url(#blue)"/><text x="270" y="472" class="edge" fill="#1d4ed8">③ 目的=永久地址</text>
+  <path d="M395 225C560 300 690 300 805 225" fill="none" stroke="#2563eb" stroke-width="7" marker-end="url(#blue)"/><text x="600" y="280" class="edge" fill="#1d4ed8">④ IP-in-IP 隧道 · 外层目的=转交地址</text>
+  <path d="M935 280V420" stroke="#2563eb" stroke-width="5" marker-end="url(#blue)"/><text x="850" y="350" class="edge" fill="#1d4ed8">⑤ 解封装后交付</text>
+  <path d="M855 535C790 620 745 630 715 630" fill="none" stroke="#ea580c" stroke-width="5" marker-end="url(#orange)"/><text x="975" y="555" class="edge" fill="#c2410c">⑥ 经被访网络直接发送</text><text x="975" y="578" class="edge" fill="#c2410c">不经过归属代理</text>
+  <text x="600" y="690" class="sub">接收路径绕经归属代理，发送路径可直接离开被访网络，因此形成三角路由</text>
+</svg>

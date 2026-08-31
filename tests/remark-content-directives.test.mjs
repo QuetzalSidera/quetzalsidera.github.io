@@ -22,6 +22,19 @@ function findAll(node, hName, results = []) {
   return results
 }
 
+function assertCompileError(source, message) {
+  assert.throws(
+    () => compile(source),
+    (error) => {
+      assert.match(error.message, message)
+      assert.equal(typeof error.line, 'number')
+      assert.equal(typeof error.column, 'number')
+      assert.ok(error.place?.start)
+      return true
+    },
+  )
+}
+
 test('transforms flow and image-group directives without changing ordinary Markdown', () => {
   const tree = compile(`
 ::::flow{mode="float" side="right" media-width="38%" min-text-width="24rem"}
@@ -59,6 +72,26 @@ test('transforms flow and image-group directives without changing ordinary Markd
     printColumns: '2',
   })
   assert.equal(findAll(group, 'GroupCaption').length, 1)
+})
+
+test('transforms poem directives and rejects nested directives', () => {
+  const tree = compile(`
+:::poem
+
+春风又绿江南岸
+
+明月何时照我还
+
+:::
+`)
+  const [poem] = findAll(tree, 'Poem')
+  assert.deepEqual(poem.data.hProperties, {})
+  assert.equal(poem.children.filter((child) => child.type === 'paragraph').length, 2)
+
+  assertCompileError(
+    ':::poem\n:::mindmap\n- 嵌套\n:::\n:::',
+    /`poem` content cannot contain nested directives/,
+  )
 })
 
 test('legacy Image markers remain opaque to remark-directive inside flow containers', () => {
@@ -101,6 +134,68 @@ test('serializes mind-map Markdown into a component property', () => {
   assert.equal(mindMap.data.hProperties.interactive, 'false')
   assert.match(mindMap.data.hProperties.source, /DNS/)
   assert.deepEqual(mindMap.children, [])
+})
+
+test('transforms Mermaid flowchart diagrams into component properties', () => {
+  const tree = compile(`
+:::diagram{title="请求链路"}
+~~~mermaid
+flowchart LR
+  Client --> Server
+~~~
+:::
+
+:::diagram
+~~~mermaid
+graph TD
+  A --> B
+~~~
+:::
+`)
+  const [flowchart, graph] = findAll(tree, 'Diagram')
+
+  assert.deepEqual(flowchart.data.hProperties, {
+    title: '请求链路',
+    source: 'flowchart LR\n  Client --> Server',
+  })
+  assert.deepEqual(flowchart.children, [])
+  assert.deepEqual(graph.data.hProperties, {
+    source: 'graph TD\n  A --> B',
+  })
+  assert.deepEqual(graph.children, [])
+})
+
+test('rejects malformed Mermaid diagram directives with source positions', () => {
+  const cases = [
+    {
+      source: ':::diagram\nflowchart LR\n:::',
+      message: /exactly one direct fenced code block/,
+    },
+    {
+      source: ':::diagram\n~~~javascript\nflowchart LR\n~~~\n:::',
+      message: /code block language must be `mermaid`/,
+    },
+    {
+      source: ':::diagram\n~~~mermaid\nflowchart LR\n~~~\n~~~mermaid\ngraph TD\n~~~\n:::',
+      message: /exactly one direct fenced code block/,
+    },
+    {
+      source: ':::diagram\n~~~mermaid\n~~~\n:::',
+      message: /requires non-empty Mermaid source/,
+    },
+    {
+      source: ':::diagram\n~~~mermaid\nsequenceDiagram\n~~~\n:::',
+      message: /must start with `flowchart` or `graph`/,
+    },
+    {
+      source: ':::diagram{theme="dark"}\n~~~mermaid\nflowchart LR\n~~~\n:::',
+      message: /Unknown attribute `theme` on `:diagram`/,
+    },
+  ]
+
+  for (const { source, message } of cases) {
+    assertCompileError(source, message)
+  }
 })
 
 test('resolves choice columns and preserves false and zero attributes', () => {

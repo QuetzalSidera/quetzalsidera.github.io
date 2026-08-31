@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">虚电路服务与数据报服务</title>
+  <desc id="desc">虚电路先建立固定路径并由中间节点保存连接状态，后续分组携带短虚电路号；数据报不建立连接，每个分组携带完整目的地址并可独立选择路径。</desc>
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#ea580c"/></marker>
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker>
+    <style>
+      text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.heading{font-size:25px;font-weight:750;fill:#0f172a}.label{font-size:17px;font-weight:700;fill:#1e293b;text-anchor:middle}.small{font-size:14px;font-weight:550;fill:#475569;text-anchor:middle}.note{font-size:15px;font-weight:600;fill:#334155}
+    </style>
+  </defs>
+  <rect width="1200" height="680" fill="#f8fafc"/>
+  <line x1="600" y1="72" x2="600" y2="625" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="300" y="48" class="heading" text-anchor="middle">虚电路 · 面向连接</text>
+  <text x="900" y="48" class="heading" text-anchor="middle">数据报 · 无连接</text>
+
+  <g stroke="#94a3b8" stroke-width="4" fill="none">
+    <path d="M105 254L235 155L390 238L520 142"/>
+    <path d="M105 254L250 360L405 355L520 142"/>
+    <path d="M680 254L815 150L970 235L1095 142"/>
+    <path d="M680 254L825 365L980 355L1095 142"/>
+  </g>
+
+  <g fill="#fff" stroke="#475569" stroke-width="2.5">
+    <circle cx="105" cy="254" r="37"/><circle cx="235" cy="155" r="37"/><circle cx="390" cy="238" r="37"/><circle cx="250" cy="360" r="37"/><circle cx="405" cy="355" r="37"/><circle cx="520" cy="142" r="37"/>
+    <circle cx="680" cy="254" r="37"/><circle cx="815" cy="150" r="37"/><circle cx="970" cy="235" r="37"/><circle cx="825" cy="365" r="37"/><circle cx="980" cy="355" r="37"/><circle cx="1095" cy="142" r="37"/>
+  </g>
+  <g class="label"><text x="105" y="260">S</text><text x="235" y="161">R₁</text><text x="390" y="244">R₂</text><text x="250" y="366">R₃</text><text x="405" y="361">R₄</text><text x="520" y="148">D</text><text x="680" y="260">S</text><text x="815" y="156">R₁</text><text x="970" y="241">R₂</text><text x="825" y="371">R₃</text><text x="980" y="361">R₄</text><text x="1095" y="148">D</text></g>
+
+  <path d="M132 232L207 175L359 226L491 158" fill="none" stroke="#2563eb" stroke-width="7" marker-end="url(#arrow-blue)"/>
+  <g fill="#dbeafe" stroke="#2563eb" stroke-width="2"><rect x="164" y="186" width="46" height="28"/><rect x="285" y="191" width="46" height="28"/><rect x="432" y="176" width="46" height="28"/></g>
+  <g class="small" fill="#1d4ed8"><text x="187" y="205">VC 7</text><text x="308" y="210">VC 3</text><text x="455" y="195">VC 9</text></g>
+  <text x="300" y="420" class="note" text-anchor="middle">建立：完整地址 → 分配逐跳 VCID → 写入连接状态</text>
+  <text x="300" y="451" class="note" text-anchor="middle">传输：固定路径；分组仅携带本链路 VCID</text>
+  <text x="300" y="482" class="note" text-anchor="middle">释放：删除沿途状态；链路资源并不被独占</text>
+
+  <path d="M707 232L787 173L939 224L1066 158" fill="none" stroke="#2563eb" stroke-width="6" marker-end="url(#arrow-blue)"/>
+  <path d="M708 276L797 341L948 344L1072 169" fill="none" stroke="#ea580c" stroke-width="6" marker-end="url(#arrow-orange)"/>
+  <g class="label"><text x="875" y="178" fill="#1d4ed8">P₁</text><text x="902" y="390" fill="#c2410c">P₂</text></g>
+  <text x="900" y="420" class="note" text-anchor="middle">每个分组携带完整目的地址并独立查表</text>
+  <text x="900" y="451" class="note" text-anchor="middle">同一报文的分组可以走不同路径</text>
+  <text x="900" y="482" class="note" text-anchor="middle">路由器不保存端到端连接状态</text>
+
+  <g transform="translate(72 540)">
+    <rect width="1056" height="90" fill="#fff" stroke="#cbd5e1" stroke-width="2"/>
+    <line x1="528" y1="0" x2="528" y2="90" stroke="#cbd5e1" stroke-width="2"/>
+    <text x="264" y="34" class="label">小首部 · 有序路径 · 故障影响整条 VC</text>
+    <text x="264" y="65" class="small">可靠性和流量控制取决于具体虚电路网络提供的服务</text>
+    <text x="792" y="34" class="label">无建立开销 · 尽力而为 · 故障后可重新选路</text>
+    <text x="792" y="65" class="small">可能丢失、重复、失序；可靠性由端系统补充</text>
+  </g>
+</svg>

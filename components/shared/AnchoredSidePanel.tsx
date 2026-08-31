@@ -80,7 +80,7 @@ export function AnchoredSidePanel({
       if (!anchor || !panel) return
 
       const anchorBounds = anchor.getBoundingClientRect()
-      const panelBounds = panel.getBoundingClientRect()
+      const panelHeight = panel.offsetHeight
       const viewportWidth = window.visualViewport?.width ?? window.innerWidth
       const viewportHeight = window.visualViewport?.height ?? window.innerHeight
       const viewportOffsetLeft = window.visualViewport?.offsetLeft ?? 0
@@ -104,9 +104,9 @@ export function AnchoredSidePanel({
         viewportOffsetLeft + viewportWidth - panelWidth - VIEWPORT_GAP,
       )
       const top = clamp(
-        anchorBounds.top + (anchorBounds.height - panelBounds.height) / 2,
+        anchorBounds.top + (anchorBounds.height - panelHeight) / 2,
         viewportOffsetTop + VIEWPORT_GAP,
-        viewportOffsetTop + viewportHeight - panelBounds.height - VIEWPORT_GAP,
+        viewportOffsetTop + viewportHeight - panelHeight - VIEWPORT_GAP,
       )
       setPosition({ left, top, ready: true, sheet: false })
     }

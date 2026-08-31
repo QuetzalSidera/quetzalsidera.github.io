@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm'
 import remarkMath from 'remark-math'
 import { BlogCodeBlock } from '@/components/BlogCodeBlock'
 import { BlogImage } from '@/components/BlogImage'
+import { LightboxImage } from '@/components/LightboxImage'
 import {
   Exercise,
   ExerciseAnswer,
@@ -17,8 +18,10 @@ import {
   ExerciseStem,
 } from '@/components/content/Exercise'
 import { ContentFlow, FlowBody, FlowMedia } from '@/components/content/Flow'
+import { Diagram } from '@/components/content/Diagram'
 import { GroupCaption, ImageGroup } from '@/components/content/ImageGroup'
 import { MindMap } from '@/components/content/MindMap'
+import { Poem } from '@/components/content/Poem'
 import { PostViewer } from '@/components/posts/PostViewer'
 import { toMdxSource, remarkLegacyImages } from '@/lib/mdx'
 import { rehypeShiki } from '@/lib/rehype-shiki'
@@ -87,6 +90,20 @@ const fixtureMarkdown = String.raw`
     - 连接管理
     - 缓存
 :::
+
+## 关系图
+
+::::diagram{title="DNS 与 HTTP 的关系"}
+
+~~~mermaid
+flowchart LR
+  DOMAIN[域名] -->|DNS 查询| ADDRESS[IP 地址]
+  ADDRESS -->|建立连接| HTTP[HTTP 服务]
+  NOTE@{ shape: note, label: "DNS 只负责名称解析" }
+  DOMAIN -.-> NOTE
+~~~
+
+::::
 
 ## 习题排版
 
@@ -247,12 +264,15 @@ export default async function ContentLayoutFixture({ searchParams }: FixturePage
           source={toMdxSource(fixtureMarkdown)}
           components={{
             Image: BlogImage,
+            img: LightboxImage,
             ContentFlow,
             FlowMedia,
             FlowBody,
+            Diagram,
             ImageGroup,
             GroupCaption,
             MindMap,
+            Poem,
             ExerciseSet,
             ExerciseGroup,
             Exercise,

@@ -6,9 +6,12 @@ import rehypeKatex from 'rehype-katex'
 import remarkDirective from 'remark-directive'
 import { BlogCodeBlock } from '@/components/BlogCodeBlock'
 import { BlogImage } from '@/components/BlogImage'
+import { LightboxImage } from '@/components/LightboxImage'
 import { ContentFlow, FlowBody, FlowMedia } from '@/components/content/Flow'
+import { Diagram } from '@/components/content/Diagram'
 import { GroupCaption, ImageGroup } from '@/components/content/ImageGroup'
 import { MindMap } from '@/components/content/MindMap'
+import { Poem } from '@/components/content/Poem'
 import {
   Exercise,
   ExerciseAnswer,
@@ -86,12 +89,15 @@ export default async function PostPage({ params }: PageProps) {
           source={post.content}
           components={{
             Image: BlogImage,
+            img: LightboxImage,
             ContentFlow,
             FlowMedia,
             FlowBody,
+            Diagram,
             ImageGroup,
             GroupCaption,
             MindMap,
+            Poem,
             ExerciseSet,
             ExerciseGroup,
             Exercise,

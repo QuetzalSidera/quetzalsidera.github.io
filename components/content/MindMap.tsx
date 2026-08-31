@@ -64,7 +64,7 @@ export function MindMap({
 
     let disposed = false
 
-    async function renderMindMap() {
+    async function renderMindMap(svgElement: SVGSVGElement) {
       try {
         const [{ Transformer }, { Markmap }] = await Promise.all([
           import('markmap-lib'),
@@ -75,7 +75,7 @@ export function MindMap({
         const transformer = new Transformer()
         const { root } = transformer.transform(source)
         const markmap = Markmap.create(
-          svg,
+          svgElement,
           {
             autoFit: false,
             duration: canInteract ? 240 : 0,
@@ -104,7 +104,7 @@ export function MindMap({
       }
     }
 
-    void renderMindMap()
+    void renderMindMap(svg)
 
     let screenTransform: string | null | undefined
     const fitForPrint = () => {

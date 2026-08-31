@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+  <title id="title">DHCP DORA 交换</title>
+  <desc id="desc">未配置地址的客户端依次广播 Discover，服务器广播 Offer，客户端广播 Request，选中的服务器广播 ACK。图中列出常见广播形式下的以太网地址、IP 地址和 UDP 端口。</desc>
+  <defs><marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker><marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7c3aed"/></marker><style>text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.title{font-size:25px;font-weight:750;fill:#0f172a}.entity{font-size:20px;font-weight:750;text-anchor:middle}.msg{font-size:17px;font-weight:750}.detail{font-size:13px;font-weight:600;fill:#475569}.note{font-size:14px;font-weight:600;fill:#334155;text-anchor:middle}</style></defs>
+  <rect width="1200" height="820" fill="#f8fafc"/>
+  <text x="38" y="45" class="title">DHCP DORA · 初次获取租约的常见广播形式</text>
+  <g stroke-width="2.5"><rect x="120" y="78" width="240" height="70" fill="#dbeafe" stroke="#2563eb"/><rect x="840" y="78" width="240" height="70" fill="#ede9fe" stroke="#7c3aed"/></g>
+  <text x="240" y="121" class="entity" fill="#1d4ed8">DHCP 客户端</text><text x="960" y="121" class="entity" fill="#6d28d9">DHCP 服务器</text>
+  <path d="M240 148V720M960 148V720" stroke="#94a3b8" stroke-width="2.5" stroke-dasharray="8 7"/>
+
+  <path d="M250 230H950" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)"/><text x="280" y="205" class="msg" fill="#1d4ed8">① DHCPDISCOVER</text><text x="280" y="257" class="detail">Ethernet：MAC_C → FF-FF-FF-FF-FF-FF</text><text x="280" y="279" class="detail">IP：0.0.0.0 → 255.255.255.255　UDP：68 → 67</text>
+  <path d="M950 365H250" stroke="#7c3aed" stroke-width="4" marker-end="url(#arrow-purple)"/><text x="920" y="340" class="msg" fill="#6d28d9" text-anchor="end">② DHCPOFFER</text><text x="920" y="392" class="detail" text-anchor="end">Ethernet：MAC_S → FF-FF-FF-FF-FF-FF</text><text x="920" y="414" class="detail" text-anchor="end">IP：IP_S → 255.255.255.255　UDP：67 → 68</text>
+  <path d="M250 500H950" stroke="#2563eb" stroke-width="4" marker-end="url(#arrow-blue)"/><text x="280" y="475" class="msg" fill="#1d4ed8">③ DHCPREQUEST</text><text x="280" y="527" class="detail">Ethernet：MAC_C → FF-FF-FF-FF-FF-FF</text><text x="280" y="549" class="detail">IP：0.0.0.0 → 255.255.255.255　UDP：68 → 67</text>
+  <path d="M950 635H250" stroke="#7c3aed" stroke-width="4" marker-end="url(#arrow-purple)"/><text x="920" y="610" class="msg" fill="#6d28d9" text-anchor="end">④ DHCPACK</text><text x="920" y="662" class="detail" text-anchor="end">Ethernet：MAC_S → FF-FF-FF-FF-FF-FF</text><text x="920" y="684" class="detail" text-anchor="end">IP：IP_S → 255.255.255.255　UDP：67 → 68</text>
+  <g transform="translate(70 735)"><rect width="1060" height="58" fill="#fff" stroke="#cbd5e1" stroke-width="2"/><text x="530" y="23" class="note">Offer/ACK 是否广播受客户端广播标志与协议状态影响；图中展示初次配置时常见的广播路径</text><text x="530" y="45" class="note">ACK 携带租用地址、子网掩码、默认网关、DNS 服务器和租期，不分配 MAC 地址</text></g>
+</svg>

@@ -19,7 +19,12 @@ const cwd = process.cwd()
 const POSTS_DIR = path.join(cwd, 'posts')
 const shouldCachePosts = process.env.NODE_ENV !== 'development'
 
-const documentKinds = new Set<DocumentKind>(['note', 'exercise', 'experiment'])
+const documentKinds = new Set<DocumentKind>([
+  'article',
+  'note',
+  'exercise',
+  'experiment',
+])
 const exerciseFonts = new Set<ExerciseFont>(['kai', 'song', 'site'])
 
 function readDocumentKind(value: unknown): DocumentKind {

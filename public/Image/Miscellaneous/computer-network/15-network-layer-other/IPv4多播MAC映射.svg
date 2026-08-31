@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+  <title id="title">IPv4 多播地址到以太网多播 MAC 地址的映射</title>
+  <desc id="desc">IPv4 D 类地址固定前四位为一一一零，剩余二十八位中只有低二十三位映射到以太网多播 MAC 地址 01-00-5E 后的低二十三位，因此三十二个 IPv4 多播地址会映射到同一个 MAC 地址。</desc>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#475569"/></marker><style>text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.title{font-size:25px;font-weight:750;fill:#0f172a}.heading{font-size:18px;font-weight:750;fill:#1e293b}.field{font-size:16px;font-weight:750;text-anchor:middle}.sub{font-size:14px;font-weight:550;fill:#475569;text-anchor:middle}.bit{font-size:13px;font-weight:650;fill:#475569;text-anchor:middle}</style></defs>
+  <rect width="1200" height="560" fill="#f8fafc"/>
+  <text x="38" y="45" class="title">IPv4 多播地址只映射低 23 位</text>
+  <text x="70" y="92" class="heading">IPv4 D 类地址 · 32 位</text>
+  <g transform="translate(70 115)" stroke-width="2.5"><rect width="135" height="82" fill="#dbeafe" stroke="#2563eb"/><rect x="135" width="170" height="82" fill="#ffe4e6" stroke="#e11d48"/><rect x="305" width="805" height="82" fill="#dcfce7" stroke="#16a34a"/><text x="67" y="37" class="field" fill="#1d4ed8">1110</text><text x="67" y="63" class="sub">固定 4 位</text><text x="220" y="37" class="field" fill="#be123c">高 5 位</text><text x="220" y="63" class="sub">不参与映射</text><text x="707" y="37" class="field" fill="#15803d">多播组号的低 23 位</text><text x="707" y="63" class="sub">原样复制</text></g>
+  <path d="M777 205C820 230 860 265 897 294" fill="none" stroke="#475569" stroke-width="4" marker-end="url(#arrow)"/><text x="810" y="250" class="sub" text-anchor="start">逐位映射</text>
+  <text x="70" y="326" class="heading">以太网多播 MAC 地址 · 48 位</text>
+  <g transform="translate(70 347)" stroke-width="2.5"><rect width="545" height="82" fill="#ede9fe" stroke="#7c3aed"/><rect x="545" width="565" height="82" fill="#dcfce7" stroke="#16a34a"/><text x="272" y="37" class="field" fill="#6d28d9">01-00-5E + 1 bit 0</text><text x="272" y="63" class="sub">固定前 25 位</text><text x="827" y="37" class="field" fill="#15803d">来自 IPv4 地址的低 23 位</text><text x="827" y="63" class="sub">MAC 范围：01-00-5E-00-00-00～01-00-5E-7F-FF-FF</text></g>
+  <g transform="translate(70 465)"><rect width="1110" height="62" fill="#fff" stroke="#cbd5e1" stroke-width="2"/><text x="555" y="25" class="field">高 5 位被丢弃 → 2⁵=32 个 IPv4 多播地址可能得到同一 MAC 地址</text><text x="555" y="49" class="sub">网卡按 MAC 接收后，主机仍须检查目的 IPv4 地址，过滤不属于本机多播组的数据报</text></g>
+</svg>

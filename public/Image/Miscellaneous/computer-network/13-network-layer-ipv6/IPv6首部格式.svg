@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="850" viewBox="0 0 1200 850" role="img" aria-labelledby="title desc">
+  <title id="title">IPv6 基本首部与扩展首部链</title>
+  <desc id="desc">IPv6 固定四十字节的基本首部按十行、每行三十二位绘制，包含版本、通信量类、流标号、有效载荷长度、下一个首部、跳数限制、源地址和目的地址。下一个首部字段把基本首部、若干扩展首部与上层协议串成一条链。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#475569"/></marker>
+    <style>text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.title{font-size:25px;font-weight:750;fill:#0f172a}.field{font-size:16px;font-weight:700;text-anchor:middle}.sub{font-size:13px;font-weight:550;fill:#475569;text-anchor:middle}.bit{font-size:13px;font-weight:650;fill:#475569}.measure{font-size:14px;font-weight:700;fill:#334155;text-anchor:middle}.chain{font-size:15px;font-weight:700;text-anchor:middle}</style>
+  </defs>
+  <rect width="1200" height="850" fill="#f8fafc"/>
+  <text x="38" y="44" class="title">IPv6 基本首部 · 固定 40 B</text><text x="1158" y="43" class="bit" text-anchor="end">每行 32 位（4 B）· 共 10 行</text>
+  <g class="bit"><text x="140" y="78">0</text><text x="252" y="78">4</text><text x="476" y="78">12</text><text x="1036" y="78" text-anchor="end">32</text></g><path d="M140 85H1036M140 80V90M252 80V90M476 80V90M1036 80V90" fill="none" stroke="#64748b" stroke-width="2"/>
+  <g stroke-width="2.2">
+    <rect x="140" y="96" width="112" height="45" fill="#dbeafe" stroke="#2563eb"/><rect x="252" y="96" width="224" height="45" fill="#dcfce7" stroke="#16a34a"/><rect x="476" y="96" width="560" height="45" fill="#ede9fe" stroke="#7c3aed"/>
+    <text x="196" y="124" class="field" fill="#1d4ed8">版本</text><text x="364" y="124" class="field" fill="#15803d">通信量类</text><text x="756" y="124" class="field" fill="#6d28d9">流标号</text>
+    <rect x="140" y="141" width="448" height="45" fill="#ffedd5" stroke="#ea580c"/><rect x="588" y="141" width="224" height="45" fill="#fae8ff" stroke="#a21caf"/><rect x="812" y="141" width="224" height="45" fill="#ccfbf1" stroke="#0f766e"/>
+    <text x="364" y="169" class="field" fill="#c2410c">有效载荷长度</text><text x="700" y="169" class="field" fill="#86198f">下一个首部</text><text x="924" y="169" class="field" fill="#0f766e">跳数限制</text>
+
+    <rect x="140" y="186" width="896" height="45" fill="#dbeafe" stroke="#2563eb"/><rect x="140" y="231" width="896" height="45" fill="#e5f0ff" stroke="#2563eb"/><rect x="140" y="276" width="896" height="45" fill="#dbeafe" stroke="#2563eb"/><rect x="140" y="321" width="896" height="45" fill="#e5f0ff" stroke="#2563eb"/>
+    <text x="588" y="259" class="field" fill="#1d4ed8">源 IPv6 地址</text><text x="588" y="282" class="sub">128 位 · 4 × 32 位</text>
+    <rect x="140" y="366" width="896" height="45" fill="#ede9fe" stroke="#7c3aed"/><rect x="140" y="411" width="896" height="45" fill="#f0e9ff" stroke="#7c3aed"/><rect x="140" y="456" width="896" height="45" fill="#ede9fe" stroke="#7c3aed"/><rect x="140" y="501" width="896" height="45" fill="#f0e9ff" stroke="#7c3aed"/>
+    <text x="588" y="439" class="field" fill="#6d28d9">目的 IPv6 地址</text><text x="588" y="462" class="sub">128 位 · 4 × 32 位</text>
+  </g>
+  <path d="M128 96H108V546H128" fill="none" stroke="#334155" stroke-width="2.5"/><text x="82" y="321" class="measure" transform="rotate(-90 82 321)">基本首部 40 B（10 × 4 B）</text>
+  <text x="100" y="600" class="title" font-size="20">扩展首部链</text>
+  <g transform="translate(100 622)" stroke-width="2.2"><rect width="215" height="96" fill="#dbeafe" stroke="#2563eb"/><rect x="270" width="215" height="96" fill="#fef3c7" stroke="#d97706"/><rect x="540" width="215" height="96" fill="#ffedd5" stroke="#ea580c"/><rect x="810" width="215" height="96" fill="#dcfce7" stroke="#16a34a"/><text x="107" y="40" class="chain" fill="#1d4ed8">IPv6 基本首部</text><text x="107" y="69" class="sub">Next Header = 0</text><text x="377" y="40" class="chain" fill="#b45309">逐跳选项</text><text x="377" y="69" class="sub">Next Header = 43</text><text x="647" y="40" class="chain" fill="#c2410c">路由扩展首部</text><text x="647" y="69" class="sub">Next Header = 6</text><text x="917" y="40" class="chain" fill="#15803d">TCP 报文段</text><text x="917" y="69" class="sub">上层载荷</text><path d="M215 48H270M485 48H540M755 48H810" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/></g>
+  <g transform="translate(100 765)"><rect width="1025" height="58" fill="#fff" stroke="#cbd5e1" stroke-width="2"/><text x="512" y="23" class="sub">IPv6 没有首部校验和；中间路由器不执行分片，分片信息由源主机放入 Fragment 扩展首部</text><text x="512" y="45" class="sub">除逐跳选项等少数情况外，扩展首部通常由目的节点处理，减少中间路由器的固定工作</text></g>
+</svg>

@@ -21,6 +21,7 @@ type AstNode = {
   type: string
   name?: string
   value?: string
+  lang?: string | null
   alt?: string
   start?: number | null
   attributes?: Record<string, string | null | undefined> | null
@@ -45,6 +46,8 @@ type ComponentName =
   | 'ImageGroup'
   | 'GroupCaption'
   | 'MindMap'
+  | 'Diagram'
+  | 'Poem'
   | 'ExerciseSet'
   | 'ExerciseGroup'
   | 'Exercise'
@@ -62,6 +65,8 @@ const globalComponents: Record<string, ComponentName> = {
   flow: 'ContentFlow',
   'image-group': 'ImageGroup',
   mindmap: 'MindMap',
+  diagram: 'Diagram',
+  poem: 'Poem',
   'exercise-set': 'ExerciseSet',
   'exercise-group': 'ExerciseGroup',
   exercise: 'Exercise',
@@ -270,6 +275,18 @@ function parseBoolean(
   fail(file, node, `Attribute \`${attribute}\` on \`:${node.name}\` must be true or false`)
 }
 
+function validateAllowedAttributes(
+  node: AstNode,
+  allowed: ReadonlySet<string>,
+  file: VFileLike,
+) {
+  for (const attribute of Object.keys(node.attributes ?? {})) {
+    if (!allowed.has(attribute)) {
+      fail(file, node, `Unknown attribute \`${attribute}\` on \`:${node.name}\``)
+    }
+  }
+}
+
 function validateAttributes(node: AstNode, component: ComponentName, file: VFileLike) {
   if (component === 'ContentFlow') {
     validateEnum(node, 'mode', flowModes, file)
@@ -281,6 +298,14 @@ function validateAttributes(node: AstNode, component: ComponentName, file: VFile
     validateInteger(node, 'columns', 1, 4, file)
     validateInteger(node, 'mobile-columns', 1, 4, file)
     validateInteger(node, 'print-columns', 1, 4, file)
+  }
+
+  if (component === 'Diagram') {
+    validateAllowedAttributes(node, new Set(['title']), file)
+  }
+
+  if (component === 'Poem') {
+    validateAllowedAttributes(node, new Set(), file)
   }
 
   if (component === 'ExerciseSet') {
@@ -310,6 +335,30 @@ function validateAttributes(node: AstNode, component: ComponentName, file: VFile
   }
 }
 
+function getDiagramSource(node: AstNode, file: VFileLike): string {
+  const children = node.children ?? []
+  if (children.length !== 1 || children[0].type !== 'code') {
+    fail(file, node, '`diagram` must contain exactly one direct fenced code block')
+  }
+
+  const code = children[0]
+  if (code.lang !== 'mermaid') {
+    fail(file, code, '`diagram` code block language must be `mermaid`')
+  }
+
+  const source = code.value?.trim() ?? ''
+  if (!source) {
+    fail(file, code, '`diagram` requires non-empty Mermaid source')
+  }
+
+  const firstToken = source.match(/^\S+/u)?.[0]
+  if (firstToken !== 'flowchart' && firstToken !== 'graph') {
+    fail(file, code, '`diagram` Mermaid source must start with `flowchart` or `graph`')
+  }
+
+  return source
+}
+
 function validateStructure(
   node: AstNode,
   component: ComponentName,
@@ -324,6 +373,14 @@ function validateStructure(
 
   if (component === 'ImageGroup') {
     assertAtMostOneChild(node, 'GroupCaption', components, file)
+  }
+
+  if (component === 'Diagram') {
+    getDiagramSource(node, file)
+  }
+
+  if (component === 'Poem' && hasDirectiveDescendant(node)) {
+    fail(file, node, '`poem` content cannot contain nested directives')
   }
 
   if (component === 'ExerciseSet') {
@@ -541,6 +598,10 @@ function normalizeProperties(
     properties.source = serializeMindMap(node, file)
   }
 
+  if (component === 'Diagram') {
+    properties.source = getDiagramSource(node, file)
+  }
+
   return properties
 }
 
@@ -562,7 +623,7 @@ function transformTree(
       const list = getSingleList(node, file)
       if (component === 'ExerciseParts') transformNestedPartChoices(node, list)
       node.children = list.children ?? []
-    } else if (component === 'MindMap') {
+    } else if (component === 'MindMap' || component === 'Diagram') {
       node.children = []
     }
   }

@@ -4,7 +4,7 @@ export type PostOutline = {
   slug: string
 }
 
-export type DocumentKind = 'note' | 'exercise' | 'experiment'
+export type DocumentKind = 'article' | 'note' | 'exercise' | 'experiment'
 export type ExerciseFont = 'kai' | 'song' | 'site'
 
 export type Post = {

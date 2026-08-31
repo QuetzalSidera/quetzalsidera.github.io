@@ -3,7 +3,8 @@ title: 关于我
 date: 2026-04-07
 tags: [ 自我介绍, 个人博客 ]
 pinned: true
-collection: 个人档案
+kind: article
+collection: 文化
 cover: /Image/Portrait/阿洛娜_比心.webp
 outline:
   - title: 1. 主线剧情
@@ -42,8 +43,8 @@ outline:
     slug: 常用工具链
     level: 1
 
-  - title: 3. 文化建设
-    slug: 文化建设
+  - title: 3. 文化与价值观
+    slug: 文化与价值观
 head:
   - - meta
     - name: description
@@ -67,7 +68,6 @@ const aronaAndPlanaImage = {
   align: 'right',
   wrap: false,
   maxHeight: '18rem',
-  caption: '阿洛娜与普拉娜',
 } as const
 
 const blueArchiveImage = {
@@ -76,7 +76,7 @@ const blueArchiveImage = {
   align: 'center',
   wrap: false,
   maxHeight: '16rem',
-  caption: '《蔚蓝档案》：“一切奇迹的起点”',
+  caption: '《蔚蓝档案》',
   captionLink: 'https://bluearchive-cn.com',
 } as const
 
@@ -86,7 +86,7 @@ const minecraftImage = {
   align: 'center',
   wrap: false,
   maxHeight: '16rem',
-  caption: 'Minecraft：无限续杯的创作沙盒',
+  caption: 'Minecraft',
   captionLink: 'https://www.minecraft.net/zh-hans',
 } as const
 
@@ -146,9 +146,8 @@ const touhouYouReimuImage = {
 <Image {...aronaAndPlanaImage} />
 :::
 :::body
-我目前是 23 级本科生，主修机器人工程，辅修工程力学，同时也对计算机科学保持着“上头”状态。
+我目前是 23 级本科生，主修机器人工程，辅修工程力学，同时也对计算机保持着持续的自学状态。
 
-这个博客既是学习笔记，也是项目日志：一边整理课程与计算机基础，一边记录从想法到实现的过程。
 :::
 ::::
 
@@ -213,7 +212,7 @@ CSVX 是一种文本优先、对 AI 友好的声明式标记语言，写法类�
 - `React` / `Next.js`：Web 前端
 - `Docker`：构建与部署
 
-## 3. 文化建设{#文化建设}
+## 3. 文化与价值观{#文化与价值观}
 
 > 这是一个关于爱、自由、知识与幸福的故事……
 
@@ -223,9 +222,6 @@ CSVX 是一种文本优先、对 AI 友好的声明式标记语言，写法类�
 <Image {...blueArchiveImage} />
 
 <Image {...minecraftImage} />
-:::caption
-从游戏中获得的故事与创造欲
-:::
 ::::
 :::::
 :::::body
@@ -245,9 +241,6 @@ CSVX 是一种文本优先、对 AI 友好的声明式标记语言，写法类�
 <Image {...yourNameImage} />
 
 <Image {...touhouYouReimuImage} />
-:::caption
-留在记忆里的动画作品
-:::
 ::::
 :::::
 :::::body

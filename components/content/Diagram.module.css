@@ -1,0 +1,164 @@
+.root {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 1.5rem 0;
+  overflow: hidden;
+  border-block: 1px solid color-mix(in srgb, var(--font-color-grey) 22%, transparent);
+  background: color-mix(in srgb, var(--foreground-color) 94%, transparent);
+}
+
+.title {
+  padding: 0.65rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--font-color-grey) 16%, transparent);
+  color: var(--font-color-grey);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: left;
+  text-indent: 0;
+}
+
+.viewport {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 1rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+}
+
+.canvas {
+  width: 100%;
+  min-width: 0;
+}
+
+.canvas :global(svg) {
+  display: block;
+  width: var(--diagram-intrinsic-width) !important;
+  min-width: 100%;
+  max-width: 100% !important;
+  height: auto !important;
+  margin-inline: auto;
+  background: transparent !important;
+}
+
+.canvas :global(.node rect),
+.canvas :global(.cluster rect) {
+  rx: 0 !important;
+  ry: 0 !important;
+}
+
+.fallback {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  background: transparent;
+  color: var(--font-color-grey);
+  font: inherit;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .canvas :global(svg) {
+    max-width: none !important;
+  }
+}
+
+@media print {
+  .root {
+    width: 100%;
+    max-width: 100%;
+    margin: 3mm 0;
+    overflow: hidden;
+    border-block-color: #777;
+    background: #fff;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .title {
+    padding: 1.5mm 0;
+    border-bottom-color: #aaa;
+    color: #111;
+    font-size: 9pt;
+  }
+
+  .viewport {
+    width: 100%;
+    max-width: 100%;
+    padding: 2mm 0;
+    overflow: hidden;
+  }
+
+  .canvas {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .canvas :global(svg) {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    height: auto !important;
+    background: #fff !important;
+    color: #111 !important;
+    filter: none !important;
+  }
+
+  .canvas :global(text),
+  .canvas :global(tspan),
+  .canvas :global(.nodeLabel),
+  .canvas :global(.edgeLabel),
+  .canvas :global(.messageText),
+  .canvas :global(.labelText) {
+    fill: #111 !important;
+    color: #111 !important;
+  }
+
+  .canvas :global(.node rect),
+  .canvas :global(.node circle),
+  .canvas :global(.node ellipse),
+  .canvas :global(.node polygon),
+  .canvas :global(.node path),
+  .canvas :global(.cluster rect),
+  .canvas :global(.actor),
+  .canvas :global(.entityBox) {
+    fill: #fff !important;
+    stroke: #444 !important;
+    filter: none !important;
+  }
+
+  .canvas :global(.edgeLabel rect),
+  .canvas :global(.labelBkg),
+  .canvas :global(.note),
+  .canvas :global(.labelBox) {
+    fill: #fff !important;
+    stroke: #777 !important;
+  }
+
+  .canvas :global(.flowchart-link),
+  .canvas :global(.edgePath path),
+  .canvas :global(.messageLine0),
+  .canvas :global(.messageLine1),
+  .canvas :global(.relationshipLine) {
+    stroke: #555 !important;
+  }
+
+  .canvas :global(marker path) {
+    fill: #555 !important;
+    stroke: #555 !important;
+  }
+
+  .fallback {
+    color: #111;
+    font-size: 9.5pt;
+  }
+}

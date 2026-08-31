@@ -1,4 +1,5 @@
 import styles from './BlogImage.module.css'
+import { LightboxImage } from './LightboxImage'
 
 type BlogImageProps = {
   src?: string
@@ -39,11 +40,12 @@ export function BlogImage({
 
   return (
     <figure className={className}>
-      <img
+      <LightboxImage
         className={styles.image}
         src={src}
         alt={alt ?? caption ?? ''}
         loading="lazy"
+        caption={caption}
         style={{ maxHeight: typeof maxHeight === 'number' ? `${maxHeight}px` : maxHeight }}
       />
       {caption ? (

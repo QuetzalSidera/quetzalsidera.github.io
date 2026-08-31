@@ -56,7 +56,7 @@ test('content components render without hydration errors and respond in both dir
 
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto('/content-layout-fixture/')
-  await expect(page.locator('[data-ready="true"]')).toHaveCount(1)
+  await expect(page.locator('[data-ready="true"]')).toHaveCount(2)
 
   await expect(page.locator('[data-mode="float"]')).toHaveAttribute('data-stacked', 'false')
   await expect(page.locator('[data-mode="split"]')).toHaveAttribute('data-stacked', 'false')
@@ -147,13 +147,79 @@ test('content components render without hydration errors and respond in both dir
   await expect(page.locator('[data-mode="split"]')).toHaveAttribute('data-stacked', 'false')
 })
 
+test('Mermaid diagrams follow the site theme and remain contained on screen and paper', async ({
+  page,
+}) => {
+  const errors: string[] = []
+  page.on('console', (message) => {
+    if (message.type() === 'error') errors.push(message.text())
+  })
+  page.on('pageerror', (error) => errors.push(error.message))
+
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.goto('/content-layout-fixture/')
+
+  const diagram = page.locator('[data-diagram]')
+  const canvas = diagram.locator('[role="img"]')
+  await expect(diagram).toHaveAttribute('data-ready', 'true')
+  await expect(diagram).toHaveAttribute('data-error', 'false')
+  await expect(canvas.locator('svg')).toHaveCount(1)
+
+  const lightMarkup = await canvas.innerHTML()
+  const lightFill = await canvas.locator('.node rect').first().evaluate(
+    (node) => getComputedStyle(node).fill,
+  )
+  const themeSelect = page.locator('select').filter({ hasText: 'Arona' })
+  await themeSelect.selectOption('dark')
+  await expect(page.locator('html')).toHaveAttribute('theme', 'dark')
+  await expect.poll(() => canvas.innerHTML()).not.toBe(lightMarkup)
+  await expect(diagram).toHaveAttribute('data-ready', 'true')
+  const darkFill = await canvas.locator('.node rect').first().evaluate(
+    (node) => getComputedStyle(node).fill,
+  )
+  expect(darkFill).not.toBe(lightFill)
+
+  await page.setViewportSize({ width: 390, height: 844 })
+  const mobileLayout = await diagram.evaluate((element) => {
+    const viewport = element.querySelector<HTMLElement>('[aria-busy]')
+    return {
+      documentOverflow:
+        document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      diagramOverflow: (viewport?.scrollWidth ?? 0) - (viewport?.clientWidth ?? 0),
+    }
+  })
+  expect(mobileLayout.documentOverflow).toBe(0)
+  expect(mobileLayout.diagramOverflow).toBeGreaterThan(0)
+
+  await page.emulateMedia({ media: 'print' })
+  const printLayout = await diagram.evaluate((element) => {
+    const svg = element.querySelector<SVGElement>('svg')
+    const node = element.querySelector<SVGElement>('.node rect')
+    const elementBounds = element.getBoundingClientRect()
+    const svgBounds = svg?.getBoundingClientRect()
+    const nodeStyle = node ? getComputedStyle(node) : null
+    return {
+      breakInside: getComputedStyle(element).breakInside,
+      fill: nodeStyle?.fill ?? '',
+      stroke: nodeStyle?.stroke ?? '',
+      svgWidth: svgBounds?.width ?? 0,
+      containerWidth: elementBounds.width,
+    }
+  })
+  expect(printLayout.breakInside).toBe('avoid')
+  expect(printLayout.fill).toBe('rgb(255, 255, 255)')
+  expect(printLayout.stroke).toBe('rgb(68, 68, 68)')
+  expect(printLayout.svgWidth).toBeLessThanOrEqual(printLayout.containerWidth + 1)
+  expect(errors).toEqual([])
+})
+
 test('practice, solution, and note print modes expose the expected content', async ({ page }) => {
   await page.addInitScript(() => {
     window.print = () => undefined
   })
   await page.setViewportSize({ width: 1440, height: 1000 })
   await page.goto('/content-layout-fixture/')
-  await expect(page.locator('[data-ready="true"]')).toHaveCount(1)
+  await expect(page.locator('[data-ready="true"]')).toHaveCount(2)
   await page.emulateMedia({ media: 'print' })
   await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')))
 
@@ -303,7 +369,7 @@ test('practice, solution, and note print modes expose the expected content', asy
   await expect(page.locator('[data-post-viewer]')).toHaveAttribute('data-printing', 'true')
   await expect(page.getByRole('status')).toContainText('正在准备打印文档')
   await expect(page.getByRole('status')).toContainText(
-    /正在载入字体、图片与思维导图|资源已就绪，正在打开系统打印窗口/,
+    /正在载入字体、图片与图表|正在打开系统打印窗口/,
   )
   await page.emulateMedia({ media: 'print' })
   await expect(page.locator('[data-exercise-section]').first()).toBeVisible()
@@ -320,7 +386,7 @@ test('practice, solution, and note print modes expose the expected content', asy
 
   await page.emulateMedia({ media: 'screen' })
   await page.goto('/content-layout-fixture/?kind=note')
-  await expect(page.locator('[data-ready="true"]')).toHaveCount(1)
+  await expect(page.locator('[data-ready="true"]')).toHaveCount(2)
   await page.getByTitle('打印 / 保存 PDF').click()
   await page
     .getByRole('dialog', { name: '打印设置' })
@@ -334,6 +400,51 @@ test('practice, solution, and note print modes expose the expected content', asy
 
   await page.evaluate(() => window.dispatchEvent(new Event('afterprint')))
   await expect(page.locator('[data-exercise-section]').first()).not.toHaveAttribute('open', '')
+})
+
+test('ordinary article printing continues when an image request stalls', async ({ page }) => {
+  await page.addInitScript(() => {
+    const probe = window as typeof window & { __printCalls?: number }
+    probe.__printCalls = 0
+    window.print = () => {
+      probe.__printCalls = (probe.__printCalls ?? 0) + 1
+    }
+  })
+
+  await page.setViewportSize({ width: 1440, height: 1000 })
+  await page.goto('/posts/culture-about-me/')
+  await page.evaluate(() => {
+    const stalledImage = document.createElement('img')
+    stalledImage.alt = '永不完成的打印测试图片'
+    stalledImage.loading = 'lazy'
+    Object.defineProperty(stalledImage, 'complete', {
+      configurable: true,
+      get: () => false,
+    })
+    document.querySelector('article')?.append(stalledImage)
+  })
+
+  await page.getByTitle('打印 / 保存 PDF').click()
+  const printPanel = page.getByRole('dialog', { name: '打印设置：文章' })
+  await expect(printPanel.getByText('打印文章', { exact: true })).toBeVisible()
+  await expect(printPanel.getByText('A4 博客文章版式', { exact: true })).toBeVisible()
+  await printPanel.getByRole('button', { name: '打印 / 保存 PDF' }).click()
+
+  await expect(page.getByRole('status')).toContainText('正在准备打印文档')
+  await expect
+    .poll(
+      () =>
+        page.evaluate(
+          () => (window as typeof window & { __printCalls?: number }).__printCalls ?? 0,
+        ),
+      { timeout: 8000 },
+    )
+    .toBe(1)
+  await expect(page.getByRole('status')).toContainText('正在打开系统打印窗口。')
+
+  await page.evaluate(() => window.dispatchEvent(new Event('afterprint')))
+  await expect(page.getByRole('status')).toHaveCount(0)
+  await expect(page.locator('[data-post-viewer]')).not.toHaveAttribute('data-printing', 'true')
 })
 
 test('scroll-to-top actions track reading progress on posts and collections', async ({ page }) => {

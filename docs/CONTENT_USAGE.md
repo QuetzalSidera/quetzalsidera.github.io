@@ -13,10 +13,10 @@ exerciseFont: kai
 
 | 字段 | 可选值 | 默认值 | 作用 |
 | --- | --- | --- | --- |
-| `kind` | `note`、`exercise`、`experiment` | `note` | `exercise` 可选择练习版或题解版打印；其余类型使用紧凑笔记版式 |
+| `kind` | `article`、`note`、`exercise`、`experiment` | `note` | 区分普通文章、知识笔记、习题与实验，并显示对应的打印设置 |
 | `exerciseFont` | `kai`、`song`、`site` | `kai` | 设置文章内习题的默认字体；打印面板可临时覆盖 |
 
-习题文章必须声明 `kind: exercise`。`experiment` 当前与 `note` 共用打印版式。
+普通博客文章声明 `kind: article`，习题文章声明 `kind: exercise`，实验文章声明 `kind: experiment`；知识笔记可省略 `kind`。`article`、`note` 与 `experiment` 当前共用正文打印样式，但打印面板使用各自的标题与说明。
 
 ## 2. 指令语法
 
@@ -86,6 +86,22 @@ exerciseFont: kai
 
 每张 `<Image>` 可保留自己的 `caption`；`caption` 是可选的共同图注，最多一个。
 
+### 4.1 竖排诗词
+
+`poem` 用于短诗或词的竖排展示。每一行写成一个 Markdown 段落，组件使用放大的楷体文字，并按从右到左排列；在 `flow` 的 `body` 中使用时，容器高度会跟随同组媒体。移动端自动恢复为自然高度，打印时保留竖排样式。
+
+```md
+:::poem
+
+雾起千灯下
+
+高楼独守一轮月
+
+星落远山眠
+
+:::
+```
+
 ## 5. 思维导图
 
 `mindmap` 接受一段非空 Markdown 层级列表：
@@ -109,9 +125,30 @@ exerciseFont: kai
 
 交互模式支持平移、缩放和重新适配画布；较小的导图可用 `print-height` 减少打印留白。百分比、无单位数值及 `calc()`、`min()`、`max()`、`clamp()` 当前不受支持；长度或 `interactive` 写错时组件会回退到默认值，不会由 directive 校验直接报错。导图正文中不能嵌套其他 directive，也不要手写 `source` 属性。
 
-## 6. 习题
+## 6. 关系图
 
-### 6.1 层级
+`diagram` 使用 Mermaid 绘制带方向、箭头、边标签和批注的关系图。它与树状知识结构使用的 `mindmap` 相互独立：
+
+````md
+::::diagram{title="DNS 与 HTTP 的关系"}
+
+```mermaid
+flowchart LR
+  DNS -->|解析| HTTP
+  note@{ shape: note, label: "DNS 将域名解析为 IP 地址" }
+  DNS -.-> note
+```
+
+::::
+````
+
+`title` 是唯一支持的属性，省略时默认为“关系图”。`diagram` 内必须恰好包含一个非空的 `mermaid` 代码围栏；围栏前后必须留空行，否则 Markdown 会将其解析为普通文本。
+
+第一版仅支持 `flowchart` 及其兼容别名 `graph`。方向、节点形状、箭头、虚线和边标签均使用 Mermaid DSL 表达；不支持初始化指令、HTML 标签、交互链接以及 sequence、class、state 等其他图表类型。网页显示静态 SVG，宽图只在组件内部横向滚动；打印时自动使用黑白配色。
+
+## 7. 习题
+
+### 7.1 层级
 
 ```text
 exercise-set
@@ -127,7 +164,7 @@ exercise-set
 
 每题必须有且仅有一个 `stem`；`answer`、`solution`、`hint` 各至多一个。顶层 `choices` 只用于 `single` 或 `multiple`。
 
-### 6.2 最小示例
+### 7.2 最小示例
 
 ```md
 ::::::exercise-set{font="kai"}
@@ -153,7 +190,7 @@ D
 ::::::
 ```
 
-### 6.3 属性
+### 7.3 属性
 
 | 指令 | 属性与默认值 |
 | --- | --- |
@@ -170,7 +207,7 @@ D
 
 `parts` 和 `choices` 的正文都必须恰好包含一个顶层 Markdown 列表。`parts` 显示圈号；每个小问内的直系嵌套列表会转换为 A、B、C 选项。`choice-columns="auto"` 根据最长选项自动选择 4、2 或 1 列，移动端仍会降列。
 
-### 6.4 分问与嵌套选项
+### 7.4 分问与嵌套选项
 
 ````md
 ::::::exercise-set
@@ -200,22 +237,23 @@ D
 
 `parts` 的一级列表显示为圈号；一级列表项中的列表显示为字母选项。若只需要整题的一组选项，应直接使用 `choices`，写法见上一节。
 
-### 6.5 打印语义
+### 7.5 打印语义
 
 - 打印页面使用 A4，页边距为上下 `14mm`、左右 `16mm`。
-- `kind: exercise` 的文章可选择练习版或题解版；`note` 与 `experiment` 使用紧凑笔记版式。
+- `kind: exercise` 的文章可选择练习版或题解版；`article`、`note` 与 `experiment` 使用正文打印版式，并显示与文档类型对应的设置说明。
 - 练习版隐藏答案、解析与提示，并按 `answer-lines` 预留答题空间。填空等题型显示横线；简答、计算和证明题只保留无横线的空白区域。
 - 题解版展开并显示答案、解析与提示，不生成答题空间；打印标签固定为“答：”“解：”“提示：”，不受网页 `label` 属性影响。
 - `exercise-set` 的 `font` 覆盖文章默认字体；打印面板显式选择字体时，再覆盖当前文章中的所有习题集。
 - 题号使用固定宽度悬挂缩进。选择、判断、填空默认尽量整题同页；长题和题解允许自然跨页。
 
-## 7. 检查
+## 8. 检查
 
 ```bash
 pnpm check:post-images
+pnpm check:post-diagrams
 pnpm typecheck
 pnpm test:content
 pnpm build
 ```
 
-构建会校验 directive 的层级、必需子项，以及本文明确列出的枚举、整数和布尔属性；`mindmap` 还会校验正文非空且不含嵌套 directive。当前不会统一拒绝未知属性，也不会在 directive 阶段校验 `flow` 的 CSS 长度或 `mindmap` 的长度与 `interactive`，因此应严格使用本文列出的写法。图片声明与路径由 `check:post-images` 另行校验。
+构建会校验 directive 的层级、必需子项，以及本文明确列出的枚举、整数和布尔属性；`mindmap` 还会校验正文非空且不含嵌套 directive。`diagram` 会在构建前使用 Mermaid 完整解析 DSL，语法错误将报告文章路径和 directive 行号并终止构建。当前不会统一拒绝其他组件的未知属性，也不会在 directive 阶段校验 `flow` 的 CSS 长度或 `mindmap` 的长度与 `interactive`，因此应严格使用本文列出的写法。图片声明与路径由 `check:post-images` 另行校验。

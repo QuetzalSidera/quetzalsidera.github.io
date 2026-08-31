@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="660" viewBox="0 0 1200 660" role="img" aria-labelledby="title desc">
+  <title id="title">NAPT 地址与端口转换</title>
+  <desc id="desc">内网主机访问外部服务器时，NAPT 路由器把私有源地址和端口转换为公网地址和新端口，并记录映射；响应到达后再依据映射还原目的地址和端口。</desc>
+  <defs>
+    <marker id="blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker><marker id="orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#ea580c"/></marker>
+    <style>text{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}.title{font-size:25px;font-weight:750;fill:#0f172a}.box{font-size:19px;font-weight:750;text-anchor:middle}.sub{font-size:14px;font-weight:550;fill:#475569;text-anchor:middle}.packet{font-size:14px;font-weight:700}.head{font-size:16px;font-weight:750;fill:#1e293b}</style>
+  </defs>
+  <rect width="1200" height="660" fill="#f8fafc"/>
+  <text x="38" y="46" class="title">NAPT：用公网地址与端口区分内网连接</text>
+  <g stroke-width="2.5"><rect x="65" y="210" width="260" height="130" fill="#dbeafe" stroke="#2563eb"/><rect x="470" y="180" width="260" height="190" fill="#ede9fe" stroke="#7c3aed"/><rect x="875" y="210" width="260" height="130" fill="#dcfce7" stroke="#16a34a"/></g>
+  <text x="195" y="260" class="box" fill="#1d4ed8">内网主机</text><text x="195" y="292" class="sub">10.0.0.1:3345</text><text x="195" y="318" class="sub">私有地址不可在公网路由</text>
+  <text x="600" y="228" class="box" fill="#6d28d9">NAPT 路由器</text><text x="600" y="260" class="sub">LAN：10.0.0.254</text><text x="600" y="286" class="sub">WAN：203.0.113.7</text><text x="600" y="329" class="sub">改写地址与端口，并更新校验和</text>
+  <text x="1005" y="260" class="box" fill="#15803d">Web 服务器</text><text x="1005" y="292" class="sub">198.51.100.20:443</text>
+  <path d="M325 220H470M730 220H875" fill="none" stroke="#2563eb" stroke-width="4" marker-end="url(#blue)"/><path d="M875 345H730M470 345H325" fill="none" stroke="#ea580c" stroke-width="4" marker-end="url(#orange)"/>
+  <g class="packet"><text x="340" y="196" fill="#1d4ed8">S=10.0.0.1:3345</text><text x="340" y="216" fill="#1d4ed8">D=198.51.100.20:443</text><text x="742" y="196" fill="#1d4ed8">S=203.0.113.7:5001</text><text x="742" y="216" fill="#1d4ed8">D=198.51.100.20:443</text><text x="742" y="382" fill="#c2410c">S=198.51.100.20:443</text><text x="742" y="402" fill="#c2410c">D=203.0.113.7:5001</text><text x="340" y="382" fill="#c2410c">S=198.51.100.20:443</text><text x="340" y="402" fill="#c2410c">D=10.0.0.1:3345</text></g>
+  <g transform="translate(270 460)"><text x="0" y="0" class="head">转换表</text><rect x="0" y="20" width="660" height="115" fill="#fff" stroke="#94a3b8" stroke-width="2"/><line x1="330" y1="20" x2="330" y2="135" stroke="#cbd5e1" stroke-width="2"/><line x1="0" y1="64" x2="660" y2="64" stroke="#cbd5e1" stroke-width="2"/><text x="165" y="49" class="head" text-anchor="middle">WAN 侧</text><text x="495" y="49" class="head" text-anchor="middle">LAN 侧</text><text x="165" y="99" class="box" fill="#6d28d9">203.0.113.7:5001</text><text x="495" y="99" class="box" fill="#1d4ed8">10.0.0.1:3345</text><text x="330" y="160" class="sub">动态表项由内向外的连接创建；静态映射可允许外部主动访问固定内网服务</text></g>
+</svg>

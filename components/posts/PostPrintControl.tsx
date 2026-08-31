@@ -13,6 +13,35 @@ import styles from './PostPrintControl.module.css'
 
 type PrintMode = 'note' | 'practice' | 'solution'
 type PrintFont = 'default' | ExerciseFont
+type PrintPanelCopy = {
+  ariaLabel: string
+  title: string
+  description?: string
+}
+
+const PRINT_ASSET_TIMEOUT_MS = 5000
+const PRINT_FRAME_FALLBACK_MS = 100
+const PRINT_PANEL_COPY: Record<DocumentKind, PrintPanelCopy> = {
+  article: {
+    ariaLabel: '打印设置：文章',
+    title: '打印文章',
+    description: 'A4 博客文章版式',
+  },
+  note: {
+    ariaLabel: '打印设置：笔记',
+    title: '打印笔记',
+    description: 'A4 紧凑笔记版式',
+  },
+  exercise: {
+    ariaLabel: '打印设置：习题',
+    title: '打印习题',
+  },
+  experiment: {
+    ariaLabel: '打印设置：实验',
+    title: '打印实验',
+    description: 'A4 实验记录版式',
+  },
+}
 
 type PostPrintControlProps = {
   title: string
@@ -21,28 +50,86 @@ type PostPrintControlProps = {
 }
 
 function nextFrame() {
-  return new Promise<void>((resolve) => window.requestAnimationFrame(() => resolve()))
+  return new Promise<void>((resolve) => {
+    let settled = false
+    let animationFrame = 0
+    let fallbackTimer = 0
+
+    const finish = () => {
+      if (settled) return
+      settled = true
+      window.cancelAnimationFrame(animationFrame)
+      window.clearTimeout(fallbackTimer)
+      resolve()
+    }
+
+    animationFrame = window.requestAnimationFrame(finish)
+    fallbackTimer = window.setTimeout(finish, PRINT_FRAME_FALLBACK_MS)
+  })
+}
+
+function waitAtMost(promise: PromiseLike<unknown>, timeoutMs: number) {
+  return new Promise<void>((resolve) => {
+    let settled = false
+    const timer = window.setTimeout(finish, timeoutMs)
+
+    function finish() {
+      if (settled) return
+      settled = true
+      window.clearTimeout(timer)
+      resolve()
+    }
+
+    Promise.resolve(promise).then(finish, finish)
+  })
+}
+
+function waitForImageLoad(image: HTMLImageElement) {
+  if (image.complete) return Promise.resolve()
+
+  return new Promise<void>((resolve) => {
+    let settled = false
+    const timer = window.setTimeout(finish, PRINT_ASSET_TIMEOUT_MS)
+
+    function finish() {
+      if (settled) return
+      settled = true
+      window.clearTimeout(timer)
+      image.removeEventListener('load', handleSettled)
+      image.removeEventListener('error', handleSettled)
+      resolve()
+    }
+
+    function handleSettled() {
+      finish()
+    }
+
+    image.addEventListener('load', handleSettled)
+    image.addEventListener('error', handleSettled)
+
+    if (image.complete) {
+      finish()
+      return
+    }
+
+    if (image.loading === 'lazy') image.loading = 'eager'
+    if (image.complete) finish()
+  })
 }
 
 async function waitForImages(root: ParentNode) {
   const images = Array.from(root.querySelectorAll('img'))
-  images.forEach((image) => {
-    if (!image.complete && image.loading === 'lazy') image.loading = 'eager'
-  })
   await Promise.all(
     images.map(async (image) => {
-      if (!image.complete) {
-        await new Promise<void>((resolve) => {
-          image.addEventListener('load', () => resolve(), { once: true })
-          image.addEventListener('error', () => resolve(), { once: true })
-        })
+      await waitForImageLoad(image)
+      if (image.complete && image.decode) {
+        await waitAtMost(image.decode(), PRINT_ASSET_TIMEOUT_MS)
       }
-      await image.decode?.().catch(() => undefined)
     }),
   )
 }
 
-async function waitForMindMaps(root: ParentNode) {
+async function waitForRenderedContent(root: ParentNode) {
   const startedAt = window.performance.now()
   while (
     root.querySelector('[data-ready="false"]') &&
@@ -53,11 +140,14 @@ async function waitForMindMaps(root: ParentNode) {
 }
 
 async function waitForPrintAssets(root: ParentNode) {
-  await Promise.all([
-    'fonts' in document ? document.fonts.ready.catch(() => undefined) : Promise.resolve(),
-    waitForImages(root),
-    waitForMindMaps(root),
-  ])
+  await waitAtMost(
+    Promise.all([
+      'fonts' in document ? document.fonts.ready : Promise.resolve(),
+      waitForImages(root),
+      waitForRenderedContent(root),
+    ]),
+    PRINT_ASSET_TIMEOUT_MS,
+  )
   await nextFrame()
 }
 
@@ -84,9 +174,10 @@ export function PostPrintControl({
   kind,
   exerciseFont,
 }: PostPrintControlProps) {
+  const panelCopy = PRINT_PANEL_COPY[kind]
   const [isPreparing, setIsPreparing] = useState(false)
   const [preparationMessage, setPreparationMessage] = useState(
-    '正在载入字体、图片与思维导图。',
+    '正在载入字体、图片与图表。',
   )
   const [exerciseMode, setExerciseMode] = useState<'practice' | 'solution'>('practice')
   const [font, setFont] = useState<PrintFont>('default')
@@ -164,14 +255,14 @@ export function PostPrintControl({
       restoreExerciseSections()
       printRoot.removeAttribute('data-printing')
       setIsPreparing(false)
-      setPreparationMessage('正在载入字体、图片与思维导图。')
+      setPreparationMessage('正在载入字体、图片与图表。')
       window.removeEventListener('afterprint', cleanup)
     }
 
     activePrintCleanupRef.current = cleanup
     closePanel()
     setIsPreparing(true)
-    setPreparationMessage('正在载入字体、图片与思维导图。')
+    setPreparationMessage('正在载入字体、图片与图表。')
     viewer.setAttribute('data-print-mode', mode)
     if (font === 'default') viewer.removeAttribute('data-print-font')
     else viewer.setAttribute('data-print-font', font)
@@ -182,7 +273,7 @@ export function PostPrintControl({
       await nextFrame()
       await waitForPrintAssets(content)
       if (didCleanup) return
-      setPreparationMessage('资源已就绪，正在打开系统打印窗口。')
+      setPreparationMessage('正在打开系统打印窗口。')
       await nextFrame()
       if (didCleanup) return
       document.title = printTitle
@@ -201,11 +292,14 @@ export function PostPrintControl({
         open={isOpen}
         anchorRef={triggerRef}
         id={panelId}
-        ariaLabel="打印设置"
+        ariaLabel={panelCopy.ariaLabel}
         role="dialog"
         onClose={closePanel}
       >
-        <p className={styles.title}>打印设置</p>
+        <p className={styles.title}>{panelCopy.title}</p>
+        {panelCopy.description ? (
+          <p className={styles.description}>{panelCopy.description}</p>
+        ) : null}
         {kind === 'exercise' ? (
           <fieldset className={styles.fieldset}>
             <legend>内容</legend>
@@ -230,9 +324,7 @@ export function PostPrintControl({
               题解版
             </label>
           </fieldset>
-        ) : (
-          <p className={styles.description}>A4 紧凑笔记版式</p>
-        )}
+        ) : null}
         {kind === 'exercise' ? (
           <label className={styles.selectLabel}>
             字体
