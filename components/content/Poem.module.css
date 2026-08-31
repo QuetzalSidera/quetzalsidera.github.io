@@ -1,12 +1,12 @@
 .root {
   display: flex;
-  flex-direction: column;
+  flex-direction: row-reverse;
   align-items: flex-start;
   justify-content: center;
   gap: 0.4em;
   box-sizing: border-box;
   width: auto;
-  min-height: var(--poem-height, 18rem);
+  height: var(--poem-height, 18rem);
   padding: 1rem 0.5rem;
   color: var(--font-color-grey);
   font-family: 'LXGW WenKai', 'Kaiti SC', 'STKaiti', KaiTi, serif !important;
@@ -14,12 +14,14 @@
   font-weight: 500;
   line-height: 1.55 !important;
   letter-spacing: 0.08em;
-  writing-mode: vertical-rl;
-  text-orientation: upright;
+  writing-mode: horizontal-tb;
   margin: 0 auto 0;
 }
 
 .root > :global(p) {
+  flex: 0 0 auto;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
   margin: 0 !important;
   padding: 0;
   text-indent: 0 !important;
@@ -27,16 +29,15 @@
   white-space: nowrap;
 }
 
-@media (max-width: 768px) {
-  .root {
-    min-height: auto;
-    padding-block: 1.25rem;
-  }
+:global([data-stacked='true']) .root {
+  height: auto;
+  padding-block: 1.25rem;
 }
 
 @media print {
-  .root {
-    min-height: var(--poem-height, 18rem);
+  .root,
+  :global([data-stacked='true']) .root {
+    height: var(--poem-height, 18rem);
     padding: 2mm 0;
     color: #111 !important;
     font-family: 'STKaiti', 'Kaiti SC', KaiTi, 'LXGW WenKai', serif !important;

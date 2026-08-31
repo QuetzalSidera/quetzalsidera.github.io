@@ -20,6 +20,7 @@ type PoemStyle = CSSProperties & {
 
 export function Poem({ children, className, style, ...props }: PoemProps) {
   const rootRef = useRef<HTMLDivElement>(null)
+  const measureFrameRef = useRef<number | null>(null)
   const [mediaHeight, setMediaHeight] = useState<number | null>(null)
   const poemStyle: PoemStyle = {
     ...style,
@@ -29,7 +30,12 @@ export function Poem({ children, className, style, ...props }: PoemProps) {
   useLayoutEffect(() => {
     const root = rootRef.current
     const flow = root?.closest<HTMLElement>('[data-mode]')
-    const media = flow?.querySelector<HTMLElement>(':scope > [data-flow-media]')
+    const media = flow
+      ? Array.from(flow.children).find(
+          (child): child is HTMLElement =>
+            child instanceof HTMLElement && child.dataset.flowMedia === 'true',
+        )
+      : null
     if (!root || !media) return
 
     const measureMedia = () => {
@@ -41,27 +47,49 @@ export function Poem({ children, className, style, ...props }: PoemProps) {
       }
     }
 
+    const scheduleMeasure = () => {
+      if (measureFrameRef.current !== null) return
+      measureFrameRef.current = window.requestAnimationFrame(() => {
+        measureFrameRef.current = null
+        measureMedia()
+      })
+    }
+
     measureMedia()
-    window.addEventListener('resize', measureMedia)
-    window.addEventListener('beforeprint', measureMedia)
-    window.addEventListener('afterprint', measureMedia)
+    scheduleMeasure()
+    window.addEventListener('resize', scheduleMeasure)
+    window.addEventListener('beforeprint', scheduleMeasure)
+    window.addEventListener('afterprint', scheduleMeasure)
+    const images = Array.from(media.querySelectorAll('img'))
+    images.forEach((image) => image.addEventListener('load', scheduleMeasure))
 
     if (typeof ResizeObserver === 'undefined') {
       return () => {
-        window.removeEventListener('resize', measureMedia)
-        window.removeEventListener('beforeprint', measureMedia)
-        window.removeEventListener('afterprint', measureMedia)
+        window.removeEventListener('resize', scheduleMeasure)
+        window.removeEventListener('beforeprint', scheduleMeasure)
+        window.removeEventListener('afterprint', scheduleMeasure)
+        images.forEach((image) => image.removeEventListener('load', scheduleMeasure))
+        if (measureFrameRef.current !== null) {
+          window.cancelAnimationFrame(measureFrameRef.current)
+          measureFrameRef.current = null
+        }
       }
     }
 
-    const observer = new ResizeObserver(measureMedia)
+    const observer = new ResizeObserver(scheduleMeasure)
     observer.observe(media)
+    observer.observe(root)
 
     return () => {
       observer.disconnect()
-      window.removeEventListener('resize', measureMedia)
-      window.removeEventListener('beforeprint', measureMedia)
-      window.removeEventListener('afterprint', measureMedia)
+      window.removeEventListener('resize', scheduleMeasure)
+      window.removeEventListener('beforeprint', scheduleMeasure)
+      window.removeEventListener('afterprint', scheduleMeasure)
+      images.forEach((image) => image.removeEventListener('load', scheduleMeasure))
+      if (measureFrameRef.current !== null) {
+        window.cancelAnimationFrame(measureFrameRef.current)
+        measureFrameRef.current = null
+      }
     }
   }, [])
 
