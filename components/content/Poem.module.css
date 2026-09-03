@@ -6,7 +6,9 @@
   gap: 0.4em;
   box-sizing: border-box;
   width: auto;
-  height: var(--poem-height, 18rem);
+  height: auto;
+  min-height: var(--poem-height, 18rem);
+  overflow: hidden;
   padding: 1rem 0.5rem;
   color: var(--font-color-grey);
   font-family: 'LXGW WenKai', 'Kaiti SC', 'STKaiti', KaiTi, serif !important;
@@ -31,13 +33,15 @@
 
 :global([data-stacked='true']) .root {
   height: auto;
+  min-height: 0;
   padding-block: 1.25rem;
 }
 
 @media print {
   .root,
   :global([data-stacked='true']) .root {
-    height: var(--poem-height, 18rem);
+    height: auto;
+    min-height: var(--poem-height, 18rem);
     padding: 2mm 0;
     color: #111 !important;
     font-family: 'STKaiti', 'Kaiti SC', KaiTi, 'LXGW WenKai', serif !important;
